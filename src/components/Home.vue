@@ -155,38 +155,6 @@
   </div>
 </template>
 <script>
-// export default {
-//   created() {
-//     window.addEventListener("resize", this.myEventHandler);
-//     this.detectWindowSize();
-//   },
-//   destroyed() {
-//     window.removeEventListener("resize", this.myEventHandler);
-//   },
-//   methods: {
-//     myEventHandler(e) {
-//       this.detectWindowSize();
-//     },
-//     detectWindowSize() {
-//       var w = window.innerWidth;
-//       console.log(w);
-//       if (w <= 760) {
-//         this.isMobile = true;
-//       } else {
-//         this.isMobile = false;
-//       }
-//     }
-//   },
-//   data() {
-//     return {
-//       showNav: false,
-//       showSideBar: false,
-//       isMobile: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-//         navigator.userAgent
-//       )
-//     };
-//   }
-// };
 </script>
 
 <style lang="scss" scoped>
