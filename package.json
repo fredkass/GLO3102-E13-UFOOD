@@ -6,12 +6,19 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
+    "css-build": "node-sass --omit-source-map-url src/assets/appstyles.scss src/assets/appstyles.css",
+    "css-watch": "npm run css-build -- --watch",
     "test:unit": "vue-cli-service test:unit"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.30",
+    "@fortawesome/free-solid-svg-icons": "^5.14.0",
+    "@fortawesome/vue-fontawesome": "^2.0.0",
+    "bulma": "^0.9.0",
     "core-js": "^3.6.5",
     "vue": "^2.6.11",
-    "vue-router": "^3.3.4"
+    "vue-router": "^3.3.4",
+    "vue-star-rating": "^1.6.1"
   },
   "devDependencies": {
     "@babel/core": "^7.11.0",
@@ -30,6 +37,8 @@
     "eslint-plugin-prettier": "^3.1.4",
     "eslint-plugin-vue": "^5.2.3",
     "prettier": "^1.19.1",
+    "node-sass": "^4.14.1",
+    "sass-loader": "^9.0.2",
     "vue-template-compiler": "^2.6.11"
   }
 }
