@@ -10,63 +10,11 @@
         </div>
       </div>
     </div>
-    <div class="content mx-5">
+    <div class="home-page">
       <div class="columns">
-        <template v-if="showSideBar || !isMobile">
-          <div class="column is-one-quarter-desktop">
-            <aside class="sideMenu">
-              <p class="menu-label"><b>Filters</b></p>
-              <ul>
-                <li>
-                  <div class="buttons has-addons">
-                    <button class="button">$</button>
-                    <button class="button is-info is-selected">$$</button>
-                    <button class="button">$$$</button>
-                    <button class="button">$$$$</button>
-                    <button class="button">$$$$$</button>
-                  </div>
-                </li>
-              </ul>
-              <p class="menu-label"><b>Genre</b></p>
-              <ul>
-                <li>
-                  <label class="checkbox">
-                    <input type="checkbox" />
-                    Pizza
-                  </label>
-                </li>
-                <li>
-                  <label class="checkbox">
-                    <input type="checkbox" />
-                    Breakfast
-                  </label>
-                </li>
-                <li>
-                  <label class="checkbox">
-                    <input type="checkbox" />
-                    Dinner
-                  </label>
-                </li>
-                <li>
-                  <label class="checkbox">
-                    <input type="checkbox" />
-                    Lunch
-                  </label>
-                </li>
-                <li>
-                  <label class="checkbox">
-                    <input type="checkbox" />
-                    Asian
-                  </label>
-                </li>
-
-                <li>
-                  <a>See all</a>
-                </li>
-              </ul>
-            </aside>
-          </div>
-        </template>
+        <div class="column is-one-quarter">
+          <sidebar></sidebar>
+        </div>
 
         <div class="column">
           <h1 class="title">Restaurants</h1>
@@ -154,10 +102,25 @@
     </div>
   </div>
 </template>
+
 <script>
+import SidebarFilter from "./SidebarFilter.vue";
+export default {
+  name: "app",
+  components: {
+    sidebar: SidebarFilter
+  }
+};
 </script>
 
 <style lang="scss" scoped>
+// .home-page {
+//   display: flex;
+//   flex-direction: row;
+//   width: 100%;
+//   min-height: 100%;
+//   // min-height: 100vh;
+//   }
 .hero {
   text-align: center;
   background-image: url("../img/banner.jpg");
@@ -191,14 +154,9 @@
 .is-xl {
   font-size: 1.7rem;
 }
-.menu ul li {
-  list-style-type: none;
-}
+
 .logoBanner {
   height: 180px;
-}
-.sideMenu ul {
-  list-style: none;
 }
 .image img {
   width: 100%;
