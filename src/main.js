@@ -5,7 +5,6 @@ import { library } from "@fortawesome/fontawesome-svg-core";
 import { fas } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
-// import 'buefy/dist/buefy.css'
 import Buefy from "buefy";
 import StarRating from "vue-star-rating";
 

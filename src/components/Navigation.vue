@@ -1,5 +1,5 @@
 <template>
-  <b-navbar fixed-top="true">
+  <b-navbar :fixed-top="true">
     <template slot="brand">
       <b-navbar-item tag="router-link" :to="{ path: '/' }">
         <figure class="image is-32x32 is-inline">
@@ -20,18 +20,6 @@
       </b-navbar-item>
     </template>
     <template slot="end">
-      <b-navbar-item tag="div">
-        <div class="field has-addons">
-          <div class="control">
-            <input class="input" type="text" placeholder="Search restaurants" />
-          </div>
-          <div class="control">
-            <b-button icon-left="search" type="is-primary">
-              Search
-            </b-button>
-          </div>
-        </div>
-      </b-navbar-item>
       <b-navbar-item tag="div">
         <div class="buttons">
           <a class="button is-primary">

@@ -2,9 +2,8 @@
   <section class="sidebar-layout">
     <b-sidebar
       position="static"
-      fullwidth="true"
-      fullheight="true"
-      :mobile="mobile"      
+      :fullwidth="true"
+      :fullheight="true"
       v-model="open"
     >
       <b-menu class="is-custom-mobile">
@@ -47,7 +46,7 @@ export default {
       expandOnHover: true,
       mobile: "hide",
       reduce: false,
-      open:true,
+      open: true
     };
   }
 };
@@ -60,8 +59,11 @@ export default {
   min-height: 100%;
   // min-height: 100vh;
 }
-.sidebar-content{
-  padding:1em;
+.sidebar-content {
+  padding: 1em;
+}
+.b-sidebar{
+  width:100%;
 }
 @media screen and (max-width: 1023px) {
   .b-sidebar {
