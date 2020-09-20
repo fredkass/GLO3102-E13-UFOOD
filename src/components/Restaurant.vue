@@ -2,13 +2,21 @@
   <div class="restaurant-single">
     <section class="hero is-primary">
       <div class="hero-body">
+        <b-carousel-list :data="restaurant.pictures" :items-to-show="4" />
         <div class="container">
-          <b-carousel-list :data="restaurant.pictures" :items-to-show="3" />
-
           <h1 class="title">
             {{ restaurant.name }}
           </h1>
-
+          <star-rating
+            :inline="true"
+            border-width="2"
+            border-color="black"
+            :star-size="20"
+            :read-only="true"
+            :show-rating="false"
+            :rating="restaurant.rating"
+            :round-start-rating="false"
+          ></star-rating> {{restaurant.rating}}
           <h2 class="subtitle ">
             <span v-for="(genre, i) in restaurant.genres" :key="i">
               <strong>{{ genre }}, </strong>
@@ -24,7 +32,22 @@
     </section>
     <section class="section">
       <div class="container">
-        <div class="columns is-multiline has-text-centered">
+        <div class="columns is-multiline">
+          <div class="column is-two-thirds">
+            <div class="card">
+              <div class="card-content">
+                <div class="columns">
+                  <div class="column is-half">
+                    <div id="map" ref="map"></div>
+                    <br />
+                  </div>
+                  <div class="column is-half">
+                    <strong>{{ restaurant.address }}</strong>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
           <div class="column is-one-third">
             <div class="menu sticky has-text-left has-border">
               <ul id="menu" class="menu-list">
@@ -39,21 +62,6 @@
                   </b-button>
                 </li>
               </ul>
-            </div>
-          </div>
-          <div class="column is-two-thirds">
-            <div class="card">
-              <div class="card-content">
-                <div class="columns">
-                  <div class="column is-half">
-                    <div id="map" ref="map"></div>
-                    <br />
-                  </div>
-                  <div class="column is-half">
-                    <strong>{{ restaurant.address }}</strong>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -124,6 +132,14 @@ export default {
   display: flex;
   align-items: center;
   max-height: 300px;
+}
+.carousel-list .carousel-slides .carousel-slide .image{
+  height:100%
+}
+.carousel-list .carousel-slides .carousel-slide .image img{
+  width:100%;
+  height:100%;
+  object-fit: cover;
 }
 .has-border ul {
   border: 1px grey solid;
