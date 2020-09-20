@@ -12,10 +12,10 @@
       <b-navbar-item tag="router-link" :to="{ path: '/' }">
         Home
       </b-navbar-item>
-      <b-navbar-item tag="router-link" :to="{ path: '/user' }">
+      <b-navbar-item tag="router-link" :to="{ path: '/restaurant' }">
         Restaurant
       </b-navbar-item>
-      <b-navbar-item tag="router-link" :to="{ path: '/restaurant' }">
+      <b-navbar-item tag="router-link" :to="{ path: '/user' }">
         User Profile
       </b-navbar-item>
     </template>
