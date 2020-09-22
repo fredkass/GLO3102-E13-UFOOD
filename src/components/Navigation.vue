@@ -33,8 +33,7 @@
     </template>
   </b-navbar>
 </template>
-<script>
-</script>
+<script></script>
 <style lang="scss" scoped>
 nav {
   padding-top: 10px;

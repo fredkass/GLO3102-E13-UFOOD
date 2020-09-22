@@ -8,13 +8,23 @@
     >
       <b-menu class="is-custom-mobile">
         <b-menu-list label="Filters">
-          <div class="buttons has-addons">
-            <button class="button">$</button>
-            <button class="button is-info is-selected">$$</button>
-            <button class="button">$$$</button>
-            <button class="button">$$$$</button>
-            <button class="button">$$$$$</button>
-          </div>
+          <b-field>
+            <b-checkbox-button v-model="checkboxPriceGroup" native-value="1">
+              $
+            </b-checkbox-button>
+            <b-checkbox-button v-model="checkboxPriceGroup" native-value="2">
+              $$
+            </b-checkbox-button>
+            <b-checkbox-button v-model="checkboxPriceGroup" native-value="3">
+              $$$
+            </b-checkbox-button>
+            <b-checkbox-button v-model="checkboxPriceGroup" native-value="4">
+              $$$$
+            </b-checkbox-button>
+            <b-checkbox-button v-model="checkboxPriceGroup" native-value="5">
+              $$$$$
+            </b-checkbox-button>
+          </b-field>
         </b-menu-list>
         <b-menu-list label="Genre">
           <div class="field">
@@ -46,7 +56,8 @@ export default {
       expandOnHover: true,
       mobile: "hide",
       reduce: false,
-      open: true
+      open: true,
+      checkboxPriceGroup: []
     };
   }
 };
@@ -57,74 +68,11 @@ export default {
   display: flex;
   flex-direction: row;
   min-height: 100%;
-  // min-height: 100vh;
 }
 .sidebar-content {
   padding: 1em;
 }
-.b-sidebar{
-  width:100%;
-}
-@media screen and (max-width: 1023px) {
-  .b-sidebar {
-    .sidebar-content {
-      &.is-mini-mobile {
-        &:not(.is-mini-expand),
-        &.is-mini-expand:not(:hover) {
-          .menu-list {
-            li {
-              a {
-                span:nth-child(2) {
-                  display: none;
-                }
-              }
-              ul {
-                padding-left: 0;
-                li {
-                  a {
-                    display: inline-block;
-                  }
-                }
-              }
-            }
-          }
-          .menu-label:not(:last-child) {
-            margin-bottom: 0;
-          }
-        }
-      }
-    }
-  }
-}
-@media screen and (min-width: 1024px) {
-  .b-sidebar {
-    .sidebar-content {
-      &.is-mini {
-        &:not(.is-mini-expand),
-        &.is-mini-expand:not(:hover) {
-          .menu-list {
-            li {
-              a {
-                span:nth-child(2) {
-                  display: none;
-                }
-              }
-              ul {
-                padding-left: 0;
-                li {
-                  a {
-                    display: inline-block;
-                  }
-                }
-              }
-            }
-          }
-          .menu-label:not(:last-child) {
-            margin-bottom: 0;
-          }
-        }
-      }
-    }
-  }
+.b-sidebar {
+  width: 100%;
 }
 </style>
