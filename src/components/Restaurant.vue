@@ -9,7 +9,7 @@
           </h1>
           <star-rating
             :inline="true"
-            border-width="2"
+            :border-width="2"
             border-color="black"
             :star-size="20"
             :read-only="true"
@@ -19,12 +19,12 @@
           ></star-rating>
           {{ restaurant.rating }}
           <h2 class="subtitle ">
-            <span v-for="(genre, i) in restaurant.genres" :key="i">
+            <span v-for="(genre, name, index) in restaurant.genres" :key="index">
               <strong>{{ genre }}, </strong>
             </span>
             &middot;
 
-            <span v-for="(n, i) in restaurant.price_range" :key="i">
+            <span v-for="n in restaurant.price_range" :key="n">
               <strong>$</strong>
             </span>
           </h2>
