@@ -16,7 +16,8 @@
             :show-rating="false"
             :rating="restaurant.rating"
             :round-start-rating="false"
-          ></star-rating> {{restaurant.rating}}
+          ></star-rating>
+          {{ restaurant.rating }}
           <h2 class="subtitle ">
             <span v-for="(genre, i) in restaurant.genres" :key="i">
               <strong>{{ genre }}, </strong>
@@ -34,34 +35,28 @@
       <div class="container">
         <div class="columns is-multiline">
           <div class="column is-two-thirds">
-            <div class="card">
-              <div class="card-content">
-                <div class="columns">
-                  <div class="column is-half">
-                    <div id="map" ref="map"></div>
-                    <br />
-                  </div>
-                  <div class="column is-half">
-                    <strong>{{ restaurant.address }}</strong>
-                  </div>
+            <div class="box">
+              <div class="columns">
+                <div class="column is-half">
+                  <div id="map" ref="map"></div>
+                  <br />
+                </div>
+                <div class="column is-half">
+                  <strong>{{ restaurant.address }}</strong>
                 </div>
               </div>
             </div>
           </div>
           <div class="column is-one-third">
             <div class="menu sticky has-text-left has-border">
-              <ul id="menu" class="menu-list">
-                <li>
-                  <b-button type="is-link" icon-left="phone">
-                    {{ restaurant.tel }}
-                  </b-button>
-                </li>
-                <li>
-                  <b-button type="is-link" icon-left="directions">
-                    Directions
-                  </b-button>
-                </li>
-              </ul>
+              <div class="buttons">
+                <b-button type="is-link" icon-left="phone" expanded>
+                  {{ restaurant.tel }}
+                </b-button>
+                <b-button type="is-link" icon-left="directions" expanded>
+                  Directions
+                </b-button>
+              </div>
             </div>
           </div>
         </div>
@@ -70,7 +65,6 @@
   </div>
 </template>
 <script>
-// import gmapsInit from '../utils/gmaps'
 export default {
   name: "restaurant",
   data() {
@@ -84,6 +78,10 @@ export default {
         genres: ["Asiatique", "Takeout"],
         rating: 4.7,
         price_range: 2,
+        location: {
+          type: "Point",
+          coordinates: [-71.2180951, 46.8178912]
+        },
         pictures: [
           {
             title: "Slide 1",
@@ -111,7 +109,13 @@ export default {
           }
         ],
         menu: {
-          monday: "12h-14h"
+          monday: "12:00-21:00",
+          thursday: "12:00-21:00",
+          wednesday: "12:00-21:00",
+          tuesday: "12:00-21:00",
+          friday: "12:00-21:00",
+          saturday: "12:00-21:00",
+          sunday: null
         }
       }
     };
@@ -126,22 +130,22 @@ export default {
 }
 .sticky {
   position: sticky;
-  top: 30px;
+  top: 100px;
 }
 .carousel-list .carousel-slides .carousel-slide {
   display: flex;
   align-items: center;
   max-height: 300px;
 }
-.carousel-list .carousel-slides .carousel-slide .image{
-  height:100%
+.carousel-list .carousel-slides .carousel-slide .image {
+  height: 100%;
 }
-.carousel-list .carousel-slides .carousel-slide .image img{
-  width:100%;
-  height:100%;
+.carousel-list .carousel-slides .carousel-slide .image img {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
 }
 .has-border ul {
-  border: 1px grey solid;
+  border: 1px lightgray solid;
 }
 </style>

@@ -89,13 +89,12 @@ export default {
     },
     detectWindowSize() {
       var w = window.innerWidth;
-      console.log(w);
       if (w <= 1025) {
         this.isMobile = true;
-        console.log(this.isNavbarOpen);
+        this.isNavbarOpen = false;
       } else {
         this.isMobile = false;
-        console.log(this.isNavbarOpen);
+        this.isNavbarOpen = true;
       }
     }
   },
