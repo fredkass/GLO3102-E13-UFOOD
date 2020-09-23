@@ -12,7 +12,7 @@
     </div>
     <div class="home-page">
       <div class="columns">
-        <template v-if="isNavbarOpen || !isMobile">
+        <template v-if="isNavbarOpen">
           <div class="column is-narrow">
             <sidebar></sidebar>
           </div>
@@ -20,7 +20,7 @@
         <div class="column">
           <h1 class="title">Restaurants</h1>
           <b-button
-            v-if="isMobile"
+            v-if="isMobile || isWindowReduced"
             @click="isNavbarOpen = !isNavbarOpen"
             icon-left="filter"
             >Filters</b-button
@@ -102,6 +102,7 @@ export default {
   name: "home",
   created() {
     window.addEventListener("resize", this.myEventHandler);
+    this.isNavbarOpen = !this.isMobile;
     this.detectWindowSize();
   },
   destroyed() {
@@ -113,21 +114,22 @@ export default {
     },
     detectWindowSize() {
       var w = window.innerWidth;
-      if (w <= 1025) {
-        this.isMobile = true;
+      if (w <= 1025 && !this.isMobile) {
         this.isNavbarOpen = false;
-      } else {
-        this.isMobile = false;
+        this.isWindowReduced = true;
+      } else if (w > 1025 && !this.isMobile) {
         this.isNavbarOpen = true;
+        this.isWindowReduced = false;
       }
     }
   },
   data() {
     return {
-      isNavbarOpen: true,
       isMobile: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
         navigator.userAgent
       ),
+      isNavbarOpen: true,
+      isWindowReduced: false,
       restaurants: [
         {
           id: 1,
