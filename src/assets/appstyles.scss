@@ -1,0 +1,37 @@
+@charset "utf-8";
+@import "~bulma/sass/utilities/_all";
+
+$purple: #8A4D76;
+$pink: #FA7C91;
+$brown: #757763;
+$beige-light: #D0D1CD;
+$beige-lighter: #EFF0EB;
+$orange: #db811a;
+
+$primary: $orange;
+$primary-invert: findColorInvert($primary);
+$twitter: #4099FF;
+$twitter-invert: findColorInvert($twitter);
+
+$colors: (
+    "black": ($black, $white),
+    "light": ($light, $light-invert),
+    "dark": ($dark, $dark-invert),
+    "primary": ($primary, $primary-invert),
+    "info": ($info, $info-invert),
+    "success": ($success, $success-invert),
+    "warning": ($warning, $warning-invert),
+    "danger": ($danger, $danger-invert),
+);
+// Update Bulma's global variables
+//$family-sans-serif: "Nunito", sans-serif;
+$grey-dark: $brown;
+$grey-light: $beige-light;
+$primary: $orange;
+$link: $orange;
+$widescreen-enabled: true;
+$fullhd-enabled: true;
+
+
+@import "~bulma";
+@import "~buefy/src/scss/buefy";
