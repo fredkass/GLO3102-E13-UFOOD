@@ -15,9 +15,6 @@
       <b-navbar-item tag="router-link" :to="{ path: '/restaurant' }">
         Restaurant
       </b-navbar-item>
-      <b-navbar-item tag="router-link" :to="{ path: '/user' }">
-        User Profile
-      </b-navbar-item>
     </template>
     <template slot="end">
       <b-navbar-item tag="div">
@@ -34,18 +31,55 @@
       </b-navbar-item>
       <b-navbar-item tag="div">
         <div class="buttons">
-          <a class="button is-primary">
+          <b-button class="button is-primary" v-if="!this.isLoggedIn">
             <strong>Sign up</strong>
-          </a>
-          <a class="button is-light">
+          </b-button>
+          <b-button
+            class="button is-light"
+            @click="toggleLogIn()"
+            v-if="!this.isLoggedIn"
+          >
             Log in
-          </a>
+          </b-button>
         </div>
+      </b-navbar-item>
+
+      <b-navbar-item
+        tag="router-link"
+        :to="{ path: '/user' }"
+        v-if="this.isLoggedIn"
+      >
+        <b-button class="button is-primary" icon-left="user">
+          <strong>{{ userName }}</strong>
+        </b-button>
+      </b-navbar-item>
+      <b-navbar-item tag="div">
+        <a
+          class="button is-light"
+          @click="toggleLogIn()"
+          v-if="this.isLoggedIn"
+        >
+          Sign out
+        </a>
       </b-navbar-item>
     </template>
   </b-navbar>
 </template>
-<script></script>
+<script>
+export default {
+  data() {
+    return {
+      isLoggedIn: false,
+      userName: "Frédéric Kassab"
+    };
+  },
+  methods: {
+    toggleLogIn() {
+      this.isLoggedIn = !this.isLoggedIn;
+    }
+  }
+};
+</script>
 <style lang="scss" scoped>
 nav {
   padding-top: 10px;
