@@ -1,5 +1,5 @@
 <template>
-  <div class="user-profile">
+  <div class="section">
     <div class="columns">
       <div class="column is-one-quarter">
         <div class="box profile-container has-text-centered">
