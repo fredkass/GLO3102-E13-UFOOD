@@ -21,6 +21,18 @@
     </template>
     <template slot="end">
       <b-navbar-item tag="div">
+        <div class="field has-addons">
+          <div class="control">
+            <input class="input" type="text" placeholder="Search" />
+          </div>
+          <div class="control">
+            <b-button icon-left="search" type="is-primary">
+              Search
+            </b-button>
+          </div>
+        </div>
+      </b-navbar-item>
+      <b-navbar-item tag="div">
         <div class="buttons">
           <a class="button is-primary">
             <strong>Sign up</strong>
