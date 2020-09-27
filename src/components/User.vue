@@ -161,9 +161,6 @@ export default {
 </script>
 
 <style scoped>
-.user-profile {
-  padding-top: 70px;
-}
 .image img {
   width: 100%;
   object-fit: cover;
