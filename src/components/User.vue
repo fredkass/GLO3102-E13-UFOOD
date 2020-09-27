@@ -2,23 +2,20 @@
   <div class="user-profile">
     <div class="columns">
       <div class="column is-one-quarter">
-        <div class="box">
-          <div class="profile-infos">
-            <div class="block">
-              <img
-                src="https://d1w2poirtb3as9.cloudfront.net/default.jpeg?Expires=1601273955&Signature=meBVGTd53ut91D6gCOwE8Zwun60NUAlDwAB2Okj2LGm0EoC12iu8B5Tthah-RFR9XPibt-3wI1ruv9ex3~tlAtUAsvXNZz2-AVRJ33L64Qn5qmo~F4YGxsuPvSBagP0hBRhSA7eVzgohLu9gIEbNqw9IFOdgeLgjP3eM3GGLSuWMe152iVyLmIiKUGhPIADJ5AmjM5qoamjXjdPXgJsOONsghDUnn76n3x76b-dLO3PgLMTWdx39IKA9Osiip5CLPA7AqFqfzdzfqruV9Fhu2Ns-kd13N45ItzW-Q8ttLcXg4mVDn7EJ2oQlpxZ6LxfVHJbPofXbHnnb68qeUeUF5g__&Key-Pair-Id=APKAJSDH2OZQQSA64LQQ"
-              />
-            </div>
-            <b-menu class="is-custom-mobile">
-              <b-menu-list label="Profile info">
-                <div>
-                  {{ profile.name }}
-                </div>
-                <div>Your rating: {{ profile.score }}</div>
-                <b-button type="is-primary">Log Out</b-button>
-              </b-menu-list>
-            </b-menu>
-          </div>
+        <div class="box profile-container has-text-centered">
+          <figure class="image profile">
+            <img
+              src="https://d1w2poirtb3as9.cloudfront.net/default.jpeg?Expires=1601273955&Signature=meBVGTd53ut91D6gCOwE8Zwun60NUAlDwAB2Okj2LGm0EoC12iu8B5Tthah-RFR9XPibt-3wI1ruv9ex3~tlAtUAsvXNZz2-AVRJ33L64Qn5qmo~F4YGxsuPvSBagP0hBRhSA7eVzgohLu9gIEbNqw9IFOdgeLgjP3eM3GGLSuWMe152iVyLmIiKUGhPIADJ5AmjM5qoamjXjdPXgJsOONsghDUnn76n3x76b-dLO3PgLMTWdx39IKA9Osiip5CLPA7AqFqfzdzfqruV9Fhu2Ns-kd13N45ItzW-Q8ttLcXg4mVDn7EJ2oQlpxZ6LxfVHJbPofXbHnnb68qeUeUF5g__&Key-Pair-Id=APKAJSDH2OZQQSA64LQQ"
+            />
+          </figure>
+          <h4 class="subtitle is-5">Profile Info</h4>
+          <p>
+            {{ profile.name }}
+          </p>
+          <p>Your rating: {{ profile.score }}</p>
+          <b-button type="is-primary" tag="router-link" :to="{ path: '/' }">
+            Log Out</b-button
+          >
         </div>
       </div>
       <div class="column is-three-quarters">
@@ -175,5 +172,17 @@ export default {
   -moz-box-shadow: 0 0 10px #ccc;
   -webkit-box-shadow: 0 0 10px #ccc;
   box-shadow: 0 0 10px #ccc;
+}
+.profile-container p {
+  line-height: 2.5em;
+}
+.profile-container .profile img {
+  max-height: 350px;
+  max-width: 350px;
+  overflow: hidden;
+  object-fit: cover;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
 </style>
