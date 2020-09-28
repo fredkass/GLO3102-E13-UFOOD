@@ -60,6 +60,11 @@
                       :rating="restaurant.rating"
                     ></star-rating>
                     <p>
+                      <strong
+                        >Visited : {{ restaurant.total_visits }} time(s)</strong
+                      >
+                    </p>
+                    <p>
                       Genres:
                       <span v-for="genre in restaurant.genres" :key="genre"
                         >{{ genre }},
@@ -104,7 +109,8 @@ export default {
           pictures: [require("../img/banner.jpg")],
           menu: {
             monday: "12h-14h"
-          }
+          },
+          total_visits: 2
         },
         {
           id: 2,
@@ -120,7 +126,8 @@ export default {
           ],
           menu: {
             monday: "12h-14h"
-          }
+          },
+          total_visits: 4
         },
         {
           id: 3,
@@ -136,7 +143,8 @@ export default {
           ],
           menu: {
             monday: "12h-14h"
-          }
+          },
+          total_visits: 4
         },
         {
           id: 4,
@@ -152,7 +160,8 @@ export default {
           ],
           menu: {
             monday: "12h-14h"
-          }
+          },
+          total_visits: 1
         }
       ]
     };
