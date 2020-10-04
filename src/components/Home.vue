@@ -45,7 +45,40 @@
               Search
             </b-button>
           </b-field>
+
+          <div class="columns is-multiline" v-if="!this.isRestaurantsLoaded">
+            <div
+              class="column is-half-desktop is-full-tablet"
+              v-for="index in restaurantsPerPage"
+              :key="index"
+            >
+              <div class="box">
+                <div class="columns is-mobile">
+                  <div class="column is-one-third">
+                    <b-carousel :autoplay="false" :indicator="false">
+                    </b-carousel>
+                  </div>
+                  <div class="column">
+                    <h5 class="title is-5">
+                      <b-skeleton :animated="true"></b-skeleton>
+                    </h5>
+                    <b-skeleton :animated="true"></b-skeleton>
+                    <b-skeleton :animated="true"></b-skeleton>
+                    <b-skeleton :animated="true"></b-skeleton>
+                    <b-skeleton :animated="true"></b-skeleton>
+                    <b-skeleton :animated="true"></b-skeleton>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
           <div class="columns is-multiline">
+            <div
+              class="column is-half-desktop is-full-tablet"
+              v-if="restaurants.length < 1 && this.isRestaurantsLoaded"
+            >
+              No Restaurants found
+            </div>
             <div
               class="column is-half-desktop is-full-tablet"
               v-for="restaurant in restaurants"
@@ -125,10 +158,12 @@ export default {
       });
     },
     async getRestaurants() {
+      this.isRestaurantsLoaded = false;
       const restaurants = await this.apiRestaurant.getRestaurants(
         this.currentPage,
         this.searchFilterTerms
       );
+      this.isRestaurantsLoaded = true;
       return restaurants;
     },
     myEventHandler() {
@@ -157,7 +192,8 @@ export default {
       currentPage: 1,
       totalPages: 100,
       restaurantsPerPage: 10,
-      searchFilterTerms: ""
+      searchFilterTerms: "",
+      isRestaurantsLoaded: false
     };
   },
   components: {
