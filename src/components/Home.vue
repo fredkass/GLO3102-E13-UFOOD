@@ -14,7 +14,7 @@
       <div class="columns">
         <template v-if="isNavbarOpen">
           <div class="column is-narrow">
-            <sidebar></sidebar>
+            <sidebar @updatePrice="priceFilterChanged" @updateGenre="genreFilterChanged"></sidebar>
           </div>
         </template>
         <div class="column">
@@ -151,6 +151,15 @@ export default {
     window.removeEventListener("resize", this.myEventHandler);
   },
   methods: {
+    priceFilterChanged(value)
+    {
+      this.price_range_filter = value;
+      this.updateRestaurants();
+    },
+    genreFilterChanged(value){      
+      this.genres_filter = value;
+      this.updateRestaurants();
+    },
     updateRestaurants() {
       this.getRestaurants().then(r => {
         this.totalPages = r.total;
@@ -160,8 +169,10 @@ export default {
     async getRestaurants() {
       this.isRestaurantsLoaded = false;
       const restaurants = await this.apiRestaurant.getRestaurants(
-        this.currentPage,
-        this.searchFilterTerms
+        this.currentPage-1,
+        this.searchFilterTerms, null,
+        this.genres_filter,
+        this.price_range_filter,
       );
       this.isRestaurantsLoaded = true;
       return restaurants;
@@ -193,6 +204,8 @@ export default {
       totalPages: 100,
       restaurantsPerPage: 10,
       searchFilterTerms: "",
+      price_range_filter:[],
+      genres_filter:[],
       isRestaurantsLoaded: false
     };
   },

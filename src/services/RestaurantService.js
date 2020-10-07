@@ -4,15 +4,23 @@ export default class RestaurantService {
   constructor() {
     this.api = new Api();
   }
-  getRestaurants(page, searchTerms = "", limit = "") {
-    return this.api.get(
-      "/restaurants?" +
-        new URLSearchParams({
-          page: page,
-          q: searchTerms,
-          limit:limit
-        })
-    );
+  getRestaurants(
+    page,
+    searchTerms = "",
+    limit = "",
+    genres = "",
+    price_range = ""
+  ) {
+    let querystrings = new URLSearchParams({
+      page: page
+    });
+
+    searchTerms && querystrings.append("q", searchTerms);
+    limit && querystrings.append("limit", limit);
+    (genres.length > 0) && querystrings.append("genres", genres);
+    (price_range.length > 0) && querystrings.append("price_range", price_range);
+
+    return this.api.get("/restaurants?" + querystrings);
   }
   getSingleRestaurant(id) {
     return this.api.get("/restaurant/" + id);

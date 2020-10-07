@@ -9,38 +9,83 @@
       <b-menu class="is-custom-mobile">
         <b-menu-list label="Filters">
           <b-field>
-            <b-checkbox-button v-model="checkboxPriceGroup" native-value="1">
+            <b-checkbox-button
+              v-model="checkboxPriceGroup"
+              native-value="1"
+              @input="onPriceChange"
+            >
               $
             </b-checkbox-button>
-            <b-checkbox-button v-model="checkboxPriceGroup" native-value="2">
+            <b-checkbox-button
+              v-model="checkboxPriceGroup"
+              native-value="2"
+              @input="onPriceChange"
+            >
               $$
             </b-checkbox-button>
-            <b-checkbox-button v-model="checkboxPriceGroup" native-value="3">
+            <b-checkbox-button
+              v-model="checkboxPriceGroup"
+              native-value="3"
+              @input="onPriceChange"
+            >
               $$$
             </b-checkbox-button>
-            <b-checkbox-button v-model="checkboxPriceGroup" native-value="4">
+            <b-checkbox-button
+              v-model="checkboxPriceGroup"
+              native-value="4"
+              @input="onPriceChange"
+            >
               $$$$
             </b-checkbox-button>
-            <b-checkbox-button v-model="checkboxPriceGroup" native-value="5">
+            <b-checkbox-button
+              v-model="checkboxPriceGroup"
+              native-value="5"
+              @input="onPriceChange"
+            >
               $$$$$
             </b-checkbox-button>
           </b-field>
         </b-menu-list>
         <b-menu-list label="Genre">
           <div class="field">
-            <b-checkbox>Breafast</b-checkbox>
+            <b-checkbox
+              v-model="genresCheckbox"
+              native-value="hamburgers"
+              @input="onGenresChange"
+              >Hamburgers</b-checkbox
+            >
           </div>
           <div class="field">
-            <b-checkbox>Lunch</b-checkbox>
+            <b-checkbox
+              v-model="genresCheckbox"
+              native-value="fast-food"
+              @input="onGenresChange"
+              >Fast-Food</b-checkbox
+            >
           </div>
           <div class="field">
-            <b-checkbox>Dinner</b-checkbox>
+            <b-checkbox
+              v-model="genresCheckbox"
+              native-value="desserts"
+              @input="onGenresChange"
+              >Desserts</b-checkbox
+            >
           </div>
           <div class="field">
-            <b-checkbox>Pizza</b-checkbox>
+            <b-checkbox
+              v-model="genresCheckbox"
+              native-value="libanais"
+              @input="onGenresChange"
+              >Libanais</b-checkbox
+            >
           </div>
           <div class="field">
-            <b-checkbox>Asian</b-checkbox>
+            <b-checkbox
+              v-model="genresCheckbox"
+              native-value="asiatique"
+              @input="onGenresChange"
+              >Asian</b-checkbox
+            >
           </div>
           <a>See all</a>
         </b-menu-list>
@@ -57,8 +102,17 @@ export default {
       mobile: "hide",
       reduce: false,
       open: true,
-      checkboxPriceGroup: []
+      checkboxPriceGroup: [],
+      genresCheckbox: []
     };
+  },
+  methods: {
+    onPriceChange() {
+      this.$emit("updatePrice", this.checkboxPriceGroup);
+    },
+    onGenresChange() {
+      this.$emit("updateGenre", this.genresCheckbox);
+    }
   }
 };
 </script>
