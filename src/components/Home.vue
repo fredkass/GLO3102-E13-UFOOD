@@ -14,32 +14,71 @@
       <div class="columns">
         <template v-if="isNavbarOpen">
           <div class="column is-narrow">
-            <sidebar></sidebar>
+            <sidebar @updatePrice="priceFilterChanged" @updateGenre="genreFilterChanged"></sidebar>
           </div>
         </template>
         <div class="column">
           <h1 class="title">Restaurants</h1>
+          <b-pagination
+            :total="totalPages"
+            v-model="currentPage"
+            :per-page="restaurantsPerPage"
+            @change="updateRestaurants"
+          >
+          </b-pagination>
           <b-button
             v-if="isMobile || isWindowReduced"
             @click="isNavbarOpen = !isNavbarOpen"
             icon-left="filter"
             >Filters</b-button
           >
-          <div class="field has-addons">
-            <div class="control">
-              <input
-                class="input"
-                type="text"
-                placeholder="Search restaurants"
-              />
-            </div>
-            <div class="control">
-              <b-button icon-left="search" type="is-primary">
-                Search
-              </b-button>
+          <b-field>
+            <b-input
+              v-model="searchFilterTerms"
+              placeholder="Search restaurants"
+            ></b-input>
+            <b-button
+              icon-left="search"
+              type="is-primary"
+              @click="updateRestaurants"
+            >
+              Search
+            </b-button>
+          </b-field>
+
+          <div class="columns is-multiline" v-if="!this.isRestaurantsLoaded">
+            <div
+              class="column is-half-desktop is-full-tablet"
+              v-for="index in restaurantsPerPage"
+              :key="index"
+            >
+              <div class="box">
+                <div class="columns is-mobile">
+                  <div class="column is-one-third">
+                    <b-carousel :autoplay="false" :indicator="false">
+                    </b-carousel>
+                  </div>
+                  <div class="column">
+                    <h5 class="title is-5">
+                      <b-skeleton :animated="true"></b-skeleton>
+                    </h5>
+                    <b-skeleton :animated="true"></b-skeleton>
+                    <b-skeleton :animated="true"></b-skeleton>
+                    <b-skeleton :animated="true"></b-skeleton>
+                    <b-skeleton :animated="true"></b-skeleton>
+                    <b-skeleton :animated="true"></b-skeleton>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
           <div class="columns is-multiline">
+            <div
+              class="column is-half-desktop is-full-tablet"
+              v-if="restaurants.length < 1 && this.isRestaurantsLoaded"
+            >
+              No Restaurants found
+            </div>
             <div
               class="column is-half-desktop is-full-tablet"
               v-for="restaurant in restaurants"
@@ -98,17 +137,46 @@
 
 <script>
 import SidebarFilter from "./SidebarFilter.vue";
+import RestaurantService from "@/services/RestaurantService.js";
 export default {
   name: "home",
   created() {
     window.addEventListener("resize", this.myEventHandler);
     this.isNavbarOpen = !this.isMobile;
     this.detectWindowSize();
+
+    this.updateRestaurants();
   },
   destroyed() {
     window.removeEventListener("resize", this.myEventHandler);
   },
   methods: {
+    priceFilterChanged(value)
+    {
+      this.price_range_filter = value;
+      this.updateRestaurants();
+    },
+    genreFilterChanged(value){      
+      this.genres_filter = value;
+      this.updateRestaurants();
+    },
+    updateRestaurants() {
+      this.getRestaurants().then(r => {
+        this.totalPages = r.total;
+        this.restaurants = r.items;
+      });
+    },
+    async getRestaurants() {
+      this.isRestaurantsLoaded = false;
+      const restaurants = await this.apiRestaurant.getRestaurants(
+        this.currentPage-1,
+        this.searchFilterTerms, null,
+        this.genres_filter,
+        this.price_range_filter,
+      );
+      this.isRestaurantsLoaded = true;
+      return restaurants;
+    },
     myEventHandler() {
       this.detectWindowSize();
     },
@@ -130,69 +198,15 @@ export default {
       ),
       isNavbarOpen: true,
       isWindowReduced: false,
-      restaurants: [
-        {
-          id: 1,
-          name: "Chandha",
-          address: "1292 rue Léger",
-          tel: "(418)-418-4800",
-          genres: ["Asiatique", "Takeout"],
-          rating: 4.7,
-          price_range: 2,
-          pictures: [require("../img/banner.jpg")],
-          menu: {
-            monday: "12h-14h"
-          }
-        },
-        {
-          id: 2,
-          name: "Chez Victor",
-          address: "100 boul. Laurier",
-          tel: "(814)-888-4800",
-          genres: ["Burger", "Takeout"],
-          rating: 4.0,
-          price_range: 3,
-          pictures: [
-            require("../img/banner.jpg"),
-            require("../img/banner.jpg")
-          ],
-          menu: {
-            monday: "12h-14h"
-          }
-        },
-        {
-          id: 3,
-          name: "Gaspésienne 51",
-          address: "1005 Chemin St-Louis",
-          tel: "(418)-898-5858",
-          genres: ["Fruits de mer", "Poisson"],
-          rating: 4.3,
-          price_range: 4,
-          pictures: [
-            require("../img/banner.jpg"),
-            require("../img/banner.jpg")
-          ],
-          menu: {
-            monday: "12h-14h"
-          }
-        },
-        {
-          id: 4,
-          name: "Snack-bar chez Raymond",
-          address: "500 boul. Laurier",
-          tel: "(800)-888-9999",
-          genres: ["Géduilles", "Snack"],
-          rating: 2.6,
-          price_range: 1,
-          pictures: [
-            require("../img/banner.jpg"),
-            require("../img/banner.jpg")
-          ],
-          menu: {
-            monday: "12h-14h"
-          }
-        }
-      ]
+      restaurants: [],
+      apiRestaurant: new RestaurantService(),
+      currentPage: 1,
+      totalPages: 100,
+      restaurantsPerPage: 10,
+      searchFilterTerms: "",
+      price_range_filter:[],
+      genres_filter:[],
+      isRestaurantsLoaded: false
     };
   },
   components: {
