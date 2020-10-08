@@ -46,4 +46,18 @@ export default class Api {
       console.error(error);
     }
   }
+
+  // quickly written, not sure it works yet -> test before pushing
+  async delete(route) {
+    try {
+      const response = await fetch(this.baseURL + route, {
+        method: "DELETE"
+      });
+      const data = await response.json();
+      return data; // should contain confirmation of deletion message
+    } catch (error) {
+      console.error("problem in delete request.");
+      console.error(error);
+    }
+  }
 }
