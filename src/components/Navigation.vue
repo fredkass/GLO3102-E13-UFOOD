@@ -3,7 +3,11 @@
     <template slot="brand">
       <b-navbar-item tag="router-link" :to="{ path: '/' }">
         <figure class="image is-32x32 is-inline">
-          <img class="logoNav" src="../img/ufood-logo-no-text.png" />
+          <img
+            class="logoNav"
+            src="../img/ufood-logo-no-text.png"
+            alt="logo-no-text"
+          />
         </figure>
         <strong class="is-size-4">UFOOD</strong>
       </b-navbar-item>

@@ -3,7 +3,11 @@
     <div class="hero is-dark">
       <div class="hero-body">
         <div class="container has-text-centered">
-          <img class="logoBanner" src="../img/ufood-logo-transparent.png" />
+          <img
+            class="logoBanner"
+            src="../img/ufood-logo-transparent.png"
+            alt="ufood-logo-transparent.png"
+          />
           <div class="button-block">
             <button class="button is-xl is-dark">Sign Up</button>
           </div>
@@ -14,7 +18,10 @@
       <div class="columns">
         <template v-if="isNavbarOpen">
           <div class="column is-narrow">
-            <sidebar @updatePrice="priceFilterChanged" @updateGenre="genreFilterChanged"></sidebar>
+            <sidebar
+              @updatePrice="priceFilterChanged"
+              @updateGenre="genreFilterChanged"
+            ></sidebar>
           </div>
         </template>
         <div class="column">
@@ -151,12 +158,11 @@ export default {
     window.removeEventListener("resize", this.myEventHandler);
   },
   methods: {
-    priceFilterChanged(value)
-    {
+    priceFilterChanged(value) {
       this.price_range_filter = value;
       this.updateRestaurants();
     },
-    genreFilterChanged(value){      
+    genreFilterChanged(value) {
       this.genres_filter = value;
       this.updateRestaurants();
     },
@@ -169,10 +175,11 @@ export default {
     async getRestaurants() {
       this.isRestaurantsLoaded = false;
       const restaurants = await this.apiRestaurant.getRestaurants(
-        this.currentPage-1,
-        this.searchFilterTerms, null,
+        this.currentPage - 1,
+        this.searchFilterTerms,
+        null,
         this.genres_filter,
-        this.price_range_filter,
+        this.price_range_filter
       );
       this.isRestaurantsLoaded = true;
       return restaurants;
@@ -204,8 +211,8 @@ export default {
       totalPages: 100,
       restaurantsPerPage: 10,
       searchFilterTerms: "",
-      price_range_filter:[],
-      genres_filter:[],
+      price_range_filter: [],
+      genres_filter: [],
       isRestaurantsLoaded: false
     };
   },
@@ -258,7 +265,7 @@ export default {
   object-fit: cover;
 }
 .content .box figure {
-  margin: 0px;
+  margin: 0;
 }
 .box:hover {
   -moz-box-shadow: 0 0 10px #ccc;
