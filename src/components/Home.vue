@@ -103,7 +103,7 @@
                   </div>
                   <div class="column">
                     <h5 class="title is-5">
-                      {{ restaurant.name }} (<span
+                      <router-link :to="'restaurant/'+restaurant.id">{{ restaurant.name }}</router-link> (<span
                         v-for="n in restaurant.price_range"
                         :key="n"
                         ><strong>$</strong></span

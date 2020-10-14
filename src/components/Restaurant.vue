@@ -17,7 +17,7 @@
             :rating="restaurant.rating"
             :round-start-rating="false"
           ></star-rating>
-          {{ restaurant.rating }}
+          {{ restaurant.rating.toFixed(2) }}
           <h2 class="subtitle ">
             <span
               v-for="(genre, name, index) in restaurant.genres"
@@ -107,6 +107,7 @@
 </template>
 <script>
 import { gmapApi } from "gmap-vue";
+import RestaurantService from "@/services/RestaurantService.js";
 export default {
   name: "restaurant",
   computed: {
@@ -117,64 +118,28 @@ export default {
       this.map = map;
       this.directionsDisplay = new this.google.maps.DirectionsRenderer();
     });
+  },  
+  async created() {
+    this.restaurant = await this.getRestaurant(this.$route.params.id);
   },
   data() {
     return {
+      apiRestaurant: new RestaurantService(),
       map: undefined,
       directionsDisplay: undefined,
       isDirectionShown: false,
+      isRestaurantsLoaded: false,
       albums: [{}],
-      restaurant: {
-        id: 1,
-        name: "Chandha",
-        address: "1292 rue Léger",
-        tel: "(418)-418-4800",
-        genres: ["Asiatique", "Takeout"],
-        rating: 4.7,
-        price_range: 2,
-        location: {
-          type: "Point",
-          coordinates: [-71.2180951, 46.8178912]
-        },
-        pictures: [
-          {
-            title: "Slide 1",
-            image: require("../img/food/food1.jpg")
-          },
-          {
-            title: "Slide 2",
-            image: require("../img/food/food2.jpg")
-          },
-          {
-            title: "Slide 3",
-            image: require("../img/food/food3.jpg")
-          },
-          {
-            title: "Slide 4",
-            image: require("../img/food/food4.jpg")
-          },
-          {
-            title: "Slide 5",
-            image: require("../img/food/food5.jpg")
-          },
-          {
-            title: "Slide 6",
-            image: require("../img/food/food6.jpg")
-          }
-        ],
-        opening_hours: {
-          monday: "12:00-21:00",
-          thursday: "12:00-21:00",
-          wednesday: "12:00-18:00",
-          tuesday: "12:00-21:00",
-          friday: "12:00-21:00",
-          saturday: "09:00-21:00",
-          sunday: null
-        }
-      }
+      restaurant: undefined
     };
   },
-  methods: {
+  methods: {    
+    async getRestaurant(id) {
+      this.isRestaurantsLoaded = false;
+      const restaurants = await this.apiRestaurant.getRestaurant(id);
+      this.isRestaurantsLoaded = true;
+      return restaurants;
+    },
     showDirections() {
       this.directionsDisplay.setMap(this.map);
 

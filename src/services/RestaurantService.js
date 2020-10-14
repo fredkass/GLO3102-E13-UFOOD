@@ -22,7 +22,7 @@ export default class RestaurantService {
 
     return this.api.get("/restaurants?" + querystrings);
   }
-  getSingleRestaurant(id) {
-    return this.api.get("/restaurant/" + id);
+  getRestaurant(id) {
+    return this.api.get("/restaurants/" + id);
   }
 }
