@@ -41,7 +41,7 @@
             <div class="box">
               <div class="columns">
                 <div class="column is-half">
-                  <div id="map" ref="map">
+                  <div id="map" v-show="isRestaurantsLoaded">
                     <GmapMap
                       ref="mapRef"
                       :center="{
@@ -113,14 +113,14 @@ export default {
   computed: {
     google: gmapApi
   },
-  mounted() {
-    this.$refs.mapRef.$mapPromise.then(map => {
-      this.map = map;
-      this.directionsDisplay = new this.google.maps.DirectionsRenderer();
-    });
-  },  
-  async created() {
+  async mounted() {
     this.restaurant = await this.getRestaurant(this.$route.params.id);
+    this.$nextTick(()=>{
+      this.$refs.mapRef.$mapPromise.then(map => {
+        this.map = map;
+        this.directionsDisplay = new this.google.maps.DirectionsRenderer();
+      });
+    });
   },
   data() {
     return {
@@ -133,7 +133,7 @@ export default {
       restaurant: undefined
     };
   },
-  methods: {    
+  methods: {
     async getRestaurant(id) {
       this.isRestaurantsLoaded = false;
       const restaurants = await this.apiRestaurant.getRestaurant(id);
