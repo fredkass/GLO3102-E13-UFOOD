@@ -39,7 +39,7 @@ export default {
   },
   methods: {
     async submit(formProps) {
-      await this.apiVisits.createRestaurantVisit(
+      let response = await this.apiVisits.createRestaurantVisit(
         this.restaurantId,
         formProps.message,
         formProps.rating,
@@ -48,8 +48,23 @@ export default {
       this.formProps.message = "";
       this.formProps.date = new Date();
       this.formProps.rating = 0;
-
-      this.close();
+      
+      if (!response) {
+        this.$buefy.toast.open({
+          duration: 5000,
+          message: `Error posting information, please try again`,
+          position: "is-top",
+          type: "is-danger"
+        });
+      } else {
+        this.$buefy.toast.open({
+          duration: 5000,
+          message: `Visit posted successfully`,
+          position: "is-bottom",
+          type: "is-success"
+        });
+        this.close();
+      }
     }
   }
 };

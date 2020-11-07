@@ -4,7 +4,7 @@
       <div class="modal-card">
         <header class="modal-card-head">
           <p class="modal-card-title">Visit information</p>
-          <button type="button" class="delete" @click="$emit('close')" />
+          <button type="button" class="delete" @click="close" />
         </header>
         <section class="modal-card-body">
           <b-field label="Select a rating">
