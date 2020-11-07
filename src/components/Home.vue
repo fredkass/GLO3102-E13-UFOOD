@@ -25,6 +25,12 @@
           </div>
         </template>
         <div class="column">
+          <visit-modal
+            :isComponentModalActive="isComponentModalActive"
+            :close="closeModal"
+            :restaurantId="restaurantModalId"
+            :userId="userId"
+          />
           <h1 class="title">Restaurants</h1>
           <b-pagination
             :total="totalPages"
@@ -110,9 +116,10 @@
                   </div>
                   <div class="column">
                     <h5 class="title is-5">
-                      <router-link :to="'restaurant/'+restaurant.id">{{ restaurant.name }}</router-link> (<span
-                        v-for="n in restaurant.price_range"
-                        :key="n"
+                      <router-link :to="'restaurant/' + restaurant.id">{{
+                        restaurant.name
+                      }}</router-link>
+                      (<span v-for="n in restaurant.price_range" :key="n"
                         ><strong>$</strong></span
                       >)
                     </h5>
@@ -131,6 +138,12 @@
                     </p>
                     <div class="address">{{ restaurant.address }}</div>
                     <div class="telephone">{{ restaurant.tel }}</div>
+                    <button
+                      class="button is-primary is-medium"
+                      @click="toggleModal(restaurant.id)"
+                    >
+                      Mark as visited
+                    </button>
                   </div>
                 </div>
               </div>
@@ -144,7 +157,9 @@
 
 <script>
 import SidebarFilter from "./SidebarFilter.vue";
+import VisitModal from "./VisitModal.vue";
 import RestaurantService from "@/services/RestaurantService.js";
+
 export default {
   name: "home",
   created() {
@@ -171,6 +186,14 @@ export default {
         this.totalPages = r.total;
         this.restaurants = r.items;
       });
+    },
+    toggleModal(id) {
+      this.isComponentModalActive = !this.isComponentModalActive;
+      this.restaurantModalId = id;
+    },
+    closeModal() {
+      console.log("Closed");
+      this.isComponentModalActive = false;
     },
     async getRestaurants() {
       this.isRestaurantsLoaded = false;
@@ -213,11 +236,16 @@ export default {
       searchFilterTerms: "",
       price_range_filter: [],
       genres_filter: [],
-      isRestaurantsLoaded: false
+      isRestaurantsLoaded: false,
+      isComponentModalActive: false,
+      restaurantModalId : 0,
+      //harcoded
+      userId: "5fa6c9524a1f410004c5114b"
     };
   },
   components: {
-    sidebar: SidebarFilter
+    sidebar: SidebarFilter,
+    VisitModal
   }
 };
 </script>
