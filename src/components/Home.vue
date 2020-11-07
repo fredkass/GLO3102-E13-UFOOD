@@ -97,56 +97,10 @@
               v-for="restaurant in restaurants"
               :key="restaurant.id"
             >
-              <div class="box">
-                <div class="columns is-mobile">
-                  <div class="column is-one-third">
-                    <b-carousel :autoplay="false" :indicator="false">
-                      <b-carousel-item
-                        v-for="(carousel, i) in restaurant.pictures"
-                        :key="i"
-                      >
-                        <figure class="image is-square">
-                          <img
-                            v-bind:src="carousel"
-                            v-bind:alt="restaurant.name"
-                          />
-                        </figure>
-                      </b-carousel-item>
-                    </b-carousel>
-                  </div>
-                  <div class="column">
-                    <h5 class="title is-5">
-                      <router-link :to="'restaurant/' + restaurant.id">{{
-                        restaurant.name
-                      }}</router-link>
-                      (<span v-for="n in restaurant.price_range" :key="n"
-                        ><strong>$</strong></span
-                      >)
-                    </h5>
-                    <star-rating
-                      :inline="true"
-                      :star-size="20"
-                      :read-only="true"
-                      :show-rating="false"
-                      :rating="restaurant.rating"
-                    ></star-rating>
-                    <p>
-                      Genres:
-                      <span v-for="genre in restaurant.genres" :key="genre"
-                        >{{ genre }},
-                      </span>
-                    </p>
-                    <div class="address">{{ restaurant.address }}</div>
-                    <div class="telephone">{{ restaurant.tel }}</div>
-                    <button
-                      class="button is-primary is-medium"
-                      @click="toggleModal(restaurant.id)"
-                    >
-                      Mark as visited
-                    </button>
-                  </div>
-                </div>
-              </div>
+              <restaurant-card
+                :restaurant="restaurant"
+                :toggleModal="toggleModal"
+              />
             </div>
           </div>
         </div>
@@ -159,6 +113,7 @@
 import SidebarFilter from "./SidebarFilter.vue";
 import VisitModal from "./VisitModal.vue";
 import RestaurantService from "@/services/RestaurantService.js";
+import RestaurantCard from "./RestaurantCard.vue";
 
 export default {
   name: "home",
@@ -238,13 +193,14 @@ export default {
       genres_filter: [],
       isRestaurantsLoaded: false,
       isComponentModalActive: false,
-      restaurantModalId : 0,
+      restaurantModalId: 0,
       //harcoded
       userId: "5fa6c9524a1f410004c5114b"
     };
   },
   components: {
     sidebar: SidebarFilter,
+    RestaurantCard,
     VisitModal
   }
 };
@@ -287,20 +243,5 @@ export default {
 
 .logoBanner {
   height: 180px;
-}
-.image img {
-  width: 100%;
-  object-fit: cover;
-}
-.content .box figure {
-  margin: 0;
-}
-.box:hover {
-  -moz-box-shadow: 0 0 10px #ccc;
-  -webkit-box-shadow: 0 0 10px #ccc;
-  box-shadow: 0 0 10px #ccc;
-}
-.box {
-  height: 100%;
 }
 </style>
