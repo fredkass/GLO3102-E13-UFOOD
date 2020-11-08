@@ -2,7 +2,10 @@
   <div class="restaurant-single">
     <section class="hero is-primary">
       <div class="hero-body">
-        <b-carousel-list :data="carouselPictures" :items-to-show="4" />
+        <b-carousel-list
+          :data="carouselPictures"
+          v-bind="carouselProperties"
+        />
         <div class="container">
           <h1 class="title">
             {{ restaurant.name }}
@@ -30,7 +33,7 @@
             <span v-for="n in restaurant.price_range" :key="n">
               <strong>$</strong>
             </span>
-          </h2>          
+          </h2>
           <modale-button
             v-if="userId"
             :restaurantId="restaurant.id"
@@ -141,6 +144,17 @@ export default {
       directionsDisplay: undefined,
       isDirectionShown: false,
       carouselPictures: undefined,
+      carouselProperties: {
+        itemsToShow: 1,
+        breakpoints: {
+          768: {
+            itemsToShow: 2
+          },
+          960: {
+            itemsToShow: 4
+          }
+        }
+      },
       //harcoded
       userId: "5fa6c9524a1f410004c5114b"
     };
