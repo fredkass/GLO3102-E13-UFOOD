@@ -19,7 +19,7 @@
               v-model="formProps.date"
               locale="en-CA"
               placeholder="Click to select..."
-              icon="calendar-today"
+              icon="calendar"
               trap-focus
               append-to-body
             >

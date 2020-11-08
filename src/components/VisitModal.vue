@@ -5,6 +5,7 @@
       has-modal-card
       trap-focus
       :destroy-on-hide="false"
+      :on-cancel="close"
       aria-role="dialog"
       aria-modal
     >
@@ -26,7 +27,7 @@ export default {
   components: {
     VisitForm
   },
-  props: ["isComponentModalActive", "restaurantId", "userId", "close"],
+  props: ["isComponentModalActive", "restaurantId", "userId"],
   data() {
     return {
       apiVisits: new RestaurantVisitsService(this.userId),
@@ -38,6 +39,9 @@ export default {
     };
   },
   methods: {
+    close(){
+      this.$emit("close");
+    },
     async submit(formProps) {
       let response = await this.apiVisits.createRestaurantVisit(
         this.restaurantId,

@@ -25,12 +25,6 @@
           </div>
         </template>
         <div class="column">
-          <visit-modal
-            :isComponentModalActive="isComponentModalActive"
-            :close="closeModal"
-            :restaurantId="restaurantModalId"
-            :userId="userId"
-          />
           <h1 class="title">Restaurants</h1>
           <b-pagination
             :total="totalPages"
@@ -99,7 +93,7 @@
             >
               <restaurant-card
                 :restaurant="restaurant"
-                :toggleModal="toggleModal"
+                :userId="userId"
               />
             </div>
           </div>
@@ -111,7 +105,6 @@
 
 <script>
 import SidebarFilter from "./SidebarFilter.vue";
-import VisitModal from "./VisitModal.vue";
 import RestaurantService from "@/services/RestaurantService.js";
 import RestaurantCard from "./RestaurantCard.vue";
 
@@ -141,14 +134,6 @@ export default {
         this.totalPages = r.total;
         this.restaurants = r.items;
       });
-    },
-    toggleModal(id) {
-      this.isComponentModalActive = !this.isComponentModalActive;
-      this.restaurantModalId = id;
-    },
-    closeModal() {
-      console.log("Closed");
-      this.isComponentModalActive = false;
     },
     async getRestaurants() {
       this.isRestaurantsLoaded = false;
@@ -201,7 +186,6 @@ export default {
   components: {
     sidebar: SidebarFilter,
     RestaurantCard,
-    VisitModal
   }
 };
 </script>

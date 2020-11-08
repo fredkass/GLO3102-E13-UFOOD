@@ -40,18 +40,25 @@
           </p>
           <div class="address">{{ restaurant.address }}</div>
           <div class="telephone">{{ restaurant.tel }}</div>
-          <button class="button is-primary" @click="toggleModal(restaurant.id)">
-            Mark as visited
-          </button>
+          <modale-button
+            v-if="userId"
+            :restaurantId="restaurant.id"
+            :userId="userId"
+            color="is-primary"
+          />
         </div>
       </div>
     </div>
   </div>
 </template>
 <script>
+import ModaleButton from "./ModaleButton.vue";
 export default {
   name: "RestaurantCard",
-  props: ["restaurant", "toggleModal"]
+  props: ["restaurant", "userId"],
+  components: {
+    ModaleButton
+  }
 };
 </script>
 <style>

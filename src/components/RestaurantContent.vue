@@ -30,7 +30,13 @@
             <span v-for="n in restaurant.price_range" :key="n">
               <strong>$</strong>
             </span>
-          </h2>
+          </h2>          
+          <modale-button
+            v-if="userId"
+            :restaurantId="restaurant.id"
+            :userId="userId"
+            color="is-dark"
+          />
         </div>
       </div>
     </section>
@@ -107,11 +113,16 @@
 </template>
 <script>
 import { gmapApi } from "gmap-vue";
+import ModaleButton from "./ModaleButton.vue";
+
 export default {
   name: "RestaurantContent",
   props: ["restaurant"],
   computed: {
     google: gmapApi
+  },
+  components: {
+    ModaleButton
   },
   mounted() {
     this.$nextTick(() => {
@@ -130,6 +141,8 @@ export default {
       directionsDisplay: undefined,
       isDirectionShown: false,
       carouselPictures: undefined,
+      //harcoded
+      userId: "5fa6c9524a1f410004c5114b"
     };
   },
 
