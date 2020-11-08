@@ -14,7 +14,7 @@
             </b-carousel-item>
           </b-carousel>
         </div>
-        <div class="column">
+        <div class="column is-half">
           <h5 class="title is-5">
             <router-link :to="'restaurant/' + restaurant.id">{{
               restaurant.name
@@ -40,10 +40,7 @@
           </p>
           <div class="address">{{ restaurant.address }}</div>
           <div class="telephone">{{ restaurant.tel }}</div>
-          <button
-            class="button is-primary is-medium"
-            @click="toggleModal(restaurant.id)"
-          >
+          <button class="button is-primary" @click="toggleModal(restaurant.id)">
             Mark as visited
           </button>
         </div>
@@ -52,13 +49,12 @@
   </div>
 </template>
 <script>
-export default {    
+export default {
   name: "RestaurantCard",
-  props:["restaurant", "toggleModal"]
-}
+  props: ["restaurant", "toggleModal"]
+};
 </script>
-<style scoped>
-
+<style>
 .box:hover {
   -moz-box-shadow: 0 0 10px #ccc;
   -webkit-box-shadow: 0 0 10px #ccc;
