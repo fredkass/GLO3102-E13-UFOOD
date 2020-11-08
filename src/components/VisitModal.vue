@@ -1,7 +1,7 @@
 <template>
   <section>
     <b-modal
-      v-model="isComponentModalActive"
+      :active="isComponentModalActive"
       has-modal-card
       trap-focus
       :destroy-on-hide="false"
@@ -27,7 +27,7 @@ export default {
   components: {
     VisitForm
   },
-  props: ["isComponentModalActive", "restaurantId", "userId"],
+  props: ["isComponentModalActive", "restaurantId", "userId", "close"],
   data() {
     return {
       apiVisits: new RestaurantVisitsService(this.userId),
@@ -39,9 +39,6 @@ export default {
     };
   },
   methods: {
-    close(){
-      this.$emit("close");
-    },
     async submit(formProps) {
       let response = await this.apiVisits.createRestaurantVisit(
         this.restaurantId,

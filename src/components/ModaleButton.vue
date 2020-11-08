@@ -4,7 +4,7 @@
       :isComponentModalActive="isComponentModalActive"
       :restaurantId="restaurantId"
       :userId="userId"
-      @close="closeModal"
+      :close="closeModal"
     />
     <button class="button" :class="color" @click="openModal(restaurantId)">
       Mark as visited
@@ -30,7 +30,6 @@ export default {
       this.restaurantModalId = id;
     },
     closeModal() {
-        console.log("cloasing parent");
       this.isComponentModalActive = false;
     }
   }
