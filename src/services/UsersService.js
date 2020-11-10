@@ -1,6 +1,6 @@
 import Api from "./api.js";
 
-export default class FavoriteRestaurantsService {
+export default class UsersService {
   constructor() {
     this.api = new Api();
   }
