@@ -81,6 +81,9 @@
         </div>
       </div>
     </div>
+    <!-- <div class="columns">
+      other row for favorites lists? or add a "favorites" b-dropbox to the user profile box and a "past visits" b-button
+    </div> -->
   </div>
 </template>
 
@@ -124,21 +127,22 @@ export default {
     async getVisitedRestaurants() {
       this.isVisitedRestaurantsloaded = false;
       const visitedRestaurants = await this.apiVisits.getAllRestaurantsVisits();
-      // debugger;
       this.isVisitedRestaurantsloaded = true;
       return visitedRestaurants;
     }
   },
   data: () => {
     return {
-      userId: "5fab32adbd8d1a00047773bd",
+      userId: "5fa6c9524a1f410004c5114b",
       apiUsers: new UsersService(),
-      apiVisits: new RestaurantVisistsService(this.userId),
+      apiVisits: new RestaurantVisistsService("5fa6c9524a1f410004c5114b"),
       isUserLoaded: false,
       isVisitedRestaurantsloaded: false,
       profile: {},
       visited_restaurants: [],
       visited_restaurants_names: [],
+      favorites_lists_ids: [],
+      favorites_lists: [],
       restaurants: [
         {
           id: 1,
