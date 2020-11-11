@@ -17,12 +17,12 @@ export default class RestaurantService {
 
     searchTerms && querystrings.append("q", searchTerms);
     limit && querystrings.append("limit", limit);
-    (genres.length > 0) && querystrings.append("genres", genres);
-    (price_range.length > 0) && querystrings.append("price_range", price_range);
+    genres.length > 0 && querystrings.append("genres", genres);
+    price_range.length > 0 && querystrings.append("price_range", price_range);
 
     return this.api.get("/restaurants?" + querystrings);
   }
-  getSingleRestaurant(id) {
-    return this.api.get("/restaurant/" + id);
+  getRestaurant(id) {
+    return this.api.get("/restaurants/" + id);
   }
 }

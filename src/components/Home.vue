@@ -3,7 +3,11 @@
     <div class="hero is-dark">
       <div class="hero-body">
         <div class="container has-text-centered">
-          <img class="logoBanner" src="../img/ufood-logo-transparent.png" />
+          <img
+            class="logoBanner"
+            src="../img/ufood-logo-transparent.png"
+            alt="ufood-logo-transparent.png"
+          />
           <div class="button-block">
             <button class="button is-xl is-dark">Sign Up</button>
           </div>
@@ -14,7 +18,10 @@
       <div class="columns">
         <template v-if="isNavbarOpen">
           <div class="column is-narrow">
-            <sidebar @updatePrice="priceFilterChanged" @updateGenre="genreFilterChanged"></sidebar>
+            <sidebar
+              @updatePrice="priceFilterChanged"
+              @updateGenre="genreFilterChanged"
+            ></sidebar>
           </div>
         </template>
         <div class="column">
@@ -84,49 +91,10 @@
               v-for="restaurant in restaurants"
               :key="restaurant.id"
             >
-              <div class="box">
-                <div class="columns is-mobile">
-                  <div class="column is-one-third">
-                    <b-carousel :autoplay="false" :indicator="false">
-                      <b-carousel-item
-                        v-for="(carousel, i) in restaurant.pictures"
-                        :key="i"
-                      >
-                        <figure class="image is-square">
-                          <img
-                            v-bind:src="carousel"
-                            v-bind:alt="restaurant.name"
-                          />
-                        </figure>
-                      </b-carousel-item>
-                    </b-carousel>
-                  </div>
-                  <div class="column">
-                    <h5 class="title is-5">
-                      {{ restaurant.name }} (<span
-                        v-for="n in restaurant.price_range"
-                        :key="n"
-                        ><strong>$</strong></span
-                      >)
-                    </h5>
-                    <star-rating
-                      :inline="true"
-                      :star-size="20"
-                      :read-only="true"
-                      :show-rating="false"
-                      :rating="restaurant.rating"
-                    ></star-rating>
-                    <p>
-                      Genres:
-                      <span v-for="genre in restaurant.genres" :key="genre"
-                        >{{ genre }},
-                      </span>
-                    </p>
-                    <div class="address">{{ restaurant.address }}</div>
-                    <div class="telephone">{{ restaurant.tel }}</div>
-                  </div>
-                </div>
-              </div>
+              <restaurant-card
+                :restaurant="restaurant"
+                :userId="userId"
+              />
             </div>
           </div>
         </div>
@@ -138,6 +106,8 @@
 <script>
 import SidebarFilter from "./SidebarFilter.vue";
 import RestaurantService from "@/services/RestaurantService.js";
+import RestaurantCard from "./RestaurantCard.vue";
+
 export default {
   name: "home",
   created() {
@@ -151,12 +121,11 @@ export default {
     window.removeEventListener("resize", this.myEventHandler);
   },
   methods: {
-    priceFilterChanged(value)
-    {
+    priceFilterChanged(value) {
       this.price_range_filter = value;
       this.updateRestaurants();
     },
-    genreFilterChanged(value){      
+    genreFilterChanged(value) {
       this.genres_filter = value;
       this.updateRestaurants();
     },
@@ -169,10 +138,11 @@ export default {
     async getRestaurants() {
       this.isRestaurantsLoaded = false;
       const restaurants = await this.apiRestaurant.getRestaurants(
-        this.currentPage-1,
-        this.searchFilterTerms, null,
+        this.currentPage - 1,
+        this.searchFilterTerms,
+        null,
         this.genres_filter,
-        this.price_range_filter,
+        this.price_range_filter
       );
       this.isRestaurantsLoaded = true;
       return restaurants;
@@ -204,13 +174,18 @@ export default {
       totalPages: 100,
       restaurantsPerPage: 10,
       searchFilterTerms: "",
-      price_range_filter:[],
-      genres_filter:[],
-      isRestaurantsLoaded: false
+      price_range_filter: [],
+      genres_filter: [],
+      isRestaurantsLoaded: false,
+      isComponentModalActive: false,
+      restaurantModalId: 0,
+      //harcoded
+      userId: "5fa6c9524a1f410004c5114b"
     };
   },
   components: {
-    sidebar: SidebarFilter
+    sidebar: SidebarFilter,
+    RestaurantCard,
   }
 };
 </script>
@@ -252,20 +227,5 @@ export default {
 
 .logoBanner {
   height: 180px;
-}
-.image img {
-  width: 100%;
-  object-fit: cover;
-}
-.content .box figure {
-  margin: 0px;
-}
-.box:hover {
-  -moz-box-shadow: 0 0 10px #ccc;
-  -webkit-box-shadow: 0 0 10px #ccc;
-  box-shadow: 0 0 10px #ccc;
-}
-.box {
-  height: 100%;
 }
 </style>

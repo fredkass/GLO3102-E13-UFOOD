@@ -5,7 +5,7 @@ import { library } from "@fortawesome/fontawesome-svg-core";
 import { fas } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
-import * as GmapVue from 'gmap-vue'
+import * as GmapVue from "gmap-vue";
 import Buefy from "buefy";
 import StarRating from "vue-star-rating";
 
@@ -19,7 +19,7 @@ Vue.use(Buefy, {
 Vue.use(GmapVue, {
   load: {
     key: "AIzaSyAKp8Sa9fa7-OXt9LJvd61Sc2zO6uz22Xs",
-    libraries:'directions'
+    libraries: "directions"
   }
 });
 Vue.config.productionTip = false;

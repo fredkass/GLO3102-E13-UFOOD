@@ -1,16 +1,29 @@
 import Api from "./api.js";
 
-export default class RestaurantVisistsService {
-  constructor() {
+export default class RestaurantVisitsService {
+  constructor(userId) {
     this.api = new Api();
+    this.userId = userId;
   }
-  getAllRestaurantsVisits(userId) {
-    return this.api.get("/users/" + userId + "/restaurants/visits");
+  getAllRestaurantsVisits() {
+    return this.api.get("/users/" + this.userId + "/restaurants/visits");
   }
-  getRestaurantVisit(visitId, userId) {
-    return this.api.get("/users/" + userId + "/restaurants/visits/" + visitId);
+  getRestaurantVisit(visitId) {
+    return this.api.get(
+      "/users/" + this.userId + "/restaurants/visits/" + visitId
+    );
   }
-  createRestaurantVisit(body, userId) {
-    return this.api.post("/users/" + userId + "/restaurants/visits/", body);
+  createRestaurantVisit(restaurantId, comment, rating, date) {
+    let body = {
+      restaurant_id: restaurantId,
+      comment: comment,
+      rating: rating,
+      date: date
+    };
+
+    return this.api.post(
+      "/users/" + this.userId + "/restaurants/visits/",
+      body
+    );
   }
 }

@@ -33,6 +33,7 @@ export default class Api {
     } catch (error) {
       console.error("Problem in post request.");
       console.error(error);
+      return error;
     }
   }
 
