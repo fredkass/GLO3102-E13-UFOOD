@@ -123,9 +123,7 @@ export default {
     },
     async getVisitedRestaurants() {
       this.isVisitedRestaurantsloaded = false;
-      const visitedRestaurants = await this.apiVisits.getAllRestaurantsVisits(
-        this.userId
-      );
+      const visitedRestaurants = await this.apiVisits.getAllRestaurantsVisits();
       // debugger;
       this.isVisitedRestaurantsloaded = true;
       return visitedRestaurants;
@@ -135,7 +133,7 @@ export default {
     return {
       userId: "5f84d3bcd416570004ccf547",
       apiUsers: new UsersService(),
-      apiVisits: new RestaurantVisistsService(),
+      apiVisits: new RestaurantVisistsService(this.userId),
       isUserLoaded: false,
       isVisitedRestaurantsloaded: false,
       profile: {},
