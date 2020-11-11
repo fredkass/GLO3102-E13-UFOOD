@@ -131,7 +131,7 @@ export default {
   },
   data: () => {
     return {
-      userId: "5f84d3bcd416570004ccf547",
+      userId: "5fab32adbd8d1a00047773bd",
       apiUsers: new UsersService(),
       apiVisits: new RestaurantVisistsService(this.userId),
       isUserLoaded: false,
