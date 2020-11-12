@@ -2,10 +2,7 @@
   <div class="restaurant-single">
     <section class="hero is-primary">
       <div class="hero-body">
-        <b-carousel-list
-          :data="carouselPictures"
-          v-bind="carouselProperties"
-        />
+        <b-carousel-list :data="carouselPictures" v-bind="carouselProperties" />
         <div class="container">
           <h1 class="title">
             {{ restaurant.name }}
@@ -34,12 +31,16 @@
               <strong>$</strong>
             </span>
           </h2>
-          <modale-button
-            v-if="userId"
-            :restaurantId="restaurant.id"
-            :userId="userId"
-            color="is-dark"
-          />
+          <div class="buttons-header">
+            <slot></slot>
+
+            <modale-button
+              v-if="userId"
+              :restaurantId="restaurant.id"
+              :userId="userId"
+              color="is-dark"
+            />
+          </div>
         </div>
       </div>
     </section>
@@ -219,6 +220,9 @@ export default {
 };
 </script>
 <style>
+.hero-body .buttons-header button{
+  margin:0.5em;  
+}
 #map {
   width: 100%;
   height: 300px;
