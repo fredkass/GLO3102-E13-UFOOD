@@ -1,5 +1,6 @@
 <template>
-  <b-dropdown aria-role="list">
+  <b-dropdown aria-role="list"
+      :disabled="isDisabled">
     <b-button
       class="button is-dark"
       type="button"
@@ -21,6 +22,16 @@
 
 <script>
 export default {
-  props: ["favoriteLists", "addToListEvent"]
+  props: ["favoriteLists", "addToListEvent"],
+  data() {
+    return {
+      isDisabled: this.isListEmpty()
+    };
+  },
+  methods: {
+    isListEmpty() {
+      return this.favoriteLists.length == 0;
+    }
+  }
 };
 </script>
