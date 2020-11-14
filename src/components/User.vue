@@ -14,7 +14,7 @@
             {{ profile.name }}
           </p>
           <p>Your rating: {{ profile.rating }}</p>
-          <b-button type="is-primary" tag="router-link" :to="{ path: '/' }">
+          <b-button type="is-primary" v-on:click="$emit('logOut')" tag="router-link" :to="{ path: '/' } ">
             Sign Out</b-button
           >
         </div>
@@ -89,7 +89,7 @@
 
 <script>
 import UsersService from "@/services/UsersService.js";
-import RestaurantVisistsService from "@/services/RestaurantVisitsService.js";
+import RestaurantVisitsService from "@/services/RestaurantVisitsService.js";
 
 export default {
   created() {
@@ -129,13 +129,22 @@ export default {
       const visitedRestaurants = await this.apiVisits.getAllRestaurantsVisits();
       this.isVisitedRestaurantsloaded = true;
       return visitedRestaurants;
+    },
+    async userSignUp() {
+      //TODO Array info bidon, doit faire page d'inscription et collect l'info des fields
+      this.signUpInfos = ["Gabriel", "gab@parrot.com", "motdepasse"];
+      this.isUserLoaded = false;
+      let signUpSuccessful = false;
+      signUpSuccessful = await this.apiUsers.signUpUser(this.signUpInfos);
+      //TODO delete this, then link to sign in page when done
+      console.log(signUpSuccessful);
     }
   },
   data: () => {
     return {
       userId: "5fa6c9524a1f410004c5114b",
       apiUsers: new UsersService(),
-      apiVisits: new RestaurantVisistsService("5fa6c9524a1f410004c5114b"),
+      apiVisits: new RestaurantVisitsService("5fa6c9524a1f410004c5114b"),
       isUserLoaded: false,
       isVisitedRestaurantsloaded: false,
       profile: {},

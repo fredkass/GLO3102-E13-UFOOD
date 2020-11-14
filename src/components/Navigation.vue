@@ -35,7 +35,7 @@
       </b-navbar-item>
       <b-navbar-item tag="div">
         <div class="buttons">
-          <b-button class="button is-primary" v-if="!this.isLoggedIn">
+          <b-button class="button is-primary" v-if="!this.isLoggedIn" tag="router-link" :to="{ path: '/SignUpForm' }" >
             <strong>Sign up</strong>
           </b-button>
           <b-button

@@ -11,6 +11,9 @@ export default {
   name: "app",
   components: {
     "nav-menu": Navigation
+  },
+  methods: {
+    //TODO watch event logout pour le bouton logout dans le milieu de user, puis passer toggleLogIn à la navbar
   }
 };
 </script>
