@@ -1,15 +1,15 @@
 <template>
-  <div class="btn-modale">
+  <span class="btn-modale">
+    <button class="button" :class="color" @click="openModal(restaurantId)">
+      Mark as visited
+    </button>
     <visit-modal
       :isComponentModalActive="isComponentModalActive"
       :restaurantId="restaurantId"
       :userId="userId"
       :close="closeModal"
     />
-    <button class="button" :class="color" @click="openModal(restaurantId)">
-      Mark as visited
-    </button>
-  </div>
+  </span>
 </template>
 <script>
 import VisitModal from "./VisitModal.vue";

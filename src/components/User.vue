@@ -13,21 +13,21 @@
           <p>
             {{ profile.name }}
           </p>
-          <p>Your rating: {{ profile.score }}</p>
+          <p>Your rating: {{ profile.rating }}</p>
           <b-button type="is-primary" tag="router-link" :to="{ path: '/' }">
             Log Out</b-button
           >
         </div>
       </div>
       <div class="column is-three-quarters">
-        <h1 class="title">Previous visits</h1>
+        <h1 class="title">Past visits</h1>
         <div class="columns is-multiline">
           <div
             class="column is-half-desktop is-full-tablet"
             v-for="restaurant in restaurants"
             :key="restaurant.id"
           >
-            <div v-if="profile.visited_restaurants.includes(restaurant.name)">
+            <div v-if="visited_restaurants_names.includes(restaurant.name)">
               <div class="box">
                 <div class="columns is-mobile">
                   <div class="column is-one-third">
@@ -81,23 +81,68 @@
         </div>
       </div>
     </div>
+    <!-- <div class="columns">
+      other row for favorites lists? or add a "favorites" b-dropbox to the user profile box and a "past visits" b-button
+    </div> -->
   </div>
 </template>
 
 <script>
+import UsersService from "@/services/UsersService.js";
+import RestaurantVisistsService from "@/services/RestaurantVisitsService.js";
+
 export default {
+  created() {
+    // add chunk of coderoo to create FavoriteLists and VisitedRestaurants to easily test display
+    // actually not gonna add it from here but from a script that's separate
+    this.updateUser();
+    this.getVisitedRestaurantsNames(); // ne fera pas grand chose si on a 0 restaurant retourné. aussi, doit être testé
+  },
+  methods: {
+    // devrait etre la liste de seulement les noms des restaurants visites, pour faire un filtre dans la liste de tous les restaurants
+    // de ceux qu'on veut afficher
+    getVisitedRestaurantsNames() {
+      const names = this.visited_restaurants.filter(function(r) {
+        r.name;
+      });
+      this.visited_restaurants_names = names;
+    },
+    updateUser() {
+      this.getUserById().then(u => {
+        this.profile = u;
+      });
+      this.getVisitedRestaurants().then(v => {
+        if (v != undefined) {
+          this.visited_restaurants = v; // this code does not work with line 29 because I have to rework logic using
+          // what I wrote on line 96
+        }
+      });
+    },
+    async getUserById() {
+      this.isUserLoaded = false;
+      const user = await this.apiUsers.getUserById(this.userId);
+      this.isUserLoaded = true;
+      return user;
+    },
+    async getVisitedRestaurants() {
+      this.isVisitedRestaurantsloaded = false;
+      const visitedRestaurants = await this.apiVisits.getAllRestaurantsVisits();
+      this.isVisitedRestaurantsloaded = true;
+      return visitedRestaurants;
+    }
+  },
   data: () => {
     return {
-      profile: {
-        name: "Frédéric Kassab",
-        score: 4.8,
-        visited_restaurants: [
-          "Chez Victor",
-          "Chandha",
-          "Gaspésienne 51",
-          "Snack-bar chez Raymond"
-        ]
-      },
+      userId: "5fa6c9524a1f410004c5114b",
+      apiUsers: new UsersService(),
+      apiVisits: new RestaurantVisistsService("5fa6c9524a1f410004c5114b"),
+      isUserLoaded: false,
+      isVisitedRestaurantsloaded: false,
+      profile: {},
+      visited_restaurants: [],
+      visited_restaurants_names: [],
+      favorites_lists_ids: [],
+      favorites_lists: [],
       restaurants: [
         {
           id: 1,
@@ -184,8 +229,8 @@ export default {
   line-height: 2.5em;
 }
 .profile-container .profile img {
-  max-height: 350px;
-  max-width: 350px;
+  max-height: 200px;
+  max-width: 200px;
   overflow: hidden;
   object-fit: cover;
   display: block;
