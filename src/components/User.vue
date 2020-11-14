@@ -19,103 +19,60 @@
           >
         </div>
       </div>
-      <div class="column is-three-quarters">
+      <div v-if="display_past_visits" class="column is-three-quarters">
         <h1 class="title">Past visits</h1>
-        <div class="columns is-multiline">
-          <div
-            class="column is-half-desktop is-full-tablet"
-            v-for="restaurant in restaurants"
-            :key="restaurant.id"
-          >
-            <div v-if="visited_restaurants_names.includes(restaurant.name)">
-              <div class="box">
-                <div class="columns is-mobile">
-                  <div class="column is-one-third">
-                    <b-carousel :autoplay="false" :indicator="false">
-                      <b-carousel-item
-                        v-for="(carousel, i) in restaurant.pictures"
-                        :key="i"
-                      >
-                        <figure class="image is-square">
-                          <img
-                            v-bind:src="carousel"
-                            v-bind:alt="restaurant.name"
-                          />
-                        </figure>
-                      </b-carousel-item>
-                    </b-carousel>
-                  </div>
-                  <div class="column">
-                    <h5 class="title is-5">
-                      {{ restaurant.name }} (<span
-                        v-for="n in restaurant.price_range"
-                        :key="n"
-                        ><strong>$</strong></span
-                      >)
-                    </h5>
-                    <star-rating
-                      :inline="true"
-                      :star-size="20"
-                      :read-only="true"
-                      :show-rating="false"
-                      :rating="restaurant.rating"
-                    ></star-rating>
-                    <p>
-                      <strong
-                        >Visited : {{ restaurant.total_visits }} time(s)</strong
-                      >
-                    </p>
-                    <p>
-                      Genres:
-                      <span v-for="genre in restaurant.genres" :key="genre"
-                        >{{ genre }},
-                      </span>
-                    </p>
-                    <div class="address">{{ restaurant.address }}</div>
-                    <div class="telephone">{{ restaurant.tel }}</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+        <div
+          class="column is-half-desktop is-full-tablet"
+          v-if="visited_restaurants.length < 1 && this.isRestaurantsLoaded"
+        >
+          No Restaurants Visited
+        </div>
+        <div
+          class="column is-half-desktop is-full-tablet"
+          v-for="visit in visited_restaurants"
+          :key="visit.visitId"
+        >
+          <restaurant-card
+            :restaurant="visit.restaurant"
+            :userId="userId"
+            :provenance="provenance"
+            :visitId="visit.visitId"
+          />
         </div>
       </div>
+      <div v-else class="column is-three-quarters">
+        <h1 class="title">Favorites list name</h1>
+      </div>
     </div>
-    <!-- <div class="columns">
-      other row for favorites lists? or add a "favorites" b-dropbox to the user profile box and a "past visits" b-button
-    </div> -->
   </div>
 </template>
 
 <script>
 import UsersService from "@/services/UsersService.js";
 import RestaurantVisistsService from "@/services/RestaurantVisitsService.js";
+import FavoriteRestaurantsService from "@/services/FavoriteRestaurantsService.js";
+import RestaurantService from "@/services/RestaurantService.js";
+import RestaurantCard from "./RestaurantCard.vue";
 
 export default {
   created() {
-    // add chunk of coderoo to create FavoriteLists and VisitedRestaurants to easily test display
-    // actually not gonna add it from here but from a script that's separate
-    this.updateUser();
-    this.getVisitedRestaurantsNames(); // ne fera pas grand chose si on a 0 restaurant retourné. aussi, doit être testé
+    this.loadUser();
+    // TODO now: console.log info about the favorites lists to make sure theyre loaded properly.
+    // then add a favorites list creator and a dropdown to look into list
   },
   methods: {
-    // devrait etre la liste de seulement les noms des restaurants visites, pour faire un filtre dans la liste de tous les restaurants
-    // de ceux qu'on veut afficher
-    getVisitedRestaurantsNames() {
-      const names = this.visited_restaurants.filter(function(r) {
-        r.name;
-      });
-      this.visited_restaurants_names = names;
-    },
-    updateUser() {
+    loadUser() {
       this.getUserById().then(u => {
         this.profile = u;
       });
-      this.getVisitedRestaurants().then(v => {
+      this.getRestaurantVisits().then(v => {
         if (v != undefined) {
-          this.visited_restaurants = v; // this code does not work with line 29 because I have to rework logic using
-          // what I wrote on line 96
+          this.restaurant_visits = v.items;
         }
+        this.loadVisitedRestaurants();
+      });
+      this.getFavoritesLists().then(l => {
+        this.favorites_lists = l;
       });
     },
     async getUserById() {
@@ -124,11 +81,40 @@ export default {
       this.isUserLoaded = true;
       return user;
     },
-    async getVisitedRestaurants() {
+    async getRestaurantVisits() {
       this.isVisitedRestaurantsloaded = false;
       const visitedRestaurants = await this.apiVisits.getAllRestaurantsVisits();
       this.isVisitedRestaurantsloaded = true;
       return visitedRestaurants;
+    },
+    async getFavoritesLists() {
+      this.isFavoritesListsLoaded = false;
+      const lists = await this.apiUsers.getFavoritesListsByUserId(this.userId);
+      return lists;
+    },
+    loadVisitedRestaurants() {
+      this.isRestaurantsLoaded = false;
+      let restaurantIds = this.restaurant_visits.map(v => v.restaurant_id);
+      let visitIds = this.restaurant_visits.map(v => v.id);
+      let visited_restaurant = {
+        restaurant:{},
+        visitId: 0
+      };
+      for (let i = 0; i < restaurantIds.length; i++) {
+        this.getRestaurant(restaurantIds[i]).then(r => {
+          visited_restaurant.restaurant = r;
+          visited_restaurant.visitId = visitIds[i];
+          this.visited_restaurants.push({
+            restaurant: visited_restaurant.restaurant,
+            visitId: visited_restaurant.visitId
+          });
+        });
+      }
+      this.isRestaurantsLoaded = true;
+    },
+    async getRestaurant(id) {
+      const restaurant = await this.apiRestaurants.getRestaurant(id);
+      return restaurant;
     }
   },
   data: () => {
@@ -136,81 +122,22 @@ export default {
       userId: "5fa6c9524a1f410004c5114b",
       apiUsers: new UsersService(),
       apiVisits: new RestaurantVisistsService("5fa6c9524a1f410004c5114b"),
+      apiFavorites: new FavoriteRestaurantsService(),
+      apiRestaurants: new RestaurantService(),
       isUserLoaded: false,
       isVisitedRestaurantsloaded: false,
+      isRestaurantsLoaded: false,
+      isFavoritesListsLoaded: false,
       profile: {},
+      restaurant_visits: [],
       visited_restaurants: [],
-      visited_restaurants_names: [],
-      favorites_lists_ids: [],
       favorites_lists: [],
-      restaurants: [
-        {
-          id: 1,
-          name: "Chandha",
-          address: "1292 rue Léger",
-          tel: "(418)-418-4800",
-          genres: ["Asiatique", "Takeout"],
-          rating: 4.7,
-          price_range: 2,
-          pictures: [require("../img/banner.jpg")],
-          menu: {
-            monday: "12h-14h"
-          },
-          total_visits: 2
-        },
-        {
-          id: 2,
-          name: "Chez Victor",
-          address: "100 boul. Laurier",
-          tel: "(814)-888-4800",
-          genres: ["Burger", "Takeout"],
-          rating: 4.0,
-          price_range: 3,
-          pictures: [
-            require("../img/banner.jpg"),
-            require("../img/banner.jpg")
-          ],
-          menu: {
-            monday: "12h-14h"
-          },
-          total_visits: 4
-        },
-        {
-          id: 3,
-          name: "Gaspésienne 51",
-          address: "1005 Chemin St-Louis",
-          tel: "(418)-898-5858",
-          genres: ["Fruits de mer", "Poisson"],
-          rating: 4.3,
-          price_range: 4,
-          pictures: [
-            require("../img/banner.jpg"),
-            require("../img/banner.jpg")
-          ],
-          menu: {
-            monday: "12h-14h"
-          },
-          total_visits: 4
-        },
-        {
-          id: 4,
-          name: "Snack-bar chez Raymond",
-          address: "500 boul. Laurier",
-          tel: "(800)-888-9999",
-          genres: ["Géduilles", "Snack"],
-          rating: 2.6,
-          price_range: 1,
-          pictures: [
-            require("../img/banner.jpg"),
-            require("../img/banner.jpg")
-          ],
-          menu: {
-            monday: "12h-14h"
-          },
-          total_visits: 1
-        }
-      ]
+      provenance: "user",
+      display_past_visits: true
     };
+  },
+  components: {
+    RestaurantCard
   }
 };
 </script>
@@ -230,11 +157,14 @@ export default {
 }
 .profile-container .profile img {
   max-height: 200px;
-  max-width: 200px;
+  max-width: 150px;
   overflow: hidden;
   object-fit: cover;
   display: block;
   margin-left: auto;
   margin-right: auto;
+}
+.past-visits {
+  margin-left: 10;
 }
 </style>

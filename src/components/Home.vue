@@ -94,6 +94,7 @@
               <restaurant-card
                 :restaurant="restaurant"
                 :userId="userId"
+                :provenance="provenance"
               />
             </div>
           </div>
@@ -179,6 +180,7 @@ export default {
       isRestaurantsLoaded: false,
       isComponentModalActive: false,
       restaurantModalId: 0,
+      provenance: "home",
       //harcoded
       userId: "5fa6c9524a1f410004c5114b"
     };

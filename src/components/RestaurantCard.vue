@@ -44,6 +44,8 @@
             v-if="userId"
             :restaurantId="restaurant.id"
             :userId="userId"
+            :provenance="provenance"
+            :visitId="visitId"
             color="is-primary"
           />
         </div>
@@ -55,7 +57,7 @@
 import ModaleButton from "./ModaleButton.vue";
 export default {
   name: "RestaurantCard",
-  props: ["restaurant", "userId"],
+  props: ["restaurant", "userId", "provenance", "visitId"],
   components: {
     ModaleButton
   }
