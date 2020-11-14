@@ -15,7 +15,7 @@
           </p>
           <p>Your rating: {{ profile.rating }}</p>
           <b-button type="is-primary" tag="router-link" :to="{ path: '/' }">
-            Log Out</b-button
+            Sign Out</b-button
           >
         </div>
       </div>

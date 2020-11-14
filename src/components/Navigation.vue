@@ -80,6 +80,9 @@ export default {
   methods: {
     toggleLogIn() {
       this.isLoggedIn = !this.isLoggedIn;
+      if(!this.isLoggedIn) {
+        this.$router.push({name: "Home"});
+      }
     }
   }
 };
