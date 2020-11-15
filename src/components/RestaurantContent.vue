@@ -135,9 +135,7 @@ export default {
         this.directionsDisplay = new this.google.maps.DirectionsRenderer();
       });
     });
-    console.log("created");
     this.carouselPictures = this.showPicturesCarousel();
-    console.log(this.carouselPictures);
   },
   data() {
     return {
@@ -191,13 +189,11 @@ export default {
                   if (status === "OK") {
                     this.directionsDisplay.setDirections(response);
                     this.isDirectionShown = true;
-                    console.log(response);
                   } else {
                     window.alert("Directions failed");
                   }
                 }
               );
-              console.log(pos);
             },
             () => {
               window.alert("Directions failed");
