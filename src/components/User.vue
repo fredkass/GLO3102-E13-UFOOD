@@ -14,6 +14,7 @@
             {{ profile.name }}
           </p>
           <p>Your rating: {{ profile.rating }}</p>
+
           <b-dropdown aria-role="list">
             <button class="button is-primary" slot="trigger">
               <span>Favorite lists</span>
@@ -27,15 +28,13 @@
               {{ favList.name }}
             </b-dropdown-item>
           </b-dropdown>
+
           <favorites-manager
             :favoritesLists="favorites_lists"
             :userId="userId"
             :deleteSelectedList="deleteSelectedList"
             :createNewList="createAndAddList"
           ></favorites-manager>
-          <b-button type="is-primary" tag="router-link" :to="{ path: '/' }">
-            Sign Out</b-button
-          >
         </div>
       </div>
       <div v-if="display_past_visits" class="column is-three-quarters">
@@ -372,6 +371,9 @@ export default {
   -moz-box-shadow: 0 0 10px #ccc;
   -webkit-box-shadow: 0 0 10px #ccc;
   box-shadow: 0 0 10px #ccc;
+}
+.profile-container button {
+  margin-top: 1em;
 }
 .profile-container p {
   line-height: 2.5em;

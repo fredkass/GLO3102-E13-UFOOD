@@ -54,7 +54,7 @@
             :addToListEvent="addToList"
           ></dropdown-favorites>
           <b-button
-            type="is-danger"
+            type="is-danger is-small"
             v-if="deleteFromList"
             @click="deleteFromList(restaurant.id)"
             >Delete</b-button
@@ -136,6 +136,6 @@ export default {
 }
 
 .restaurant-box .box button{
-  margin-top:1em;
+  margin:0.5em;
 }
 </style>
