@@ -2,7 +2,7 @@
   <div class="restaurant-box">
     <div class="box">
       <div class="columns is-mobile">
-        <div class="column is-half">
+        <div class="column">
           <b-carousel :autoplay="false" :indicator="false">
             <b-carousel-item
               v-for="(carousel, i) in restaurant.pictures"
@@ -14,7 +14,7 @@
             </b-carousel-item>
           </b-carousel>
         </div>
-        <div class="column is-half">
+        <div class="column">
           <h5 class="title is-5">
             <router-link :to="'restaurant/' + restaurant.id">{{
               restaurant.name
@@ -130,5 +130,9 @@ export default {
 }
 .content .box figure {
   margin: 0;
+}
+
+.box button{
+  margin-top:1em;
 }
 </style>

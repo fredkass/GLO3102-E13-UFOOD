@@ -2,7 +2,7 @@
   <b-dropdown aria-role="list"
       :disabled="isDisabled">
     <b-button
-      class="button is-dark"
+      class="button is-dark is-small"
       type="button"
       slot="trigger"
       icon-left="plus"

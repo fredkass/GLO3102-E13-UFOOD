@@ -1,32 +1,28 @@
 <template>
-  <div v-if="isHomeDisplay">
-    <span class="btn-modale">
-      <button class="button" :class="color" @click="openModal(restaurantId)">
-        Mark as visited
-      </button>
-      <visit-modal
-        :isComponentModalActive="isComponentModalActive"
-        :restaurantId="restaurantId"
-        :userId="userId"
-        :close="closeModal"
-      />
-    </span>
-  </div>
-  <div v-else>
-    <span class="btn-modale">
-      <button class="button" :class="color" @click="openModal(restaurantId)">
-        Open visit info
-      </button>
-      <visit-modal
-        :isComponentModalActive="isComponentModalActive"
-        :isComponentModalReadonly="isComponentModalReadonly"
-        :restaurantId="restaurantId"
-        :userId="userId"
-        :close="closeModal"
-        :visits="visits"
-      />
-    </span>
-  </div>
+  <span class="btn-modale" v-if="!isComponentModalReadonly">
+    <button class="button" :class="color" @click="openModal(restaurantId)">
+      Mark as visited
+    </button>
+    <visit-modal
+      :isComponentModalActive="isComponentModalActive"
+      :restaurantId="restaurantId"
+      :userId="userId"
+      :close="closeModal"
+    />
+  </span>
+  <span class="btn-modale" v-else>
+    <button class="button" :class="color" @click="openModal(restaurantId)">
+      Open visit info
+    </button>
+    <visit-modal
+      :isComponentModalActive="isComponentModalActive"
+      :isComponentModalReadonly="isComponentModalReadonly"
+      :restaurantId="restaurantId"
+      :userId="userId"
+      :close="closeModal"
+      :visits="visits"
+    />
+  </span>
 </template>
 <script>
 import VisitModal from "./VisitModal.vue";
@@ -40,8 +36,7 @@ export default {
   data() {
     return {
       isComponentModalActive: false,
-      isComponentModalReadonly: this.provenance == "user",
-      isHomeDisplay: this.provenance == "home"
+      isComponentModalReadonly: this.visits != undefined,
     };
   },
   methods: {
