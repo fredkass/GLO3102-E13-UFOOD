@@ -115,7 +115,7 @@ export default {
   }
 };
 </script>
-<style>
+<style scoped>
 .box:hover {
   -moz-box-shadow: 0 0 10px #ccc;
   -webkit-box-shadow: 0 0 10px #ccc;
@@ -124,6 +124,9 @@ export default {
 .box {
   height: 100%;
 }
+</style>
+
+<style>
 .image img {
   width: 100%;
   object-fit: cover;
@@ -132,7 +135,7 @@ export default {
   margin: 0;
 }
 
-.box button{
+.restaurant-box .box button{
   margin-top:1em;
 }
 </style>
