@@ -31,30 +31,41 @@
             </b-dropdown-item>
           </b-dropdown>
           <b-button type="is-primary" tag="router-link" :to="{ path: '/' }">
-            Sign Out</b-button>
+            Sign Out</b-button
+          >
         </div>
       </div>
       <div v-if="display_past_visits" class="column is-three-quarters">
         <h1 class="title">Past visits</h1>
-        <div
-          class="column is-half-desktop is-full-tablet"
-          v-if="visited_restaurants.length < 1 && this.isRestaurantsLoaded"
+
+        <b-pagination
+          :total="total_visits"
+          v-model="currentPage"
+          :per-page="visit_per_page"
+          @change="loadVisits"
         >
-          No Restaurants Visited
-        </div>
-        <div
-          class="column is-half-desktop is-full-tablet"
-          v-for="visit in visited_restaurants"
-          :key="visit.visitId"
-        >
-          <restaurant-card
-            :restaurant="visit.restaurant"
-            :userId="userId"
-            :provenance="provenance"
-            :visitId="visit.visitId"
-            :hideModal="false"
-            :favoriteLists="favorites_lists"
-          />
+        </b-pagination>
+        <div class="columns is-multiline">
+          <div
+            class="column is-half-desktop is-full-tablet"
+            v-if="visited_restaurants.length < 1 && this.isRestaurantsLoaded"
+          >
+            No Restaurants Visited
+          </div>
+          <div
+            class="column is-half-desktop is-full-tablet"
+            v-for="visit in visited_restaurants"
+            :key="visit.restaurant.id"
+          >
+            <restaurant-card
+              :restaurant="visit.restaurant"
+              :userId="userId"
+              :provenance="provenance"
+              :visits="visit.visits"
+              :hideModal="false"
+              :favoriteLists="favorites_lists"
+            />
+          </div>
         </div>
       </div>
       <div v-else class="column is-three-quarters">
@@ -101,14 +112,19 @@ export default {
       this.getUserById().then(u => {
         this.profile = u;
       });
-      this.getRestaurantVisits().then(v => {
+      this.loadVisits();
+      this.getFavoritesLists().then(l => {
+        this.favorites_lists = l.items;
+      });
+    },
+    async loadVisits() {
+      this.visited_restaurants = [];
+      this.getRestaurantVisits(this.currentPage - 1).then(v => {
         if (v != undefined) {
           this.restaurant_visits = v.items;
         }
         this.loadVisitedRestaurants();
-      });
-      this.getFavoritesLists().then(l => {
-        this.favorites_lists = l.items;
+        this.total_visits = v.total;
       });
     },
     async getUserById() {
@@ -117,9 +133,11 @@ export default {
       this.isUserLoaded = true;
       return user;
     },
-    async getRestaurantVisits() {
+    async getRestaurantVisits(page) {
       this.isVisitedRestaurantsloaded = false;
-      const visitedRestaurants = await this.apiVisits.getAllRestaurantsVisits();
+      const visitedRestaurants = await this.apiVisits.getAllRestaurantsVisits(
+        page
+      );
       this.isVisitedRestaurantsloaded = true;
       return visitedRestaurants;
     },
@@ -131,19 +149,18 @@ export default {
     },
     loadVisitedRestaurants() {
       this.isRestaurantsLoaded = false;
-      let restaurantIds = this.restaurant_visits.map(v => v.restaurant_id);
-      let visitIds = this.restaurant_visits.map(v => v.id);
-      let visited_restaurant = {
-        restaurant: {},
-        visitId: 0
-      };
+      let restaurantIds = this.restaurant_visits
+        .map(v => v.restaurant_id)
+        .filter((item, pos, self) => self.indexOf(item) === pos);
+
       for (let i = 0; i < restaurantIds.length; i++) {
+        let currentRestaurantVisits = this.restaurant_visits.filter(
+          visit => visit.restaurant_id === restaurantIds[i]
+        );
         this.getRestaurant(restaurantIds[i]).then(r => {
-          visited_restaurant.restaurant = r;
-          visited_restaurant.visitId = visitIds[i];
           this.visited_restaurants.push({
-            restaurant: visited_restaurant.restaurant,
-            visitId: visited_restaurant.visitId
+            restaurant: r,
+            visits: currentRestaurantVisits
           });
         });
       }
@@ -170,7 +187,7 @@ export default {
         r => r.id
       );
       this.current_favorites_with_restaurants.restaurants = [];
-      debugger;
+      //debugger;
       for (let i = 0; i < restaurantIds.length; i++) {
         this.getRestaurant(restaurantIds[i]).then(r => {
           this.current_favorites_with_restaurants.restaurants.push(r);
@@ -196,7 +213,10 @@ export default {
       current_favorites_list: {},
       current_favorites_with_restaurants: {},
       provenance: "user",
-      display_past_visits: true
+      display_past_visits: true,
+      total_visits: 0,
+      visit_per_page: 10,
+      currentPage: 1
     };
   },
   components: {

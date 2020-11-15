@@ -45,10 +45,11 @@
             :restaurantId="restaurant.id"
             :userId="userId"
             :provenance="provenance"
-            :visitId="visitId"
+            :visits="visits"
             color="is-primary"
           />
           <dropdown-favorites
+            v-if="favoriteLists"
             :favoriteLists="favoriteLists"
             :addToListEvent="addToList"
           ></dropdown-favorites>
@@ -68,7 +69,7 @@ export default {
     "restaurant",
     "userId",
     "provenance",
-    "visitId",
+    "visits",
     "hideModal",
     "favoriteLists"
   ],
@@ -79,30 +80,29 @@ export default {
   data: () => {
     return {
       apiFavorites: new FavoriteRestaurantsService()
-    }
+    };
   },
   methods: {
     async addToList(listId) {
       let response = await this.apiFavorites.addRestaurantToList(
         listId,
-        this.restaurantId
-      )
+        this.restaurant.id
+      );
 
-      if (!response) {
+      if (response instanceof Error) {
         this.$buefy.toast.open({
           duration: 5000,
-          message: `Error posting information, please try again`,
+          message: `Error adding restaurant to favorites`,
           position: "is-top",
           type: "is-danger"
         });
       } else {
         this.$buefy.toast.open({
           duration: 5000,
-          message: `Visit posted successfully`,
+          message: `${this.restaurant.name} added to ${response.name}`,
           position: "is-bottom",
           type: "is-success"
         });
-        this.close();
       }
     }
   }

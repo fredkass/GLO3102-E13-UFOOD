@@ -27,6 +27,13 @@
         aria-role="dialog"
         aria-modal
       >
+        <b-pagination
+          :total="totalVisits"
+          per-page="1"
+          v-model="currentVisit"
+          @change="loadVisitInfo"
+        >
+        </b-pagination>
         <visit :close="close" :visitInfo="visitInfo"></visit>
       </b-modal>
     </div>
@@ -42,7 +49,9 @@ export default {
   name: "VisitModal",
   created() {
     if (this.isComponentModalReadonly) {
-      this.loadVisitInfo(this.visitId);
+      this.totalVisits = this.visits.length;
+      this.currentVisit = 1;
+      this.loadVisitInfo();
     }
   },
   components: {
@@ -55,12 +64,15 @@ export default {
     "restaurantId",
     "userId",
     "close",
-    "visitId"
+    "visits"
   ],
   data() {
     return {
       apiVisits: new RestaurantVisitsService(this.userId),
       visitInfo: {},
+      totalVisits: 1,
+      currentVisit: 1,
+
       formProps: {
         message: "",
         date: new Date(),
@@ -97,12 +109,8 @@ export default {
         this.close();
       }
     },
-    loadVisitInfo(id) {
-      this.getVisitInfo(id).then(v => (this.visitInfo = v));
-    },
-    async getVisitInfo(id) {
-      const visitInfo = await this.apiVisits.getRestaurantVisit(id);
-      return visitInfo;
+    loadVisitInfo() {
+      this.visitInfo = this.visits[this.currentVisit - 1];
     }
   }
 };

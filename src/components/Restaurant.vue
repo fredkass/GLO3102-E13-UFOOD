@@ -26,7 +26,6 @@ export default {
   async beforeMount() {
     this.restaurant = await this.getRestaurant(this.$route.params.id);
     this.favorites = await this.getUserFavorites();
-    console.log(this.favorites);
     this.isRestaurantsLoaded = true;
   },
   data() {
@@ -54,10 +53,9 @@ export default {
       return favorites;
     },
     async addRestaurantToList(listId) {
-      let response = await this.apiFavorites.addRestaurantToList(listId, {
-        id: this.restaurant.id
-      });
-      if (!response) {
+      let response = await this.apiFavorites.addRestaurantToList(listId, this.restaurant.id);
+
+      if (response instanceof Error) {
         this.$buefy.toast.open({
           duration: 5000,
           message: `Error adding restaurant to favorites`,
