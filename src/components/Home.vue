@@ -52,33 +52,6 @@
               Search
             </b-button>
           </b-field>
-
-          <div class="columns is-multiline" v-if="!this.isRestaurantsLoaded">
-            <div
-              class="column is-half-desktop is-full-tablet"
-              v-for="index in restaurantsPerPage"
-              :key="index"
-            >
-              <div class="box">
-                <div class="columns is-mobile">
-                  <div class="column is-one-third">
-                    <b-carousel :autoplay="false" :indicator="false">
-                    </b-carousel>
-                  </div>
-                  <div class="column">
-                    <h5 class="title is-5">
-                      <b-skeleton :animated="true"></b-skeleton>
-                    </h5>
-                    <b-skeleton :animated="true"></b-skeleton>
-                    <b-skeleton :animated="true"></b-skeleton>
-                    <b-skeleton :animated="true"></b-skeleton>
-                    <b-skeleton :animated="true"></b-skeleton>
-                    <b-skeleton :animated="true"></b-skeleton>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
           <div class="columns is-multiline">
             <div
               class="column is-half-desktop is-full-tablet"
@@ -96,6 +69,7 @@
                 :userId="userId"
                 :provenance="provenance"
                 :hideModal="false"
+                :isLoaded="isRestaurantsLoaded"
               />
             </div>
           </div>

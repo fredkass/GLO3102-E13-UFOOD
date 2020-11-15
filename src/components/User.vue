@@ -50,7 +50,7 @@
         <div class="columns is-multiline">
           <div
             class="column is-half-desktop is-full-tablet"
-            v-if="visited_restaurants.length < 1 && this.isRestaurantsLoaded"
+            v-if="visited_restaurants.length < 1 && this.isVisitedRestaurantsloaded"
           >
             No Restaurants Visited
           </div>
@@ -66,6 +66,7 @@
               :visits="visit.visits"
               :hideModal="false"
               :favoriteLists="favorites_lists"
+              :isLoaded="isVisitedRestaurantsloaded"
             />
           </div>
         </div>
@@ -108,6 +109,8 @@
               :provenance="provenance"
               :favoriteLists="favorites_lists"
               :deleteFromList="deleteFromList"
+              :isLoaded="isFavoritesListsLoaded"
+              @addedToFavorite="loadFavoriteListItems(current_favorites_with_restaurants.id)"
             />
           </div>
         </div>
@@ -125,7 +128,7 @@ import RestaurantCard from "./RestaurantCard.vue";
 import FavoritesManager from "./FavoritesManager.vue";
 
 export default {
-  created() {
+  mounted() {
     this.loadUser();
   },
   methods: {
@@ -139,6 +142,7 @@ export default {
       });
     },
     async loadVisits() {
+      this.isVisitedRestaurantsloaded = false;
       this.visited_restaurants = [];
       this.getRestaurantVisits(this.currentPage - 1).then(v => {
         if (v != undefined) {

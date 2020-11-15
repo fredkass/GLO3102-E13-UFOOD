@@ -1,6 +1,24 @@
 <template>
   <div class="restaurant-box">
-    <div class="box">
+    <div class="box" v-if="!isLoaded">
+      <div class="columns is-mobile">
+        <div class="column is-one-third">
+          <b-carousel :autoplay="false" :indicator="false"> </b-carousel>
+        </div>
+        <div class="column">
+          <h5 class="title is-5">
+            <b-skeleton :animated="true"></b-skeleton>
+          </h5>
+          <b-skeleton :animated="true"></b-skeleton>
+          <b-skeleton :animated="true"></b-skeleton>
+          <b-skeleton :animated="true"></b-skeleton>
+          <b-skeleton :animated="true"></b-skeleton>
+          <b-skeleton :animated="true"></b-skeleton>
+        </div>
+      </div>
+    </div>
+
+    <div class="box" v-if="isLoaded">
       <div class="columns">
         <div class="column">
           <b-carousel :autoplay="false" :indicator="false">
@@ -72,6 +90,7 @@ import FavoriteRestaurantsService from "./../services/FavoriteRestaurantsService
 export default {
   name: "RestaurantCard",
   props: [
+    "isLoaded",
     "restaurant",
     "userId",
     "provenance",
@@ -111,6 +130,7 @@ export default {
           type: "is-success"
         });
       }
+      this.$emit("addedToFavorite");
     }
   }
 };
@@ -135,7 +155,7 @@ export default {
   margin: 0;
 }
 
-.restaurant-box .box button{
-  margin:0.5em;
+.restaurant-box .box button {
+  margin: 0.5em;
 }
 </style>
