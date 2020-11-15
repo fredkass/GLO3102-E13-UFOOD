@@ -47,47 +47,14 @@
           </b-field>
         </b-menu-list>
         <b-menu-list label="Genre">
-          <div class="field">
+          <div class="field" v-for="genre in genresList" :key="genre.native">
             <b-checkbox
               v-model="genresCheckbox"
-              native-value="hamburgers"
+              :native-value="genre.native"
               @input="onGenresChange"
-              >Hamburgers</b-checkbox
+              >{{ genre.name }}</b-checkbox
             >
           </div>
-          <div class="field">
-            <b-checkbox
-              v-model="genresCheckbox"
-              native-value="fast-food"
-              @input="onGenresChange"
-              >Fast-Food</b-checkbox
-            >
-          </div>
-          <div class="field">
-            <b-checkbox
-              v-model="genresCheckbox"
-              native-value="desserts"
-              @input="onGenresChange"
-              >Desserts</b-checkbox
-            >
-          </div>
-          <div class="field">
-            <b-checkbox
-              v-model="genresCheckbox"
-              native-value="libanais"
-              @input="onGenresChange"
-              >Libanais</b-checkbox
-            >
-          </div>
-          <div class="field">
-            <b-checkbox
-              v-model="genresCheckbox"
-              native-value="asiatique"
-              @input="onGenresChange"
-              >Asian</b-checkbox
-            >
-          </div>
-          <a>See all</a>
         </b-menu-list>
       </b-menu>
     </b-sidebar>
@@ -103,7 +70,73 @@ export default {
       reduce: false,
       open: true,
       checkboxPriceGroup: [],
-      genresCheckbox: []
+      genresCheckbox: [],
+      genresList: [
+        {
+          native: "végétarien",
+          name: "Vegetarian"
+        },
+        {
+          native: "santé",
+          name: "Healthy"
+        },
+        {
+          native: "italien",
+          name: "Italian"
+        },
+        {
+          native: "asiatique",
+          name: "Asian"
+        },
+        {
+          native: "mexicain",
+          name: "Mexican"
+        },
+        {
+          native: "libanais",
+          name: "Lebanese"
+        },
+        {
+          native: "bistro",
+          name: "Bistro"
+        },
+        {
+          native: "pizzeria",
+          name: "Pizza"
+        },
+        {
+          native: "fast-food",
+          name: "Fast-Food"
+        },
+        {
+          native: "hamburgers",
+          name: "Hamburgers"
+        },
+        {
+          native: "fruits de mer",
+          name: "Fish"
+        },
+        {
+          native: "happy hour",
+          name: "Happy hour"
+        },
+        {
+          native: "ambiance",
+          name: "Ambiance"
+        },
+        {
+          native: "européen",
+          name: "European"
+        },
+        {
+          native: "café",
+          name: "Café"
+        },
+        {
+          native: "desserts",
+          name: "Desserts"
+        }
+      ]
     };
   },
   methods: {
