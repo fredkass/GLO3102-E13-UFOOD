@@ -16,8 +16,10 @@
             :fixed-points="1"
             :increment="0.1"
           ></star-rating>
-          <div class="visit-date">{{ visitInfo.date }}</div>
-          <div class="visit-message">{{ visitInfo.comment }}</div>
+          <div class="visit-date">
+            Date of visit : {{ visitInfo.date.slice(0, 10) }}
+          </div>
+          <div class="visit-message">Comment : {{ visitInfo.comment }}</div>
         </section>
         <footer class="modal-card-foot">
           <button class="button" type="button" @click="close">
@@ -32,19 +34,8 @@
 export default {
   name: "VisitForm",
   props: ["close", "visitInfo"],
-  created() {
-    this.formatInfo();
-  },
-  methods: {
-    formatInfo() {
-      this.visitInfo.date =
-        "Date of visit : " + this.visitInfo.date.slice(0, 10);
-      this.visitInfo.comment = "Comment : " + this.visitInfo.comment;
-    }
-  },
   data() {
-    return {
-    };
+    return {};
   }
 };
 </script>
