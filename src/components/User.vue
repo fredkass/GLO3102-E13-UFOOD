@@ -31,6 +31,7 @@
             :favoritesLists="favorites_lists"
             :userId="userId"
             :deleteSelectedList="deleteSelectedList"
+            :createNewList="createAndAddList"
           ></favorites-manager>
           <b-button type="is-primary" tag="router-link" :to="{ path: '/' }">
             Sign Out</b-button
@@ -75,7 +76,7 @@
           {{ this.current_favorites_list.name }}
           <b-button icon-left="edit" @click="toggleEditMode"></b-button>
         </h1>
- 
+
         <div class="field has-addons" v-if="editMode">
           <div class="control">
             <b-input type="text" v-model="current_favorites_list.name" />
@@ -271,11 +272,11 @@ export default {
     changeName() {
       this.changeFavoriteListName().then(() => {
         this.toggleEditMode();
-        this.favorites_lists.forEach((f) => {
-          if(f.id == this.current_favorites_list.id) {
+        this.favorites_lists.forEach(f => {
+          if (f.id == this.current_favorites_list.id) {
             f.name = this.current_favorites_list.name;
           }
-        })
+        });
       });
     },
     async changeFavoriteListName() {
@@ -283,7 +284,7 @@ export default {
         this.current_favorites_list.id,
         this.current_favorites_list.name,
         this.current_favorites_list.owner
-      )
+      );
       if (!response) {
         this.$buefy.toast.open({
           duration: 5000,
@@ -299,6 +300,35 @@ export default {
           type: "is-success"
         });
       }
+    },
+    createAndAddList(name) {
+      this.createNewList(name).then((id) => {
+        this.getFavoriteList(id).then(l => {
+          this.favorites_lists.push(l);
+        })
+      })
+    },
+    async createNewList(name) {
+      let response = await this.apiFavorites.createFavoriteList(
+        name,
+        this.profile.email
+      );
+      if (!response) {
+        this.$buefy.toast.open({
+          duration: 5000,
+          message: `Error posting information, please try again`,
+          position: "is-top",
+          type: "is-danger"
+        });
+      } else {
+        this.$buefy.toast.open({
+          duration: 5000,
+          message: `List created successfully`,
+          position: "is-bottom",
+          type: "is-success"
+        });
+      }
+      return response.id;
     }
   },
   data: () => {

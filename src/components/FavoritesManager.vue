@@ -13,22 +13,29 @@
         {{ favList.name }}
       </b-dropdown-item>
     </b-dropdown>
-    <b-button class="button is-primary" slot="trigger">
-      <span>Create new list</span>
-    </b-button>
+    <div class="field has-addons">
+      <div class="control">
+        <b-input type="text" v-model="new_list_name" />
+      </div>
+      <div class="control">
+        <b-button type="is-primary" @click="createNewList(new_list_name)">
+          Create
+        </b-button>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
   name: "FavoritesManager",
-  props: ["favoritesLists", "userId", "deleteSelectedList"],
+  props: ["favoritesLists", "userId", "deleteSelectedList", "createNewList"],
   data() {
     return {
+      new_list_name: ""
     };
   },
-  methods: {
-  }
+  methods: {}
 };
 </script>
 

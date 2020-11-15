@@ -15,7 +15,11 @@ export default class FavoriteRestaurantsService {
   }
   // body requires owner value if no token is used
   // creates favorite list
-  createFavoriteList(body) {
+  createFavoriteList(name, owner) {
+    let body = {
+      name: name,
+      owner: owner
+    }
     return this.api.post("/favorites/", body);
   }
   // updates favorite list with provided Id
