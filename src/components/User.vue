@@ -93,6 +93,7 @@
               :userId="userId"
               :provenance="provenance"
               :favoriteLists="favorites_lists"
+              :deleteFromList="deleteFromList"
             />
           </div>
         </div>
@@ -203,7 +204,6 @@ export default {
       let response = await this.apiFavorites.deleteFavoriteList(listId);
 
       this.favorites_lists = this.favorites_lists.filter(f => f.id != listId);
-      debugger;
       if (this.current_favorites_list.id == listId) {
         this.display_past_visits = true;
       }
@@ -225,6 +225,31 @@ export default {
     },
     switchView() {
       this.display_past_visits = !this.display_past_visits;
+    },
+    async deleteFromList(restaurantId) {
+      let response = await this.apiFavorites.deleteRestaurantFromList(
+        this.current_favorites_list.id,
+        restaurantId
+      );
+
+      this.current_favorites_list.restaurants = this.current_favorites_list.restaurants.filter(
+        r => r.id != restaurantId
+      );
+      if (!response) {
+        this.$buefy.toast.open({
+          duration: 5000,
+          message: `Error posting information, please try again`,
+          position: "is-top",
+          type: "is-danger"
+        });
+      } else {
+        this.$buefy.toast.open({
+          duration: 5000,
+          message: `List deleted successfully`,
+          position: "is-bottom",
+          type: "is-success"
+        });
+      }
     }
   },
   data: () => {

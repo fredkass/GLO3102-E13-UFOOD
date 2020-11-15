@@ -53,6 +53,12 @@
             :favoriteLists="favoriteLists"
             :addToListEvent="addToList"
           ></dropdown-favorites>
+          <b-button
+            type="is-danger"
+            v-if="deleteFromList"
+            @click="deleteFromList(restaurant.id)"
+            >Delete</b-button
+          >
         </div>
       </div>
     </div>
@@ -71,7 +77,8 @@ export default {
     "provenance",
     "visits",
     "hideModal",
-    "favoriteLists"
+    "favoriteLists",
+    "deleteFromList"
   ],
   components: {
     ModaleButton,
