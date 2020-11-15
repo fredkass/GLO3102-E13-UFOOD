@@ -71,7 +71,21 @@
         </div>
       </div>
       <div v-else class="column is-three-quarters">
-        <h1 class="title">{{ this.current_favorites_list.name }}</h1>
+        <h1 class="title" v-if="!editMode">
+          {{ this.current_favorites_list.name }}
+          <b-button icon-left="edit" @click="toggleEditMode"></b-button>
+        </h1>
+ 
+        <div class="field has-addons" v-if="editMode">
+          <div class="control">
+            <b-input type="text" v-model="current_favorites_list.name" />
+          </div>
+          <div class="control">
+            <b-button icon-left="edit" type="is-primary" @click="changeName">
+              Change Name
+            </b-button>
+          </div>
+        </div>
         <b-button class="is-primary is-light" @click="switchView"
           >Return to past visits view</b-button
         >
@@ -250,6 +264,41 @@ export default {
           type: "is-success"
         });
       }
+    },
+    toggleEditMode() {
+      this.editMode = !this.editMode;
+    },
+    changeName() {
+      this.changeFavoriteListName().then(() => {
+        this.toggleEditMode();
+        this.favorites_lists.forEach((f) => {
+          if(f.id == this.current_favorites_list.id) {
+            f.name = this.current_favorites_list.name;
+          }
+        })
+      });
+    },
+    async changeFavoriteListName() {
+      let response = this.apiFavorites.updateFavoriteList(
+        this.current_favorites_list.id,
+        this.current_favorites_list.name,
+        this.current_favorites_list.owner
+      )
+      if (!response) {
+        this.$buefy.toast.open({
+          duration: 5000,
+          message: `Error posting information, please try again`,
+          position: "is-top",
+          type: "is-danger"
+        });
+      } else {
+        this.$buefy.toast.open({
+          duration: 5000,
+          message: `List updated successfully`,
+          position: "is-bottom",
+          type: "is-success"
+        });
+      }
     }
   },
   data: () => {
@@ -273,7 +322,8 @@ export default {
       display_past_visits: true,
       total_visits: 0,
       visit_per_page: 10,
-      currentPage: 1
+      currentPage: 1,
+      editMode: false
     };
   },
   components: {

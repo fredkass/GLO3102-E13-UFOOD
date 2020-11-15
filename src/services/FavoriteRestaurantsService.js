@@ -19,7 +19,11 @@ export default class FavoriteRestaurantsService {
     return this.api.post("/favorites/", body);
   }
   // updates favorite list with provided Id
-  updateFavoriteList(body, favoriteListId) {
+  updateFavoriteList(favoriteListId, name, owner) {
+    let body = {
+      name: name,
+      owner: owner
+    }
     return this.api.put("/favorites/" + favoriteListId, body);
   }
   // deletes favorite list with provided Id
