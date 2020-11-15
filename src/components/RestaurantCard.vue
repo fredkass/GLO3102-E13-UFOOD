@@ -41,7 +41,7 @@
           <div class="address">{{ restaurant.address }}</div>
           <div class="telephone">{{ restaurant.tel }}</div>
           <modale-button
-            v-if="userId"
+            v-if="userId && this.hideModal == false"
             :restaurantId="restaurant.id"
             :userId="userId"
             :provenance="provenance"
@@ -57,7 +57,7 @@
 import ModaleButton from "./ModaleButton.vue";
 export default {
   name: "RestaurantCard",
-  props: ["restaurant", "userId", "provenance", "visitId"],
+  props: ["restaurant", "userId", "provenance", "visitId", "hideModal"],
   components: {
     ModaleButton
   }

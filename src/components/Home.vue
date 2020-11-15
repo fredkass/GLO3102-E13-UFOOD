@@ -95,6 +95,7 @@
                 :restaurant="restaurant"
                 :userId="userId"
                 :provenance="provenance"
+                :hideModal="false"
               />
             </div>
           </div>
