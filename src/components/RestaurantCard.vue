@@ -48,18 +48,63 @@
             :visitId="visitId"
             color="is-primary"
           />
+          <dropdown-favorites
+            :favoriteLists="favoriteLists"
+            :addToListEvent="addToList"
+          ></dropdown-favorites>
         </div>
       </div>
     </div>
   </div>
 </template>
 <script>
+import DropdownFavorites from "./DropdownFavorites.vue";
 import ModaleButton from "./ModaleButton.vue";
+import FavoriteRestaurantsService from "./../services/FavoriteRestaurantsService.js";
+
 export default {
   name: "RestaurantCard",
-  props: ["restaurant", "userId", "provenance", "visitId", "hideModal"],
+  props: [
+    "restaurant",
+    "userId",
+    "provenance",
+    "visitId",
+    "hideModal",
+    "favoriteLists"
+  ],
   components: {
-    ModaleButton
+    ModaleButton,
+    DropdownFavorites
+  },
+  data: () => {
+    return {
+      apiFavorites: new FavoriteRestaurantsService()
+    }
+  },
+  methods: {
+    async addToList(listId) {
+      let response = await this.apiFavorites.addRestaurantToList(
+        listId,
+        this.restaurantId
+      )
+
+      if (!response) {
+        this.$buefy.toast.open({
+          duration: 5000,
+          message: `Error posting information, please try again`,
+          position: "is-top",
+          type: "is-danger"
+        });
+      } else {
+        this.$buefy.toast.open({
+          duration: 5000,
+          message: `Visit posted successfully`,
+          position: "is-bottom",
+          type: "is-success"
+        });
+        this.close();
+      }
+    }
   }
 };
 </script>

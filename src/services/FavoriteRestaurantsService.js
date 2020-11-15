@@ -26,8 +26,12 @@ export default class FavoriteRestaurantsService {
   deleteFavoriteList(favoriteListId) {
     return this.api.delete("/favorites/" + favoriteListId);
   }
-  // add restaurant to list with provided Id
-  addRestaurantToList(favoriteListId, body) {
+  // add restaurant to list with provided Id  
+  addRestaurantToList(favoriteListId, restaurantId) {
+    let body = {
+      id: restaurantId
+    };
+
     return this.api.post("/favorites/" + favoriteListId + "/restaurants", body);
   }
   // delete restaurant with given Id from list with given Id

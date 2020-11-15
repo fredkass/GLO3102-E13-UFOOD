@@ -53,6 +53,7 @@
             :provenance="provenance"
             :visitId="visit.visitId"
             :hideModal="false"
+            :favoriteLists="favorites_lists"
           />
         </div>
       </div>
@@ -75,6 +76,7 @@
               :restaurant="restaurant"
               :userId="userId"
               :provenance="provenance"
+              :favoriteLists="favorites_lists"
             />
           </div>
         </div>
@@ -224,8 +226,5 @@ export default {
   display: block;
   margin-left: auto;
   margin-right: auto;
-}
-.past-visits {
-  margin-left: 10;
 }
 </style>
