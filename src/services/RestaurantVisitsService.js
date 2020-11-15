@@ -5,8 +5,13 @@ export default class RestaurantVisitsService {
     this.api = new Api();
     this.userId = userId;
   }
-  getAllRestaurantsVisits() {
-    return this.api.get("/users/" + this.userId + "/restaurants/visits");
+  getAllRestaurantsVisits(page) {
+    let querystrings = new URLSearchParams({
+      page: page
+    });
+    return this.api.get(
+      "/users/" + this.userId + "/restaurants/visits?" + querystrings
+    );
   }
   getRestaurantVisit(visitId) {
     return this.api.get(

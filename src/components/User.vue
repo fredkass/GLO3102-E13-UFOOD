@@ -14,108 +14,139 @@
             {{ profile.name }}
           </p>
           <p>Your rating: {{ profile.rating }}</p>
+          <b-dropdown aria-role="list">
+            <button class="button is-primary" slot="trigger">
+              <span>Favorite lists</span>
+            </button>
+            <b-dropdown-item
+              v-for="favList in favorites_lists"
+              :key="favList.id"
+              aria-role="listitem"
+              @click="loadFavoriteListItems(favList.id)"
+            >
+              {{ favList.name }}
+            </b-dropdown-item>
+          </b-dropdown>
+          <favorites-manager
+            :favoritesLists="favorites_lists"
+            :userId="userId"
+            :deleteSelectedList="deleteSelectedList"
+            :createNewList="createAndAddList"
+          ></favorites-manager>
           <b-button type="is-primary" tag="router-link" :to="{ path: '/' }">
-            Log Out</b-button
+            Sign Out</b-button
           >
         </div>
       </div>
-      <div class="column is-three-quarters">
+      <div v-if="display_past_visits" class="column is-three-quarters">
         <h1 class="title">Past visits</h1>
+
+        <b-pagination
+          :total="total_visits"
+          v-model="currentPage"
+          :per-page="visit_per_page"
+          @change="loadVisits"
+        >
+        </b-pagination>
         <div class="columns is-multiline">
           <div
             class="column is-half-desktop is-full-tablet"
-            v-for="restaurant in restaurants"
-            :key="restaurant.id"
+            v-if="visited_restaurants.length < 1 && this.isRestaurantsLoaded"
           >
-            <div v-if="visited_restaurants_names.includes(restaurant.name)">
-              <div class="box">
-                <div class="columns is-mobile">
-                  <div class="column is-one-third">
-                    <b-carousel :autoplay="false" :indicator="false">
-                      <b-carousel-item
-                        v-for="(carousel, i) in restaurant.pictures"
-                        :key="i"
-                      >
-                        <figure class="image is-square">
-                          <img
-                            v-bind:src="carousel"
-                            v-bind:alt="restaurant.name"
-                          />
-                        </figure>
-                      </b-carousel-item>
-                    </b-carousel>
-                  </div>
-                  <div class="column">
-                    <h5 class="title is-5">
-                      {{ restaurant.name }} (<span
-                        v-for="n in restaurant.price_range"
-                        :key="n"
-                        ><strong>$</strong></span
-                      >)
-                    </h5>
-                    <star-rating
-                      :inline="true"
-                      :star-size="20"
-                      :read-only="true"
-                      :show-rating="false"
-                      :rating="restaurant.rating"
-                    ></star-rating>
-                    <p>
-                      <strong
-                        >Visited : {{ restaurant.total_visits }} time(s)</strong
-                      >
-                    </p>
-                    <p>
-                      Genres:
-                      <span v-for="genre in restaurant.genres" :key="genre"
-                        >{{ genre }},
-                      </span>
-                    </p>
-                    <div class="address">{{ restaurant.address }}</div>
-                    <div class="telephone">{{ restaurant.tel }}</div>
-                  </div>
-                </div>
-              </div>
-            </div>
+            No Restaurants Visited
+          </div>
+          <div
+            class="column is-half-desktop is-full-tablet"
+            v-for="visit in visited_restaurants"
+            :key="visit.restaurant.id"
+          >
+            <restaurant-card
+              :restaurant="visit.restaurant"
+              :userId="userId"
+              :provenance="provenance"
+              :visits="visit.visits"
+              :hideModal="false"
+              :favoriteLists="favorites_lists"
+            />
+          </div>
+        </div>
+      </div>
+      <div v-else class="column is-three-quarters">
+        <h1 class="title" v-if="!editMode">
+          {{ this.current_favorites_list.name }}
+          <b-button icon-left="edit" @click="toggleEditMode"></b-button>
+        </h1>
+
+        <div class="field has-addons" v-if="editMode">
+          <div class="control">
+            <b-input type="text" v-model="current_favorites_list.name" />
+          </div>
+          <div class="control">
+            <b-button icon-left="edit" type="is-primary" @click="changeName">
+              Change Name
+            </b-button>
+          </div>
+        </div>
+        <b-button class="is-primary is-light" @click="switchView"
+          >Return to past visits view</b-button
+        >
+        <div class="columns is-multiline">
+          <div
+            class="column is-half-desktop is-full-tablet"
+            v-if="current_favorites_list.restaurants.length < 1"
+          >
+            List currently empty
+          </div>
+          <div
+            class="column is-half-desktop is-full-tablet"
+            v-for="restaurant in current_favorites_with_restaurants.restaurants"
+            :key="restaurant.index"
+          >
+            <restaurant-card
+              :hideModal="true"
+              :restaurant="restaurant"
+              :userId="userId"
+              :provenance="provenance"
+              :favoriteLists="favorites_lists"
+              :deleteFromList="deleteFromList"
+            />
           </div>
         </div>
       </div>
     </div>
-    <!-- <div class="columns">
-      other row for favorites lists? or add a "favorites" b-dropbox to the user profile box and a "past visits" b-button
-    </div> -->
   </div>
 </template>
 
 <script>
 import UsersService from "@/services/UsersService.js";
 import RestaurantVisistsService from "@/services/RestaurantVisitsService.js";
+import FavoriteRestaurantsService from "@/services/FavoriteRestaurantsService.js";
+import RestaurantService from "@/services/RestaurantService.js";
+import RestaurantCard from "./RestaurantCard.vue";
+import FavoritesManager from "./FavoritesManager.vue";
 
 export default {
   created() {
-    // add chunk of coderoo to create FavoriteLists and VisitedRestaurants to easily test display
-    // actually not gonna add it from here but from a script that's separate
-    this.updateUser();
-    this.getVisitedRestaurantsNames(); // ne fera pas grand chose si on a 0 restaurant retourné. aussi, doit être testé
+    this.loadUser();
   },
   methods: {
-    // devrait etre la liste de seulement les noms des restaurants visites, pour faire un filtre dans la liste de tous les restaurants
-    // de ceux qu'on veut afficher
-    getVisitedRestaurantsNames() {
-      const names = this.visited_restaurants.filter(function(r) {
-        r.name;
-      });
-      this.visited_restaurants_names = names;
-    },
-    updateUser() {
+    loadUser() {
       this.getUserById().then(u => {
         this.profile = u;
       });
-      this.getVisitedRestaurants().then(v => {
+      this.loadVisits();
+      this.getFavoritesLists().then(l => {
+        this.favorites_lists = l.items;
+      });
+    },
+    async loadVisits() {
+      this.visited_restaurants = [];
+      this.getRestaurantVisits(this.currentPage - 1).then(v => {
         if (v != undefined) {
-          this.visited_restaurants = v; // this code does not work with line 29 because I have to rework logic using
-          // what I wrote on line 96
+          this.restaurant_visits = v.items;
         }
+        this.loadVisitedRestaurants();
+        this.total_visits = v.total;
       });
     },
     async getUserById() {
@@ -124,11 +155,180 @@ export default {
       this.isUserLoaded = true;
       return user;
     },
-    async getVisitedRestaurants() {
+    async getRestaurantVisits(page) {
       this.isVisitedRestaurantsloaded = false;
-      const visitedRestaurants = await this.apiVisits.getAllRestaurantsVisits();
+      const visitedRestaurants = await this.apiVisits.getAllRestaurantsVisits(
+        page
+      );
       this.isVisitedRestaurantsloaded = true;
       return visitedRestaurants;
+    },
+    async getFavoritesLists() {
+      this.isFavoritesListsLoaded = false;
+      const lists = await this.apiUsers.getFavoritesListsByUserId(this.userId);
+      this.isFavoritesListsLoaded = true;
+      return lists;
+    },
+    loadVisitedRestaurants() {
+      this.isRestaurantsLoaded = false;
+      let restaurantIds = this.restaurant_visits
+        .map(v => v.restaurant_id)
+        .filter((item, pos, self) => self.indexOf(item) === pos);
+
+      for (let i = 0; i < restaurantIds.length; i++) {
+        let currentRestaurantVisits = this.restaurant_visits.filter(
+          visit => visit.restaurant_id === restaurantIds[i]
+        );
+        this.getRestaurant(restaurantIds[i]).then(r => {
+          this.visited_restaurants.push({
+            restaurant: r,
+            visits: currentRestaurantVisits
+          });
+        });
+      }
+      this.isRestaurantsLoaded = true;
+    },
+    async getRestaurant(id) {
+      const restaurant = await this.apiRestaurants.getRestaurant(id);
+      return restaurant;
+    },
+    loadFavoriteListItems(listId) {
+      this.getFavoriteList(listId).then(l => {
+        this.current_favorites_list = l;
+        this.current_favorites_with_restaurants = l;
+        this.display_past_visits = false;
+        this.loadFavoriteRestaurants();
+      });
+    },
+    async getFavoriteList(listId) {
+      const list = await this.apiFavorites.getFavoriteListById(listId);
+      return list;
+    },
+    loadFavoriteRestaurants() {
+      let restaurantIds = this.current_favorites_list.restaurants.map(
+        r => r.id
+      );
+      this.current_favorites_with_restaurants.restaurants = [];
+      for (let i = 0; i < restaurantIds.length; i++) {
+        this.getRestaurant(restaurantIds[i]).then(r => {
+          this.current_favorites_with_restaurants.restaurants.push(r);
+        });
+      }
+    },
+    async deleteSelectedList(listId) {
+      let response = await this.apiFavorites.deleteFavoriteList(listId);
+
+      this.favorites_lists = this.favorites_lists.filter(f => f.id != listId);
+      if (this.current_favorites_list.id == listId) {
+        this.display_past_visits = true;
+      }
+      if (!response) {
+        this.$buefy.toast.open({
+          duration: 5000,
+          message: `Error posting information, please try again`,
+          position: "is-top",
+          type: "is-danger"
+        });
+      } else {
+        this.$buefy.toast.open({
+          duration: 5000,
+          message: `List deleted successfully`,
+          position: "is-bottom",
+          type: "is-success"
+        });
+      }
+    },
+    switchView() {
+      this.display_past_visits = !this.display_past_visits;
+    },
+    async deleteFromList(restaurantId) {
+      let response = await this.apiFavorites.deleteRestaurantFromList(
+        this.current_favorites_list.id,
+        restaurantId
+      );
+
+      this.current_favorites_list.restaurants = this.current_favorites_list.restaurants.filter(
+        r => r.id != restaurantId
+      );
+      if (!response) {
+        this.$buefy.toast.open({
+          duration: 5000,
+          message: `Error posting information, please try again`,
+          position: "is-top",
+          type: "is-danger"
+        });
+      } else {
+        this.$buefy.toast.open({
+          duration: 5000,
+          message: `List deleted successfully`,
+          position: "is-bottom",
+          type: "is-success"
+        });
+      }
+    },
+    toggleEditMode() {
+      this.editMode = !this.editMode;
+    },
+    changeName() {
+      this.changeFavoriteListName().then(() => {
+        this.toggleEditMode();
+        this.favorites_lists.forEach(f => {
+          if (f.id == this.current_favorites_list.id) {
+            f.name = this.current_favorites_list.name;
+          }
+        });
+      });
+    },
+    async changeFavoriteListName() {
+      let response = this.apiFavorites.updateFavoriteList(
+        this.current_favorites_list.id,
+        this.current_favorites_list.name,
+        this.current_favorites_list.owner
+      );
+      if (!response) {
+        this.$buefy.toast.open({
+          duration: 5000,
+          message: `Error posting information, please try again`,
+          position: "is-top",
+          type: "is-danger"
+        });
+      } else {
+        this.$buefy.toast.open({
+          duration: 5000,
+          message: `List updated successfully`,
+          position: "is-bottom",
+          type: "is-success"
+        });
+      }
+    },
+    createAndAddList(name) {
+      this.createNewList(name).then((id) => {
+        this.getFavoriteList(id).then(l => {
+          this.favorites_lists.push(l);
+        })
+      })
+    },
+    async createNewList(name) {
+      let response = await this.apiFavorites.createFavoriteList(
+        name,
+        this.profile.email
+      );
+      if (!response) {
+        this.$buefy.toast.open({
+          duration: 5000,
+          message: `Error posting information, please try again`,
+          position: "is-top",
+          type: "is-danger"
+        });
+      } else {
+        this.$buefy.toast.open({
+          duration: 5000,
+          message: `List created successfully`,
+          position: "is-bottom",
+          type: "is-success"
+        });
+      }
+      return response.id;
     }
   },
   data: () => {
@@ -136,81 +336,29 @@ export default {
       userId: "5fa6c9524a1f410004c5114b",
       apiUsers: new UsersService(),
       apiVisits: new RestaurantVisistsService("5fa6c9524a1f410004c5114b"),
+      apiFavorites: new FavoriteRestaurantsService(),
+      apiRestaurants: new RestaurantService(),
       isUserLoaded: false,
       isVisitedRestaurantsloaded: false,
+      isRestaurantsLoaded: false,
+      isFavoritesListsLoaded: false,
       profile: {},
+      restaurant_visits: [],
       visited_restaurants: [],
-      visited_restaurants_names: [],
-      favorites_lists_ids: [],
       favorites_lists: [],
-      restaurants: [
-        {
-          id: 1,
-          name: "Chandha",
-          address: "1292 rue Léger",
-          tel: "(418)-418-4800",
-          genres: ["Asiatique", "Takeout"],
-          rating: 4.7,
-          price_range: 2,
-          pictures: [require("../img/banner.jpg")],
-          menu: {
-            monday: "12h-14h"
-          },
-          total_visits: 2
-        },
-        {
-          id: 2,
-          name: "Chez Victor",
-          address: "100 boul. Laurier",
-          tel: "(814)-888-4800",
-          genres: ["Burger", "Takeout"],
-          rating: 4.0,
-          price_range: 3,
-          pictures: [
-            require("../img/banner.jpg"),
-            require("../img/banner.jpg")
-          ],
-          menu: {
-            monday: "12h-14h"
-          },
-          total_visits: 4
-        },
-        {
-          id: 3,
-          name: "Gaspésienne 51",
-          address: "1005 Chemin St-Louis",
-          tel: "(418)-898-5858",
-          genres: ["Fruits de mer", "Poisson"],
-          rating: 4.3,
-          price_range: 4,
-          pictures: [
-            require("../img/banner.jpg"),
-            require("../img/banner.jpg")
-          ],
-          menu: {
-            monday: "12h-14h"
-          },
-          total_visits: 4
-        },
-        {
-          id: 4,
-          name: "Snack-bar chez Raymond",
-          address: "500 boul. Laurier",
-          tel: "(800)-888-9999",
-          genres: ["Géduilles", "Snack"],
-          rating: 2.6,
-          price_range: 1,
-          pictures: [
-            require("../img/banner.jpg"),
-            require("../img/banner.jpg")
-          ],
-          menu: {
-            monday: "12h-14h"
-          },
-          total_visits: 1
-        }
-      ]
+      current_favorites_list: {},
+      current_favorites_with_restaurants: {},
+      provenance: "user",
+      display_past_visits: true,
+      total_visits: 0,
+      visit_per_page: 10,
+      currentPage: 1,
+      editMode: false
     };
+  },
+  components: {
+    RestaurantCard,
+    FavoritesManager
   }
 };
 </script>
@@ -230,7 +378,7 @@ export default {
 }
 .profile-container .profile img {
   max-height: 200px;
-  max-width: 200px;
+  max-width: 150px;
   overflow: hidden;
   object-fit: cover;
   display: block;

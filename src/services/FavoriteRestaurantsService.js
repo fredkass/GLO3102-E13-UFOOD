@@ -15,19 +15,31 @@ export default class FavoriteRestaurantsService {
   }
   // body requires owner value if no token is used
   // creates favorite list
-  createFavoriteList(body) {
+  createFavoriteList(name, owner) {
+    let body = {
+      name: name,
+      owner: owner
+    }
     return this.api.post("/favorites/", body);
   }
   // updates favorite list with provided Id
-  updateFavoriteList(body, favoriteListId) {
+  updateFavoriteList(favoriteListId, name, owner) {
+    let body = {
+      name: name,
+      owner: owner
+    }
     return this.api.put("/favorites/" + favoriteListId, body);
   }
   // deletes favorite list with provided Id
   deleteFavoriteList(favoriteListId) {
     return this.api.delete("/favorites/" + favoriteListId);
   }
-  // add restaurant to list with provided Id
-  addRestaurantToList(favoriteListId, body) {
+  // add restaurant to list with provided Id  
+  addRestaurantToList(favoriteListId, restaurantId) {
+    let body = {
+      id: restaurantId
+    };
+
     return this.api.post("/favorites/" + favoriteListId + "/restaurants", body);
   }
   // delete restaurant with given Id from list with given Id

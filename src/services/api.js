@@ -28,6 +28,9 @@ export default class Api {
         },
         body: JSON.stringify(body)
       });
+      if (!response.ok) {
+        return Error("Problem in post request");
+      }
       const data = await response.json();
       return data;
     } catch (error) {

@@ -1,36 +1,78 @@
 <template>
   <section>
-    <b-modal
-      :active="isComponentModalActive"
-      has-modal-card
-      trap-focus
-      :destroy-on-hide="false"
-      :on-cancel="close"
-      aria-role="dialog"
-      aria-modal
-    >
-      <visit-form
-        :close="close"
-        :submit="submit"
-        :formProps="formProps"
-      ></visit-form>
-    </b-modal>
+    <div class="visit-modal" v-if="!this.isComponentModalReadonly">
+      <b-modal
+        :active="isComponentModalActive"
+        has-modal-card
+        trap-focus
+        :destroy-on-hide="false"
+        :on-cancel="close"
+        aria-role="dialog"
+        aria-modal
+      >
+        <visit-form
+          :close="close"
+          :submit="submit"
+          :formProps="formProps"
+        ></visit-form>
+      </b-modal>
+    </div>
+    <div v-else>
+      <b-modal
+        :active="isComponentModalActive"
+        has-modal-card
+        trap-focus
+        :destroy-on-hide="false"
+        :on-cancel="close"
+        aria-role="dialog"
+        aria-modal
+      >
+        <b-pagination
+          :total="totalVisits"
+          per-page="1"
+          v-model="currentVisit"
+          @change="loadVisitInfo"
+        >
+        </b-pagination>
+        <visit :close="close" :visitInfo="visitInfo"></visit>
+      </b-modal>
+    </div>
   </section>
 </template>
 
 <script>
 import VisitForm from "./VisitForm.vue";
+import Visit from "./Visit.vue";
 import RestaurantVisitsService from "../services/RestaurantVisitsService.js";
 
 export default {
   name: "VisitModal",
-  components: {
-    VisitForm
+  created() {
+    if (this.isComponentModalReadonly) {
+      this.totalVisits = this.visits.length;
+      this.currentVisit = 1;
+      this.loadVisitInfo();
+    }
   },
-  props: ["isComponentModalActive", "restaurantId", "userId", "close"],
+  components: {
+    VisitForm,
+    Visit
+  },
+  props: [
+    "isComponentModalReadonly",
+    "isComponentModalActive",
+    "restaurantId",
+    "userId",
+    "close",
+    "visits"
+  ],
   data() {
     return {
       apiVisits: new RestaurantVisitsService(this.userId),
+      visitInfo: {},
+      totalVisits: 1,
+      currentVisit: 1,
+
       formProps: {
         message: "",
         date: new Date(),
@@ -49,7 +91,7 @@ export default {
       this.formProps.message = "";
       this.formProps.date = new Date();
       this.formProps.rating = 0;
-      
+
       if (!response) {
         this.$buefy.toast.open({
           duration: 5000,
@@ -66,6 +108,9 @@ export default {
         });
         this.close();
       }
+    },
+    loadVisitInfo() {
+      this.visitInfo = this.visits[this.currentVisit - 1];
     }
   }
 };

@@ -41,23 +41,77 @@
           <div class="address">{{ restaurant.address }}</div>
           <div class="telephone">{{ restaurant.tel }}</div>
           <modale-button
-            v-if="userId"
+            v-if="userId && this.hideModal == false"
             :restaurantId="restaurant.id"
             :userId="userId"
+            :provenance="provenance"
+            :visits="visits"
             color="is-primary"
           />
+          <dropdown-favorites
+            v-if="favoriteLists"
+            :favoriteLists="favoriteLists"
+            :addToListEvent="addToList"
+          ></dropdown-favorites>
+          <b-button
+            type="is-danger"
+            v-if="deleteFromList"
+            @click="deleteFromList(restaurant.id)"
+            >Delete</b-button
+          >
         </div>
       </div>
     </div>
   </div>
 </template>
 <script>
+import DropdownFavorites from "./DropdownFavorites.vue";
 import ModaleButton from "./ModaleButton.vue";
+import FavoriteRestaurantsService from "./../services/FavoriteRestaurantsService.js";
+
 export default {
   name: "RestaurantCard",
-  props: ["restaurant", "userId"],
+  props: [
+    "restaurant",
+    "userId",
+    "provenance",
+    "visits",
+    "hideModal",
+    "favoriteLists",
+    "deleteFromList"
+  ],
   components: {
-    ModaleButton
+    ModaleButton,
+    DropdownFavorites
+  },
+  data: () => {
+    return {
+      apiFavorites: new FavoriteRestaurantsService()
+    };
+  },
+  methods: {
+    async addToList(listId) {
+      let response = await this.apiFavorites.addRestaurantToList(
+        listId,
+        this.restaurant.id
+      );
+
+      if (response instanceof Error) {
+        this.$buefy.toast.open({
+          duration: 5000,
+          message: `Error adding restaurant to favorites`,
+          position: "is-top",
+          type: "is-danger"
+        });
+      } else {
+        this.$buefy.toast.open({
+          duration: 5000,
+          message: `${this.restaurant.name} added to ${response.name}`,
+          position: "is-bottom",
+          type: "is-success"
+        });
+      }
+    }
   }
 };
 </script>
