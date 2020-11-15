@@ -72,6 +72,9 @@
       </div>
       <div v-else class="column is-three-quarters">
         <h1 class="title">{{ this.current_favorites_list.name }}</h1>
+        <b-button class="is-primary is-light" @click="switchView"
+          >Return to past visits view</b-button
+        >
         <div class="columns is-multiline">
           <div
             class="column is-half-desktop is-full-tablet"
@@ -219,6 +222,9 @@ export default {
           type: "is-success"
         });
       }
+    },
+    switchView() {
+      this.display_past_visits = !this.display_past_visits;
     }
   },
   data: () => {
