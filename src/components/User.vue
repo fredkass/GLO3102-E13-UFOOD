@@ -30,14 +30,8 @@
               {{ favList.name }}
             </b-dropdown-item>
           </b-dropdown>
-          <b-button
-            class="logout"
-            type="is-primary"
-            tag="router-link"
-            :to="{ path: '/' }"
-          >
-            Log Out
-          </b-button>
+          <b-button type="is-primary" tag="router-link" :to="{ path: '/' }">
+            Sign Out</b-button>
         </div>
       </div>
       <div v-if="display_past_visits" class="column is-three-quarters">
