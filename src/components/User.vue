@@ -18,9 +18,6 @@
             <button class="button is-primary" slot="trigger">
               <span>Favorite lists</span>
             </button>
-            <b-dropdown-item aria-role="listitem" @click="createNewList()"
-              >Create new list
-            </b-dropdown-item>
             <b-dropdown-item
               v-for="favList in favorites_lists"
               :key="favList.id"
@@ -30,6 +27,11 @@
               {{ favList.name }}
             </b-dropdown-item>
           </b-dropdown>
+          <favorites-manager
+            :favoritesLists="favorites_lists"
+            :userId="userId"
+            :deleteSelectedList="deleteSelectedList"
+          ></favorites-manager>
           <b-button type="is-primary" tag="router-link" :to="{ path: '/' }">
             Sign Out</b-button
           >
@@ -102,6 +104,7 @@ import RestaurantVisistsService from "@/services/RestaurantVisitsService.js";
 import FavoriteRestaurantsService from "@/services/FavoriteRestaurantsService.js";
 import RestaurantService from "@/services/RestaurantService.js";
 import RestaurantCard from "./RestaurantCard.vue";
+import FavoritesManager from "./FavoritesManager.vue";
 
 export default {
   created() {
@@ -187,10 +190,33 @@ export default {
         r => r.id
       );
       this.current_favorites_with_restaurants.restaurants = [];
-      //debugger;
       for (let i = 0; i < restaurantIds.length; i++) {
         this.getRestaurant(restaurantIds[i]).then(r => {
           this.current_favorites_with_restaurants.restaurants.push(r);
+        });
+      }
+    },
+    async deleteSelectedList(listId) {
+      let response = await this.apiFavorites.deleteFavoriteList(listId);
+
+      this.favorites_lists = this.favorites_lists.filter(f => f.id != listId);
+      debugger;
+      if (this.current_favorites_list.id == listId) {
+        this.display_past_visits = true;
+      }
+      if (!response) {
+        this.$buefy.toast.open({
+          duration: 5000,
+          message: `Error posting information, please try again`,
+          position: "is-top",
+          type: "is-danger"
+        });
+      } else {
+        this.$buefy.toast.open({
+          duration: 5000,
+          message: `List deleted successfully`,
+          position: "is-bottom",
+          type: "is-success"
         });
       }
     }
@@ -220,7 +246,8 @@ export default {
     };
   },
   components: {
-    RestaurantCard
+    RestaurantCard,
+    FavoritesManager
   }
 };
 </script>
