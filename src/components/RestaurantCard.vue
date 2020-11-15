@@ -1,7 +1,7 @@
 <template>
   <div class="restaurant-box">
     <div class="box">
-      <div class="columns is-mobile">
+      <div class="columns">
         <div class="column">
           <b-carousel :autoplay="false" :indicator="false">
             <b-carousel-item
