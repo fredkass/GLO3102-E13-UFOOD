@@ -26,4 +26,13 @@ export default class UsersService {
   unFollowUser(userId) {
     return this.api.delete("/follow/" + userId);
   }
+  signUp(body) {
+    return this.api.post("/signup/", body);
+  }
+  logIn(body) {
+    return this.api.post("/login/", body);
+  }
+  logOut() {
+    return this.api.post("/logout/");
+  }
 }
