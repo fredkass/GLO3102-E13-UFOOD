@@ -26,7 +26,7 @@ export default {
     async signUp(formData) {
       const { email, name, password } = formData;
       const body = { email, name, password };
-      await this.apiUser.signup(body);
+      await this.apiUser.signUp(body);
     }
   }
 };

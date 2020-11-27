@@ -67,7 +67,7 @@
             ></b-input>
           </b-field>
 
-          <b-button type="is-primary" expanded @click="submit(formData)"
+          <b-button type="is-primary" expanded @click="validateAndSubmit()"
             >Submit</b-button
           >
         </div>
@@ -110,7 +110,8 @@ export default {
       if (
         this.isEmailValid == 1 &&
         this.isNameValid == 1 &&
-        this.isPasswordValid == 1
+        this.isPasswordValid == 1 &&
+        this.isConfirmationValid == 1
       ) {
         this.submit(this.formData);
       }
@@ -132,6 +133,15 @@ export default {
       } else {
         this.messages.name = [];
       }
+    },    
+    validateConfirmation() {
+      const { password, passwordConfirmation } = this.formData;
+      const isSamePassword = passwordConfirmation === password;
+      if (isSamePassword && this.isPasswordValid == 1) {
+        this.isConfirmationValid = 1;
+      } else {
+        this.isConfirmationValid = -1;
+      }
     },
     validatePassword() {
       const { password } = this.formData;
@@ -144,15 +154,7 @@ export default {
       } else {
         this.messages.password = [];
       }
-    },
-    validateConfirmation() {
-      const { password, passwordConfirmation } = this.formData;
-      const isSamePassword = passwordConfirmation === password;
-      if (isSamePassword && this.isPasswordValid == 1) {
-        this.isConfirmationValid = 1;
-      } else {
-        this.isConfirmationValid = -1;
-      }
+      this.validateConfirmation();
     },
     validateLength(input, minChars) {
       if (input.length <= minChars) {
