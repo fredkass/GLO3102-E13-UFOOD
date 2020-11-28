@@ -26,7 +26,16 @@ export default {
     async signUp(formData) {
       const { email, name, password } = formData;
       const body = { email, name, password };
-      await this.apiUser.signUp(body);
+      const user = await this.apiUser.signUpAndLogin(body);
+
+      if (!(user instanceof Error)) {
+        this.$root.user = user;
+        this.$root.authenticated = true;
+        this.$router.push("/");
+      }
+      else{
+        //console.log(user);
+      }
     }
   }
 };

@@ -4,7 +4,7 @@ export default class RestaurantService {
   constructor() {
     this.api = new Api();
   }
-  getRestaurants(
+  async getRestaurants(
     page,
     searchTerms = "",
     limit = "",
@@ -20,9 +20,11 @@ export default class RestaurantService {
     genres.length > 0 && querystrings.append("genres", genres);
     price_range.length > 0 && querystrings.append("price_range", price_range);
 
-    return this.api.get("/restaurants?" + querystrings);
+    const response = await this.api.get("/restaurants?" + querystrings);    
+    return await response.json();
   }
-  getRestaurant(id) {
-    return this.api.get("/restaurants/" + id);
+  async getRestaurant(id) {
+    const response = await this.api.get("/restaurants/" + id);    
+    return await response.json();
   }
 }

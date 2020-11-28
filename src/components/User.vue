@@ -219,33 +219,18 @@ export default {
       }
     },
     async deleteSelectedList(listId) {
-      let response = await this.apiFavorites.deleteFavoriteList(listId);
+      await this.apiFavorites.deleteFavoriteList(listId);
 
       this.favorites_lists = this.favorites_lists.filter(f => f.id != listId);
       if (this.current_favorites_list.id == listId) {
         this.display_past_visits = true;
-      }
-      if (!response) {
-        this.$buefy.toast.open({
-          duration: 5000,
-          message: `Error posting information, please try again`,
-          position: "is-top",
-          type: "is-danger"
-        });
-      } else {
-        this.$buefy.toast.open({
-          duration: 5000,
-          message: `List deleted successfully`,
-          position: "is-bottom",
-          type: "is-success"
-        });
       }
     },
     switchView() {
       this.display_past_visits = !this.display_past_visits;
     },
     async deleteFromList(restaurantId) {
-      let response = await this.apiFavorites.deleteRestaurantFromList(
+      await this.apiFavorites.deleteRestaurantFromList(
         this.current_favorites_list.id,
         restaurantId
       );
@@ -253,21 +238,6 @@ export default {
       this.current_favorites_list.restaurants = this.current_favorites_list.restaurants.filter(
         r => r.id != restaurantId
       );
-      if (!response) {
-        this.$buefy.toast.open({
-          duration: 5000,
-          message: `Error posting information, please try again`,
-          position: "is-top",
-          type: "is-danger"
-        });
-      } else {
-        this.$buefy.toast.open({
-          duration: 5000,
-          message: `List deleted successfully`,
-          position: "is-bottom",
-          type: "is-success"
-        });
-      }
     },
     toggleEditMode() {
       this.editMode = !this.editMode;
@@ -283,54 +253,25 @@ export default {
       });
     },
     async changeFavoriteListName() {
-      let response = this.apiFavorites.updateFavoriteList(
+      this.apiFavorites.updateFavoriteList(
         this.current_favorites_list.id,
         this.current_favorites_list.name,
         this.current_favorites_list.owner
       );
-      if (!response) {
-        this.$buefy.toast.open({
-          duration: 5000,
-          message: `Error posting information, please try again`,
-          position: "is-top",
-          type: "is-danger"
-        });
-      } else {
-        this.$buefy.toast.open({
-          duration: 5000,
-          message: `List updated successfully`,
-          position: "is-bottom",
-          type: "is-success"
-        });
-      }
     },
     createAndAddList(name) {
       this.createNewList(name).then((id) => {
         this.getFavoriteList(id).then(l => {
           this.favorites_lists.push(l);
         })
-      })
+      });
+      
     },
     async createNewList(name) {
       let response = await this.apiFavorites.createFavoriteList(
         name,
         this.profile.email
       );
-      if (!response) {
-        this.$buefy.toast.open({
-          duration: 5000,
-          message: `Error posting information, please try again`,
-          position: "is-top",
-          type: "is-danger"
-        });
-      } else {
-        this.$buefy.toast.open({
-          duration: 5000,
-          message: `List created successfully`,
-          position: "is-bottom",
-          type: "is-success"
-        });
-      }
       return response.id;
     }
   },
@@ -356,7 +297,7 @@ export default {
       total_visits: 0,
       visit_per_page: 10,
       currentPage: 1,
-      editMode: false
+      editMode: false,
     };
   },
   components: {

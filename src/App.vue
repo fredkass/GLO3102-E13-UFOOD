@@ -12,6 +12,17 @@ export default {
   components: {
     "nav-menu": Navigation
   },
+  data() {
+    return {
+      authenticated: false,
+      user: {
+        email: "",
+        password: "",
+        token: "",
+        id: ""
+      }
+    };
+  },
   methods: {
     //TODO watch event logout pour le bouton logout dans le milieu de user, puis passer toggleLogIn à la navbar
   }

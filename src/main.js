@@ -9,6 +9,8 @@ import * as GmapVue from "gmap-vue";
 import Buefy from "buefy";
 import StarRating from "vue-star-rating";
 
+var VueCookie = require('vue-cookies')
+
 library.add(fas);
 Vue.component("font-awesome-icon", FontAwesomeIcon);
 Vue.component("star-rating", StarRating);
@@ -22,6 +24,7 @@ Vue.use(GmapVue, {
     libraries: "directions"
   }
 });
+Vue.use(VueCookie);
 Vue.config.productionTip = false;
 
 new Vue({

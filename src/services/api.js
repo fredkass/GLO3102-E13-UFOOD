@@ -12,8 +12,7 @@ export default class Api {
         },
         body: JSON.stringify(body)
       });
-      const data = await response.json();
-      return data;
+      return response;
     } catch (error) {
       console.error("Problem in put request.");
       console.error(error);
@@ -28,11 +27,7 @@ export default class Api {
         },
         body: JSON.stringify(body)
       });
-      if (!response.ok) {
-        return Error("Problem in post request");
-      }
-      const data = await response.json();
-      return data;
+      return response;
     } catch (error) {
       console.error("Problem in post request.");
       console.error(error);
@@ -43,8 +38,7 @@ export default class Api {
   async get(route) {
     try {
       const response = await fetch(this.baseURL + route);
-      const data = await response.json();
-      return data;
+      return response;
     } catch (error) {
       console.error("Problem in get request.");
       console.error(error);
@@ -57,8 +51,7 @@ export default class Api {
       const response = await fetch(this.baseURL + route, {
         method: "DELETE"
       });
-      const data = await response.json();
-      return data; // should contain confirmation of deletion message
+      return response;
     } catch (error) {
       console.error("problem in delete request.");
       console.error(error);

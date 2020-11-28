@@ -5,20 +5,22 @@ export default class RestaurantVisitsService {
     this.api = new Api();
     this.userId = userId;
   }
-  getAllRestaurantsVisits(page) {
+  async getAllRestaurantsVisits(page) {
     let querystrings = new URLSearchParams({
       page: page
     });
-    return this.api.get(
+    const response = await this.api.get(
       "/users/" + this.userId + "/restaurants/visits?" + querystrings
     );
+    return await response.json();
   }
-  getRestaurantVisit(visitId) {
-    return this.api.get(
+  async getRestaurantVisit(visitId) {
+    const response = await this.api.get(
       "/users/" + this.userId + "/restaurants/visits/" + visitId
     );
+    return await response.json();
   }
-  createRestaurantVisit(restaurantId, comment, rating, date) {
+  async createRestaurantVisit(restaurantId, comment, rating, date) {
     let body = {
       restaurant_id: restaurantId,
       comment: comment,
@@ -26,9 +28,11 @@ export default class RestaurantVisitsService {
       date: date
     };
 
-    return this.api.post(
+    const response = await this.api.post(
       "/users/" + this.userId + "/restaurants/visits/",
       body
     );
+    
+    return await response.json();
   }
 }
