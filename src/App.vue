@@ -25,6 +25,9 @@ export default {
   },
   methods: {
     //TODO watch event logout pour le bouton logout dans le milieu de user, puis passer toggleLogIn à la navbar
+    isAuthenticated(){
+      return this.authenticated;
+    }
   }
 };
 </script>

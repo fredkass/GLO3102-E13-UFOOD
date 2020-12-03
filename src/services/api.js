@@ -1,6 +1,6 @@
 export default class Api {
   constructor() {
-    this.baseURL = "https://ufoodapi.herokuapp.com/unsecure";
+    this.baseURL = "https://ufoodapi.herokuapp.com";
   }
 
   async put(route, body) {

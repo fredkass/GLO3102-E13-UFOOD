@@ -52,14 +52,14 @@ export default class UsersService {
     }
   }
   async logIn(body) {
-    const response = await this.api.post("/login/", body);
+    const response = await this.api.post("/login", body);
     const data = await response.json();
     console.log(data);
     this.setTokenCookie(data);
     return data;
   }
   async logOut() {
-    const response = await this.api.post("/logout/");
+    const response = await this.api.post("/logout");
     return await response.json();
   }
 

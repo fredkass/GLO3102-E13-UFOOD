@@ -14,58 +14,48 @@
           <h1 class="title is-1">
             Sign up for free !
           </h1>
-          <b-field label="Email" :type="getInputType(isEmailValid)">
-            <b-input
-              type="email"
-              placeholder="Email"
-              icon="envelope"
-              v-model="formData.email"
-              @input="validateEmail()"
-            ></b-input>
-          </b-field>
-
-          <b-field
+          <input-field
+            label="Email"
+            type="email"
+            :maxlength="100"
+            :minChars="4"
+            icon="envelope"
+            v-model="formData.email"
+            @isValid="updateIsValidEmail"
+            :validationMethod="validateEmail"
+          ></input-field>
+          
+          <input-field
             label="Username"
-            :message="messages.name"
-            :type="getInputType(isNameValid)"
-          >
-            <b-input
-              placeholder="Username"
-              icon="user"
-              maxlength="30"
-              v-model="formData.name"
-              @input="validateName()"
-            ></b-input>
-          </b-field>
+            type="username"
+            :maxlength="30"
+            :minChars="4"
+            icon="user"
+            v-model="formData.name"
+            @isValid="updateIsValidUserName"
+          ></input-field>
 
-          <b-field
+
+          <input-field
             label="Password"
-            :message="messages.password"
-            :type="getInputType(isPasswordValid)"
-          >
-            <b-input
-              placeholder="Password"
-              icon="key"
-              type="password"
-              maxlength="30"
-              v-model="formData.password"
-              @input="validatePassword()"
-            ></b-input>
-          </b-field>
+            type="Password"
+            :maxlength="30"
+            :minChars="4"
+            icon="key"
+            v-model="formData.password"
+            @isValid="updateIsValidPassword"
+          ></input-field>
 
-          <b-field
+          
+          <input-field
             label="Confirm Password"
-            :type="getInputType(isConfirmationValid)"
-          >
-            <b-input
-              placeholder="Password"
-              icon="key"
-              type="password"
-              maxlength="30"
-              v-model="formData.passwordConfirmation"
-              @input="validateConfirmation()"
-            ></b-input>
-          </b-field>
+            type="Password"
+            :maxlength="30"
+            :minChars="4"
+            v-model="formData.passwordConfirmation"
+            @isValid="updateIsValidPasswordConfirmation"
+            :validationMethod="validateConfirmation"
+          ></input-field>
 
           <b-button type="is-primary" expanded @click="validateAndSubmit()"
             >Submit</b-button
@@ -79,7 +69,12 @@
 </template>
 
 <script>
+import InputField from "../Fields/InputField.vue";
+
 export default {
+  components: {
+    InputField
+  },
   name: "SignUpForm",
   props: ["submit"],
   data: () => {
@@ -110,8 +105,8 @@ export default {
       if (
         this.isEmailValid == 1 &&
         this.isNameValid == 1 &&
-        this.isPasswordValid == 1 &&
-        this.isConfirmationValid == 1
+        this.isPasswordValid &&
+        this.validateConfirmation()
       ) {
         this.submit(this.formData);
       }
@@ -119,11 +114,7 @@ export default {
     validateEmail() {
       const { email } = this.formData;
       const regexEmail = /\S+@\S+\.\S+/;
-      if (regexEmail.test(email)) {
-        this.isEmailValid = 1;
-      } else {
-        this.isEmailValid = -1;
-      }
+      return regexEmail.test(email);
     },
     validateName() {
       const { name } = this.formData;
@@ -133,28 +124,30 @@ export default {
       } else {
         this.messages.name = [];
       }
-    },    
+    },
     validateConfirmation() {
+      // const { password, passwordConfirmation } = this.formData;
+      // const isSamePassword = passwordConfirmation === password;
+      // if (isSamePassword && this.isPasswordValid == 1) {
+      //   this.isConfirmationValid = 1;
+      // } else {
+      //   this.isConfirmationValid = -1;
+      // }
       const { password, passwordConfirmation } = this.formData;
       const isSamePassword = passwordConfirmation === password;
-      if (isSamePassword && this.isPasswordValid == 1) {
-        this.isConfirmationValid = 1;
-      } else {
-        this.isConfirmationValid = -1;
-      }
+      return isSamePassword;
     },
-    validatePassword() {
-      const { password } = this.formData;
-      this.isPasswordValid = this.validateLength(
-        password,
-        this.minimumChars.password
-      );
-      if (this.isPasswordValid == -1) {
-        this.messages.password = ["Password is too short"];
-      } else {
-        this.messages.password = [];
-      }
-      this.validateConfirmation();
+    updateIsValidPassword(isValid) {
+      this.isPasswordValid = isValid;
+    },
+    updateIsValidEmail(isValid) {
+      this.isEmailValid = isValid;
+    },
+    updateIsValidUserName(isValid) {
+      this.isNameValid = isValid;
+    },
+    updateIsValidPasswordConfirmation(isValid) {
+      this.isConfirmationValid = isValid;
     },
     validateLength(input, minChars) {
       if (input.length <= minChars) {

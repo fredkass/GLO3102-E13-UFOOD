@@ -9,7 +9,7 @@ import * as GmapVue from "gmap-vue";
 import Buefy from "buefy";
 import StarRating from "vue-star-rating";
 
-var VueCookie = require('vue-cookies')
+var VueCookie = require("vue-cookies");
 
 library.add(fas);
 Vue.component("font-awesome-icon", FontAwesomeIcon);
@@ -27,6 +27,22 @@ Vue.use(GmapVue, {
 Vue.use(VueCookie);
 Vue.config.productionTip = false;
 
+router.beforeEach((to, from, next) => {
+  console.log(Vue.$cookies.get("token"));
+  if (
+    to.matched.some(record => record.meta.requiresAuth) &&
+    to.path !== "/login"
+  ) {
+    if (!Vue.$cookies.get("token")) {
+      console.log("ok");
+      next({ name: "Login" });
+    } else {
+      next();
+    }
+  } else {
+    next();
+  }
+});
 new Vue({
   render: h => h(App),
   router

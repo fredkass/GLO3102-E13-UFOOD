@@ -1,16 +1,16 @@
 <template>
   <div class="section">
-    <sign-up-form :submit="validateAndSignup"></sign-up-form>
+    <login-form :submit="login"></login-form>
   </div>
 </template>
 
 <script>
 import UsersService from "@/services/UsersService.js";
-import SignUpForm from "./SignUpForm.vue";
+import LoginForm from "./LoginForm.vue";
 export default {
-  name: "SignUp",
+  name: "Login",
   components: {
-    SignUpForm
+    LoginForm
   },
   data: () => {
     return {
@@ -18,21 +18,17 @@ export default {
     };
   },
   methods: {
-    async validateAndSignup(formData) {
-      await this.signUp(formData);
-    },
-
-    async signUp(formData) {
-      const { email, name, password } = formData;
-      const body = { email, name, password };
-      const user = await this.apiUser.signUpAndLogin(body);
+    async login(formData) {
+      console.log(formData);
+      const { email, password } = formData;
+      const body = { email, password };
+      const user = await this.apiUser.logIn(body);
 
       if (!(user instanceof Error)) {
         this.$root.user = user;
         this.$root.authenticated = true;
         this.$router.push("/");
-      }
-      else{
+      } else {
         //console.log(user);
       }
     }
