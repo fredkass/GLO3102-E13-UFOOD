@@ -66,7 +66,7 @@
             >
               <restaurant-card
                 :restaurant="restaurant"
-                :userId="userId"
+                :user="user"
                 :provenance="provenance"
                 :hideModal="false"
                 :isLoaded="isRestaurantsLoaded"
@@ -145,7 +145,7 @@ export default {
       isNavbarOpen: true,
       isWindowReduced: false,
       restaurants: [],
-      apiRestaurant: new RestaurantService(),
+      apiRestaurant: new RestaurantService(this.$root.user.token),
       currentPage: 1,
       totalPages: 100,
       restaurantsPerPage: 10,
@@ -156,8 +156,7 @@ export default {
       isComponentModalActive: false,
       restaurantModalId: 0,
       provenance: "home",
-      //harcoded
-      userId: "5fa6c9524a1f410004c5114b"
+      user: this.$root.user
     };
   },
   components: {

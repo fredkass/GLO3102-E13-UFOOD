@@ -1,8 +1,8 @@
 import Api from "./api.js";
 
 export default class RestaurantVisitsService {
-  constructor(userId) {
-    this.api = new Api();
+  constructor(userId, token) {
+    this.api = new Api(token);
     this.userId = userId;
   }
   async getAllRestaurantsVisits(page) {

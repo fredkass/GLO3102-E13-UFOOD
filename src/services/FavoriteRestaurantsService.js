@@ -2,8 +2,8 @@ import Api from "./api.js";
 import ToastService from "./ToastDisplayService.js";
 
 export default class FavoriteRestaurantsService {
-  constructor() {
-    this.api = new Api();
+  constructor(token) {
+    this.api = new Api(token);
     this.toast = new ToastService();
   }
   // optional : ?limit, ?page
@@ -75,7 +75,7 @@ export default class FavoriteRestaurantsService {
     const response = await this.api.delete(
       "/favorites/" + favoriteListId + "/restaurants/" + restaurantId
     );
-    console.log(response);
+    
     if (!response.ok) {
       this.toast.fail("Error deleting restaurant from list, please try again");
     } else {

@@ -1,8 +1,8 @@
 import Api from "./api.js";
 
 export default class RestaurantService {
-  constructor() {
-    this.api = new Api();
+  constructor(token) {
+    this.api = new Api(token);
   }
   async getRestaurants(
     page,

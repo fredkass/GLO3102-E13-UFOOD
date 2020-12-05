@@ -28,13 +28,11 @@ Vue.use(VueCookie);
 Vue.config.productionTip = false;
 
 router.beforeEach((to, from, next) => {
-  console.log(Vue.$cookies.get("token"));
   if (
     to.matched.some(record => record.meta.requiresAuth) &&
     to.path !== "/login"
   ) {
     if (!Vue.$cookies.get("token")) {
-      console.log("ok");
       next({ name: "Login" });
     } else {
       next();
@@ -45,5 +43,22 @@ router.beforeEach((to, from, next) => {
 });
 new Vue({
   render: h => h(App),
+  data() {
+    return {
+      authenticated: false,
+      user: {
+        email: "",
+        password: "",
+        token: "",
+        id: ""
+      }
+    };
+  },
+  methods: {
+    //TODO watch event logout pour le bouton logout dans le milieu de user, puis passer toggleLogIn à la navbar
+    isAuthenticated(){
+      return this.authenticated;
+    }
+  },
   router
 }).$mount("#app");

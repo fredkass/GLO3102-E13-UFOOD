@@ -35,9 +35,9 @@
             <slot></slot>
 
             <modale-button
-              v-if="userId"
+              v-if="user"
               :restaurantId="restaurant.id"
-              :userId="userId"
+              :user="user"
               color="is-dark"
             />
           </div>
@@ -154,8 +154,7 @@ export default {
           }
         }
       },
-      //harcoded
-      userId: "5fa6c9524a1f410004c5114b"
+      user: this.$root.user
     };
   },
 

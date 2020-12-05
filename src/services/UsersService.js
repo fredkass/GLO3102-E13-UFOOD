@@ -2,8 +2,8 @@ import Api from "./api.js";
 import Vue from "vue";
 
 export default class UsersService {
-  constructor() {
-    this.api = new Api();
+  constructor(token) {
+    this.api = new Api(token);
     this.token = this.getTokenCookie();
   }
   // optional : ?limit, ?page, ?q=name
@@ -54,7 +54,7 @@ export default class UsersService {
   async logIn(body) {
     const response = await this.api.post("/login", body);
     const data = await response.json();
-    console.log(data);
+    
     this.setTokenCookie(data);
     return data;
   }

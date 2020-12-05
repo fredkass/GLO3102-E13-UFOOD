@@ -31,7 +31,7 @@
 
           <favorites-manager
             :favoritesLists="favorites_lists"
-            :userId="userId"
+            :userId="user.id"
             :deleteSelectedList="deleteSelectedList"
             :createNewList="createAndAddList"
           ></favorites-manager>
@@ -50,7 +50,9 @@
         <div class="columns is-multiline">
           <div
             class="column is-half-desktop is-full-tablet"
-            v-if="visited_restaurants.length < 1 && this.isVisitedRestaurantsloaded"
+            v-if="
+              visited_restaurants.length < 1 && this.isVisitedRestaurantsloaded
+            "
           >
             No Restaurants Visited
           </div>
@@ -61,7 +63,7 @@
           >
             <restaurant-card
               :restaurant="visit.restaurant"
-              :userId="userId"
+              :user="user"
               :provenance="provenance"
               :visits="visit.visits"
               :hideModal="false"
@@ -105,12 +107,14 @@
             <restaurant-card
               :hideModal="true"
               :restaurant="restaurant"
-              :userId="userId"
+              :user="user"
               :provenance="provenance"
               :favoriteLists="favorites_lists"
               :deleteFromList="deleteFromList"
               :isLoaded="isFavoritesListsLoaded"
-              @addedToFavorite="loadFavoriteListItems(current_favorites_with_restaurants.id)"
+              @addedToFavorite="
+                loadFavoriteListItems(current_favorites_with_restaurants.id)
+              "
             />
           </div>
         </div>
@@ -129,6 +133,14 @@ import FavoritesManager from "./FavoritesManager.vue";
 
 export default {
   mounted() {
+    this.user = this.$root.user;
+    this.apiUsers = new UsersService(this.$root.user.token);
+    this.apiVisits = new RestaurantVisistsService(
+      this.$root.user.id,
+      this.$root.user.token
+    );
+    this.apiFavorites = new FavoriteRestaurantsService(this.$root.user.token);
+    this.apiRestaurants = new RestaurantService(this.$root.user.token);
     this.loadUser();
   },
   methods: {
@@ -154,7 +166,7 @@ export default {
     },
     async getUserById() {
       this.isUserLoaded = false;
-      const user = await this.apiUsers.getUserById(this.userId);
+      const user = await this.apiUsers.getUserById(this.user.id);
       this.isUserLoaded = true;
       return user;
     },
@@ -168,7 +180,7 @@ export default {
     },
     async getFavoritesLists() {
       this.isFavoritesListsLoaded = false;
-      const lists = await this.apiUsers.getFavoritesListsByUserId(this.userId);
+      const lists = await this.apiUsers.getFavoritesListsByUserId(this.user.id);
       this.isFavoritesListsLoaded = true;
       return lists;
     },
@@ -260,12 +272,11 @@ export default {
       );
     },
     createAndAddList(name) {
-      this.createNewList(name).then((id) => {
+      this.createNewList(name).then(id => {
         this.getFavoriteList(id).then(l => {
           this.favorites_lists.push(l);
-        })
+        });
       });
-      
     },
     async createNewList(name) {
       let response = await this.apiFavorites.createFavoriteList(
@@ -277,11 +288,11 @@ export default {
   },
   data: () => {
     return {
-      userId: "5fa6c9524a1f410004c5114b",
-      apiUsers: new UsersService(),
-      apiVisits: new RestaurantVisistsService("5fa6c9524a1f410004c5114b"),
-      apiFavorites: new FavoriteRestaurantsService(),
-      apiRestaurants: new RestaurantService(),
+      apiUsers: {},
+      apiVisits: {},
+      apiFavorites: {},
+      apiRestaurants: {},
+      user: "",
       isUserLoaded: false,
       isVisitedRestaurantsloaded: false,
       isRestaurantsLoaded: false,
@@ -297,7 +308,7 @@ export default {
       total_visits: 0,
       visit_per_page: 10,
       currentPage: 1,
-      editMode: false,
+      editMode: false
     };
   },
   components: {
