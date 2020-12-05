@@ -60,9 +60,13 @@ export default class UsersService {
   }
   async logOut() {
     const response = await this.api.post("/logout");
-    return await response.json();
+    return response.ok;
   }
 
+  async getUserFromToken(){    
+    const response = await this.api.get("/tokeninfo");
+    return response;
+  }
   setTokenCookie(response) {
     Vue.$cookies.set("token", response.token);
   }
@@ -70,4 +74,5 @@ export default class UsersService {
   getTokenCookie() {
     return Vue.$cookies.get("token");
   }
+
 }
