@@ -1,10 +1,6 @@
 <template>
   <div class="restaurant-map">
-    <GmapMap
-      :center="currentPos"
-      :zoom="13"
-      map-type-id="terrain"
-    >
+    <GmapMap ref="mapRef" :center="currentPos" :zoom="13" map-type-id="terrain">
       <GmapMarker
         :key="id"
         v-for="(restaurant, id) in restaurants"
@@ -14,7 +10,12 @@
         }"
         :clickable="true"
         :draggable="true"
-        @click="center = m.position"
+        @click="
+          center = {
+            lat: restaurant.location.coordinates[1],
+            lng: restaurant.location.coordinates[0]
+          }
+        "
       />
     </GmapMap>
   </div>
@@ -24,41 +25,34 @@ import { gmapApi } from "gmap-vue";
 
 export default {
   name: "RestaurantMap",
-  props: ["restaurants"],
+  props: ["restaurants", "currentPos"],
   computed: {
     google: gmapApi
   },
 
-  mounted() {
-    this.currentPos = {
-      lat: this.restaurants[0].location.coordinates[1],
-      lng: this.restaurants[0].location.coordinates[0]
-    };
-    navigator.geolocation.getCurrentPosition(
-      position =>
-        (this.currentPos = {
-          lat: position.coords.latitude,
-          lng: position.coords.longitude
-        }),
-      () => {
-        this.currentPos = {
-          lat: this.restaurants[0].location.coordinates[1],
-          lng: this.restaurants[0].location.coordinates[0]
-        };
-        window.alert("Impossible to determine location");
-      }
-    );
+  beforeUpdate() {
+    this.$refs.mapRef.$mapPromise.then(map => {
+      var bounds = new this.google.maps.LatLngBounds();
+      this.restaurants.forEach(r => {
+        bounds.extend(
+          new this.google.maps.LatLng(
+            r.location.coordinates[1],
+            r.location.coordinates[0]
+          )
+        );
+      });
+      map.fitBounds(bounds);
+    });
   },
   data() {
     return {
-      map: undefined,
-      currentPos: {}
+      map: undefined
     };
   }
 };
 </script>
 <style scoped>
-.restaurant-map{
+.restaurant-map {
   height: calc(-97px + 100vh);
   position: sticky;
   top: 100px;
@@ -73,7 +67,10 @@ export default {
 }
 
 .vue-map-container .vue-map {
-  left: 0; right: 0; top: 0; bottom: 0;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
   position: absolute;
 }
 

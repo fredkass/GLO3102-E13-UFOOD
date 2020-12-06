@@ -9,7 +9,9 @@ export default class RestaurantService {
     searchTerms = "",
     limit = "",
     genres = "",
-    price_range = ""
+    price_range = "",
+    lat,
+    lon,
   ) {
     let querystrings = new URLSearchParams({
       page: page
@@ -19,7 +21,10 @@ export default class RestaurantService {
     limit && querystrings.append("limit", limit);
     genres.length > 0 && querystrings.append("genres", genres);
     price_range.length > 0 && querystrings.append("price_range", price_range);
+    lat && querystrings.append("lat", lat);
+    lon && querystrings.append("lon", lon);
 
+    console.log(querystrings);
     const response = await this.api.get("/restaurants?" + querystrings);    
     return await response.json();
   }

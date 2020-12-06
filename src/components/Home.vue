@@ -34,7 +34,7 @@
           >
           </b-pagination>
 
-          <b-button @click="isMapMode = !isMapMode" icon-left="map">{{
+          <b-button @click="toggleMapMode" icon-left="map">{{
             !isMapMode ? "Map" : "List"
           }}</b-button>
           <b-button
@@ -86,6 +86,7 @@
           <restaurant-map
             v-if="restaurants.length > 0"
             :restaurants="restaurants"
+            :currentPos="currentPos"
           ></restaurant-map>
         </div>
       </div>
@@ -112,6 +113,31 @@ export default {
     window.removeEventListener("resize", this.myEventHandler);
   },
   methods: {
+    toggleMapMode() {
+      if (!this.isMapMode) {
+        navigator.geolocation.getCurrentPosition(
+          position => {
+            this.currentPos = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude
+            };
+            console.log(this.currentPos);
+            this.updateRestaurants();
+          },
+          () => {
+            this.currentPos = {
+              lat: this.restaurants[0].location.coordinates[1],
+              lng: this.restaurants[0].location.coordinates[0]
+            };
+            console.log(this.currentPos);
+
+            this.updateRestaurants();
+            window.alert("Impossible to determine location");
+          }
+        );
+      }
+      this.isMapMode = !this.isMapMode;
+    },
     priceFilterChanged(value) {
       this.price_range_filter = value;
       this.updateRestaurants();
@@ -128,12 +154,16 @@ export default {
     },
     async getRestaurants() {
       this.isRestaurantsLoaded = false;
+      const lat = this.isMapMode ? this.currentPos.lat : "";
+      const lon = this.isMapMode ? this.currentPos.lng : "";
       const restaurants = await this.apiRestaurant.getRestaurants(
         this.currentPage - 1,
         this.searchFilterTerms,
         null,
         this.genres_filter,
-        this.price_range_filter
+        this.price_range_filter,
+        lat,
+        lon
       );
       this.isRestaurantsLoaded = true;
       return restaurants;
@@ -172,7 +202,8 @@ export default {
       restaurantModalId: 0,
       provenance: "home",
       user: this.$root.user,
-      isMapMode: false
+      isMapMode: false,
+      currentPos: {}
     };
   },
   components: {
