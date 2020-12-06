@@ -33,6 +33,10 @@
             @change="updateRestaurants"
           >
           </b-pagination>
+
+          <b-button @click="isMapMode = !isMapMode" icon-left="map">{{
+            !isMapMode ? "Map" : "List"
+          }}</b-button>
           <b-button
             v-if="isMobile || isWindowReduced"
             @click="isNavbarOpen = !isNavbarOpen"
@@ -60,7 +64,11 @@
               No Restaurants found
             </div>
             <div
-              class="column is-half-desktop is-full-tablet"
+              v-bind:class="{
+                column: true,
+                'is-half-desktop': !isMapMode,
+                'is-full-tablet': !isMapMode
+              }"
               v-for="restaurant in restaurants"
               :key="restaurant.id"
             >
@@ -74,6 +82,12 @@
             </div>
           </div>
         </div>
+        <div class="column is-half-desktop is-full-tablet" v-if="isMapMode">
+          <restaurant-map
+            v-if="restaurants.length > 0"
+            :restaurants="restaurants"
+          ></restaurant-map>
+        </div>
       </div>
     </div>
   </div>
@@ -83,6 +97,7 @@
 import SidebarFilter from "./SidebarFilter.vue";
 import RestaurantService from "@/services/RestaurantService.js";
 import RestaurantCard from "./RestaurantCard.vue";
+import RestaurantMap from "./RestaurantMap.vue";
 
 export default {
   name: "home",
@@ -156,12 +171,14 @@ export default {
       isComponentModalActive: false,
       restaurantModalId: 0,
       provenance: "home",
-      user: this.$root.user
+      user: this.$root.user,
+      isMapMode: false
     };
   },
   components: {
     sidebar: SidebarFilter,
     RestaurantCard,
+    RestaurantMap
   }
 };
 </script>
