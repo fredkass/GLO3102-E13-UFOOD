@@ -57,7 +57,7 @@
         v-if="this.isAuthenticated"
       >
         <b-button class="button is-primary" icon-left="user">
-          <strong>{{ userName }}</strong>
+          <strong>{{ this.user.name }}</strong>
         </b-button>
       </b-navbar-item>
       <b-navbar-item tag="div">
@@ -70,12 +70,7 @@
 </template>
 <script>
 export default {
-  props: ["logout"],
-  data() {
-    return {
-      userName: "Frédéric Kassab"
-    };
-  },
+  props: ["logout", "user"],
   methods: {
     toggleLogIn() {
       this.isLoggedIn = !this.isLoggedIn;

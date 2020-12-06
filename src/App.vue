@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <nav-menu :logout="logout"></nav-menu>
+    <nav-menu :user="this.$root.user" :logout="logout"></nav-menu>
     <router-view></router-view>
   </div>
 </template>
