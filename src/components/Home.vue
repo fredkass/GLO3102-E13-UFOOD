@@ -33,6 +33,10 @@
             @change="updateRestaurants"
           >
           </b-pagination>
+
+          <b-button @click="toggleMapMode" icon-left="map">{{
+            !isMapMode ? "Map" : "List"
+          }}</b-button>
           <b-button
             v-if="isMobile || isWindowReduced"
             @click="isNavbarOpen = !isNavbarOpen"
@@ -60,7 +64,11 @@
               No Restaurants found
             </div>
             <div
-              class="column is-half-desktop is-full-tablet"
+              v-bind:class="{
+                column: true,
+                'is-half-desktop': !isMapMode,
+                'is-full-tablet': !isMapMode
+              }"
               v-for="restaurant in restaurants"
               :key="restaurant.id"
             >
@@ -74,6 +82,13 @@
             </div>
           </div>
         </div>
+        <div class="column is-half-desktop is-full-tablet" v-if="isMapMode">
+          <restaurant-map
+            v-if="restaurants.length > 0"
+            :restaurants="restaurants"
+            :currentPos="currentPos"
+          ></restaurant-map>
+        </div>
       </div>
     </div>
   </div>
@@ -83,6 +98,7 @@
 import SidebarFilter from "./SidebarFilter.vue";
 import RestaurantService from "@/services/RestaurantService.js";
 import RestaurantCard from "./RestaurantCard.vue";
+import RestaurantMap from "./RestaurantMap.vue";
 
 export default {
   name: "home",
@@ -97,6 +113,31 @@ export default {
     window.removeEventListener("resize", this.myEventHandler);
   },
   methods: {
+    toggleMapMode() {
+      if (!this.isMapMode) {
+        navigator.geolocation.getCurrentPosition(
+          position => {
+            this.currentPos = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude
+            };
+            console.log(this.currentPos);
+            this.updateRestaurants();
+          },
+          () => {
+            this.currentPos = {
+              lat: this.restaurants[0].location.coordinates[1],
+              lng: this.restaurants[0].location.coordinates[0]
+            };
+            console.log(this.currentPos);
+
+            this.updateRestaurants();
+            window.alert("Impossible to determine location");
+          }
+        );
+      }
+      this.isMapMode = !this.isMapMode;
+    },
     priceFilterChanged(value) {
       this.price_range_filter = value;
       this.updateRestaurants();
@@ -113,12 +154,16 @@ export default {
     },
     async getRestaurants() {
       this.isRestaurantsLoaded = false;
+      const lat = this.isMapMode ? this.currentPos.lat : "";
+      const lon = this.isMapMode ? this.currentPos.lng : "";
       const restaurants = await this.apiRestaurant.getRestaurants(
         this.currentPage - 1,
         this.searchFilterTerms,
         null,
         this.genres_filter,
-        this.price_range_filter
+        this.price_range_filter,
+        lat,
+        lon
       );
       this.isRestaurantsLoaded = true;
       return restaurants;
@@ -156,12 +201,15 @@ export default {
       isComponentModalActive: false,
       restaurantModalId: 0,
       provenance: "home",
-      user: this.$root.user
+      user: this.$root.user,
+      isMapMode: false,
+      currentPos: {}
     };
   },
   components: {
     sidebar: SidebarFilter,
     RestaurantCard,
+    RestaurantMap
   }
 };
 </script>

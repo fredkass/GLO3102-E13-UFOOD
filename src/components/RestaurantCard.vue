@@ -144,6 +144,7 @@ export default {
 }
 .box {
   height: 100%;
+  min-width:300px;
 }
 </style>
 
