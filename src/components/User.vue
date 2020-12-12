@@ -4,10 +4,11 @@
       <div class="column is-one-quarter">
         <div class="box profile-container has-text-centered">
           <figure class="image profile">
-            <img
+            <!-- <img
               src="https://d1w2poirtb3as9.cloudfront.net/default.jpeg?Expires=1601273955&Signature=meBVGTd53ut91D6gCOwE8Zwun60NUAlDwAB2Okj2LGm0EoC12iu8B5Tthah-RFR9XPibt-3wI1ruv9ex3~tlAtUAsvXNZz2-AVRJ33L64Qn5qmo~F4YGxsuPvSBagP0hBRhSA7eVzgohLu9gIEbNqw9IFOdgeLgjP3eM3GGLSuWMe152iVyLmIiKUGhPIADJ5AmjM5qoamjXjdPXgJsOONsghDUnn76n3x76b-dLO3PgLMTWdx39IKA9Osiip5CLPA7AqFqfzdzfqruV9Fhu2Ns-kd13N45ItzW-Q8ttLcXg4mVDn7EJ2oQlpxZ6LxfVHJbPofXbHnnb68qeUeUF5g__&Key-Pair-Id=APKAJSDH2OZQQSA64LQQ"
               alt="user icon"
-            />
+            /> -->
+            <img :src="this.gravatarURL" alt="user icon" />
           </figure>
           <h4 class="subtitle is-5">Profile Info</h4>
           <p>
@@ -31,7 +32,7 @@
 
           <favorites-manager
             :favoritesLists="favorites_lists"
-            :userId="userId"
+            :userId="user.id"
             :deleteSelectedList="deleteSelectedList"
             :createNewList="createAndAddList"
           ></favorites-manager>
@@ -50,7 +51,9 @@
         <div class="columns is-multiline">
           <div
             class="column is-half-desktop is-full-tablet"
-            v-if="visited_restaurants.length < 1 && this.isVisitedRestaurantsloaded"
+            v-if="
+              visited_restaurants.length < 1 && this.isVisitedRestaurantsloaded
+            "
           >
             No Restaurants Visited
           </div>
@@ -61,7 +64,7 @@
           >
             <restaurant-card
               :restaurant="visit.restaurant"
-              :userId="userId"
+              :user="user"
               :provenance="provenance"
               :visits="visit.visits"
               :hideModal="false"
@@ -105,12 +108,14 @@
             <restaurant-card
               :hideModal="true"
               :restaurant="restaurant"
-              :userId="userId"
+              :user="user"
               :provenance="provenance"
               :favoriteLists="favorites_lists"
               :deleteFromList="deleteFromList"
               :isLoaded="isFavoritesListsLoaded"
-              @addedToFavorite="loadFavoriteListItems(current_favorites_with_restaurants.id)"
+              @addedToFavorite="
+                loadFavoriteListItems(current_favorites_with_restaurants.id)
+              "
             />
           </div>
         </div>
@@ -126,9 +131,19 @@ import FavoriteRestaurantsService from "@/services/FavoriteRestaurantsService.js
 import RestaurantService from "@/services/RestaurantService.js";
 import RestaurantCard from "./RestaurantCard.vue";
 import FavoritesManager from "./FavoritesManager.vue";
+import GravatarService from "@/services/GravatarService.js";
 
 export default {
   mounted() {
+    this.user = this.$root.user;
+    this.apiUsers = new UsersService(this.$root.user.token);
+    this.apiVisits = new RestaurantVisistsService(
+      this.$root.user.id,
+      this.$root.user.token
+    );
+    this.apiFavorites = new FavoriteRestaurantsService(this.$root.user.token);
+    this.apiRestaurants = new RestaurantService(this.$root.user.token);
+    this.gravatarURL = new GravatarService(this.user.email).getAvatarURL(200);
     this.loadUser();
   },
   methods: {
@@ -154,7 +169,7 @@ export default {
     },
     async getUserById() {
       this.isUserLoaded = false;
-      const user = await this.apiUsers.getUserById(this.userId);
+      const user = await this.apiUsers.getUserById(this.user.id);
       this.isUserLoaded = true;
       return user;
     },
@@ -168,7 +183,7 @@ export default {
     },
     async getFavoritesLists() {
       this.isFavoritesListsLoaded = false;
-      const lists = await this.apiUsers.getFavoritesListsByUserId(this.userId);
+      const lists = await this.apiUsers.getFavoritesListsByUserId(this.user.id);
       this.isFavoritesListsLoaded = true;
       return lists;
     },
@@ -219,33 +234,18 @@ export default {
       }
     },
     async deleteSelectedList(listId) {
-      let response = await this.apiFavorites.deleteFavoriteList(listId);
+      await this.apiFavorites.deleteFavoriteList(listId);
 
       this.favorites_lists = this.favorites_lists.filter(f => f.id != listId);
       if (this.current_favorites_list.id == listId) {
         this.display_past_visits = true;
-      }
-      if (!response) {
-        this.$buefy.toast.open({
-          duration: 5000,
-          message: `Error posting information, please try again`,
-          position: "is-top",
-          type: "is-danger"
-        });
-      } else {
-        this.$buefy.toast.open({
-          duration: 5000,
-          message: `List deleted successfully`,
-          position: "is-bottom",
-          type: "is-success"
-        });
       }
     },
     switchView() {
       this.display_past_visits = !this.display_past_visits;
     },
     async deleteFromList(restaurantId) {
-      let response = await this.apiFavorites.deleteRestaurantFromList(
+      await this.apiFavorites.deleteRestaurantFromList(
         this.current_favorites_list.id,
         restaurantId
       );
@@ -253,21 +253,6 @@ export default {
       this.current_favorites_list.restaurants = this.current_favorites_list.restaurants.filter(
         r => r.id != restaurantId
       );
-      if (!response) {
-        this.$buefy.toast.open({
-          duration: 5000,
-          message: `Error posting information, please try again`,
-          position: "is-top",
-          type: "is-danger"
-        });
-      } else {
-        this.$buefy.toast.open({
-          duration: 5000,
-          message: `List deleted successfully`,
-          position: "is-bottom",
-          type: "is-success"
-        });
-      }
     },
     toggleEditMode() {
       this.editMode = !this.editMode;
@@ -283,64 +268,34 @@ export default {
       });
     },
     async changeFavoriteListName() {
-      let response = this.apiFavorites.updateFavoriteList(
+      this.apiFavorites.updateFavoriteList(
         this.current_favorites_list.id,
         this.current_favorites_list.name,
         this.current_favorites_list.owner
       );
-      if (!response) {
-        this.$buefy.toast.open({
-          duration: 5000,
-          message: `Error posting information, please try again`,
-          position: "is-top",
-          type: "is-danger"
-        });
-      } else {
-        this.$buefy.toast.open({
-          duration: 5000,
-          message: `List updated successfully`,
-          position: "is-bottom",
-          type: "is-success"
-        });
-      }
     },
     createAndAddList(name) {
-      this.createNewList(name).then((id) => {
+      this.createNewList(name).then(id => {
         this.getFavoriteList(id).then(l => {
           this.favorites_lists.push(l);
-        })
-      })
+        });
+      });
     },
     async createNewList(name) {
       let response = await this.apiFavorites.createFavoriteList(
         name,
         this.profile.email
       );
-      if (!response) {
-        this.$buefy.toast.open({
-          duration: 5000,
-          message: `Error posting information, please try again`,
-          position: "is-top",
-          type: "is-danger"
-        });
-      } else {
-        this.$buefy.toast.open({
-          duration: 5000,
-          message: `List created successfully`,
-          position: "is-bottom",
-          type: "is-success"
-        });
-      }
       return response.id;
     }
   },
   data: () => {
     return {
-      userId: "5fa6c9524a1f410004c5114b",
-      apiUsers: new UsersService(),
-      apiVisits: new RestaurantVisistsService("5fa6c9524a1f410004c5114b"),
-      apiFavorites: new FavoriteRestaurantsService(),
-      apiRestaurants: new RestaurantService(),
+      apiUsers: {},
+      apiVisits: {},
+      apiFavorites: {},
+      apiRestaurants: {},
+      user: "",
       isUserLoaded: false,
       isVisitedRestaurantsloaded: false,
       isRestaurantsLoaded: false,
@@ -356,7 +311,8 @@ export default {
       total_visits: 0,
       visit_per_page: 10,
       currentPage: 1,
-      editMode: false
+      editMode: false,
+      gravatarURL: ""
     };
   },
   components: {

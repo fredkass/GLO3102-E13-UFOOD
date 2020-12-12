@@ -6,7 +6,7 @@
     <visit-modal
       :isComponentModalActive="isComponentModalActive"
       :restaurantId="restaurantId"
-      :userId="userId"
+      :user="user"
       :close="closeModal"
     />
   </span>
@@ -18,7 +18,7 @@
       :isComponentModalActive="isComponentModalActive"
       :isComponentModalReadonly="isComponentModalReadonly"
       :restaurantId="restaurantId"
-      :userId="userId"
+      :user="user"
       :close="closeModal"
       :visits="visits"
     />
@@ -32,7 +32,7 @@ export default {
   components: {
     VisitModal
   },
-  props: ["restaurantId", "userId", "color", "provenance", "visits"],
+  props: ["restaurantId", "user", "color", "provenance", "visits"],
   data() {
     return {
       isComponentModalActive: false,

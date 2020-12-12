@@ -62,13 +62,13 @@ export default {
     "isComponentModalReadonly",
     "isComponentModalActive",
     "restaurantId",
-    "userId",
+    "user",
     "close",
     "visits"
   ],
   data() {
     return {
-      apiVisits: new RestaurantVisitsService(this.userId),
+      apiVisits: new RestaurantVisitsService(this.user.id, this.user.token),
       visitInfo: {},
       totalVisits: 1,
       currentVisit: 1,

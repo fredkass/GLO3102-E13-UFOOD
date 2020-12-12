@@ -30,11 +30,11 @@ export default {
   },
   data() {
     return {
-      apiRestaurant: new RestaurantService(),
-      apiUser: new UserService(),
-      apiFavorites: new FavoriteRestaurantsService(),
+      apiRestaurant: new RestaurantService(this.$root.user.token),
+      apiUser: new UserService(this.$root.user.token),
+      apiFavorites: new FavoriteRestaurantsService(this.$root.user.token),
       isRestaurantsLoaded: false,
-      userId: "5fa6c9524a1f410004c5114b",
+      userId: this.$root.user.id,
       restaurant: undefined,
       favorites: undefined,
       dropdownComponent: "DropdownFavorites"

@@ -32,13 +32,19 @@
       </b-navbar-item>
       <b-navbar-item tag="div">
         <div class="buttons">
-          <b-button class="button is-primary" v-if="!this.isLoggedIn">
+          <b-button
+            class="button is-primary"
+            v-if="!this.isAuthenticated"
+            tag="router-link"
+            :to="{ path: '/SignUp' }"
+          >
             <strong>Sign up</strong>
           </b-button>
           <b-button
+            tag="router-link"
+            :to="{ path: '/login' }"
             class="button is-light"
-            @click="toggleLogIn()"
-            v-if="!this.isLoggedIn"
+            v-if="!this.isAuthenticated"
           >
             Log in
           </b-button>
@@ -48,18 +54,14 @@
       <b-navbar-item
         tag="router-link"
         :to="{ path: '/user' }"
-        v-if="this.isLoggedIn"
+        v-if="this.isAuthenticated"
       >
         <b-button class="button is-primary" icon-left="user">
-          <strong>{{ userName }}</strong>
+          <strong>{{ this.user.name }}</strong>
         </b-button>
       </b-navbar-item>
       <b-navbar-item tag="div">
-        <a
-          class="button is-light"
-          @click="toggleLogIn()"
-          v-if="this.isLoggedIn"
-        >
+        <a class="button is-light" @click="logout" v-if="this.isAuthenticated">
           Sign out
         </a>
       </b-navbar-item>
@@ -68,18 +70,18 @@
 </template>
 <script>
 export default {
-  data() {
-    return {
-      isLoggedIn: false,
-      userName: "Frédéric Kassab"
-    };
-  },
+  props: ["logout", "user"],
   methods: {
     toggleLogIn() {
       this.isLoggedIn = !this.isLoggedIn;
-      if(!this.isLoggedIn) {
-        this.$router.push({name: "Home"});
+      if (!this.isLoggedIn) {
+        this.$router.push({ name: "Home" });
       }
+    }
+  },
+  computed: {
+    isAuthenticated() {
+      return this.$root.authenticated;
     }
   }
 };

@@ -1,19 +1,21 @@
 export default class Api {
-  constructor() {
-    this.baseURL = "https://ufoodapi.herokuapp.com/unsecure";
+  constructor(token) {
+    this.baseURL = "https://ufoodapi.herokuapp.com";
+    this.headers = new Headers();
+    this.headers.append("Content-Type", "application/json");
+    //if (token != undefined) {
+    this.headers.append("Authorization", token);
+    //}
   }
 
   async put(route, body) {
     try {
       const response = await fetch(this.baseURL + route, {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json"
-        },
+        headers: this.headers,
         body: JSON.stringify(body)
       });
-      const data = await response.json();
-      return data;
+      return response;
     } catch (error) {
       console.error("Problem in put request.");
       console.error(error);
@@ -23,16 +25,10 @@ export default class Api {
     try {
       const response = await fetch(this.baseURL + route, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
+        headers: this.headers,
         body: JSON.stringify(body)
       });
-      if (!response.ok) {
-        return Error("Problem in post request");
-      }
-      const data = await response.json();
-      return data;
+      return response;
     } catch (error) {
       console.error("Problem in post request.");
       console.error(error);
@@ -42,9 +38,10 @@ export default class Api {
 
   async get(route) {
     try {
-      const response = await fetch(this.baseURL + route);
-      const data = await response.json();
-      return data;
+      const response = await fetch(this.baseURL + route, {
+        headers: this.headers
+      });
+      return response;
     } catch (error) {
       console.error("Problem in get request.");
       console.error(error);
@@ -55,10 +52,10 @@ export default class Api {
   async delete(route) {
     try {
       const response = await fetch(this.baseURL + route, {
-        method: "DELETE"
+        method: "DELETE",
+        headers: this.headers
       });
-      const data = await response.json();
-      return data; // should contain confirmation of deletion message
+      return response;
     } catch (error) {
       console.error("problem in delete request.");
       console.error(error);

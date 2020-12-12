@@ -59,9 +59,9 @@
           <div class="address">{{ restaurant.address }}</div>
           <div class="telephone">{{ restaurant.tel }}</div>
           <modale-button
-            v-if="userId && this.hideModal == false"
+            v-if="user && this.hideModal == false"
             :restaurantId="restaurant.id"
-            :userId="userId"
+            :user="user"
             :provenance="provenance"
             :visits="visits"
             color="is-primary"
@@ -92,7 +92,7 @@ export default {
   props: [
     "isLoaded",
     "restaurant",
-    "userId",
+    "user",
     "provenance",
     "visits",
     "hideModal",
@@ -103,9 +103,10 @@ export default {
     ModaleButton,
     DropdownFavorites
   },
-  data: () => {
+  data() {
     return {
-      apiFavorites: new FavoriteRestaurantsService()
+      userId: this.user.id,
+      apiFavorites: new FavoriteRestaurantsService(this.user.token)
     };
   },
   methods: {
