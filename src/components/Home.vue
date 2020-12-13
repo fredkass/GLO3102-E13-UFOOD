@@ -56,12 +56,15 @@
               Search
             </b-button>
           </b-field>
+
           <SearchAutoComplete
             :restaurants="getRestaurants"
             @change="updateRestaurants"
+            v-on:typing="getRestaurants"
             v-model="searchFilterTerms"
           >
           </SearchAutoComplete>
+
           <div class="columns is-multiline">
             <div
               class="column is-half-desktop is-full-tablet"
