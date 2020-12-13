@@ -9,7 +9,7 @@
             alt="ufood-logo-transparent.png"
           />
           <div class="button-block">
-            <button class="button is-xl is-dark">Sign Up</button>
+            <button class="button is-xl is-dark" v-if="!this.$root.authenticated">Sign Up</button>
           </div>
         </div>
       </div>
@@ -44,17 +44,14 @@
             >Filters</b-button
           >
           <b-field>
-            <b-input
-              v-model="searchFilterTerms"
-              placeholder="Search restaurants"
-            ></b-input>
-            <b-button
-              icon-left="search"
-              type="is-primary"
-              @click="updateRestaurants"
-            >
-              Search
-            </b-button>
+          <SearchAutoComplete
+            :names="restaurantAutocomplete"
+            :keypressed="updateAutoComplete"
+            v-model="searchFilterTerms"
+            @keyup.enter.native="updateRestaurants"
+            :search="updateRestaurants"
+          >
+          </SearchAutoComplete>
           </b-field>
           <div class="columns is-multiline">
             <div
@@ -99,6 +96,7 @@ import SidebarFilter from "./SidebarFilter.vue";
 import RestaurantService from "@/services/RestaurantService.js";
 import RestaurantCard from "./RestaurantCard.vue";
 import RestaurantMap from "./RestaurantMap.vue";
+import SearchAutoComplete from "@/components/SearchAutoComplete";
 
 export default {
   name: "home",
@@ -113,47 +111,47 @@ export default {
     window.removeEventListener("resize", this.myEventHandler);
   },
   methods: {
-    toggleMapMode() {
+    async toggleMapMode() {
       if (!this.isMapMode) {
         navigator.geolocation.getCurrentPosition(
-          position => {
+          async position => {
             this.currentPos = {
               lat: position.coords.latitude,
               lng: position.coords.longitude
             };
             console.log(this.currentPos);
-            this.updateRestaurants();
+            await this.updateRestaurants();
           },
-          () => {
+          async () => {
             this.currentPos = {
               lat: this.restaurants[0].location.coordinates[1],
               lng: this.restaurants[0].location.coordinates[0]
             };
             console.log(this.currentPos);
 
-            this.updateRestaurants();
+            await this.updateRestaurants();
             window.alert("Impossible to determine location");
           }
         );
       }
       this.isMapMode = !this.isMapMode;
     },
-    priceFilterChanged(value) {
+    async priceFilterChanged(value) {
       this.price_range_filter = value;
-      this.updateRestaurants();
+      await this.updateRestaurants();
     },
-    genreFilterChanged(value) {
+    async genreFilterChanged(value) {
       this.genres_filter = value;
-      this.updateRestaurants();
+      await this.updateRestaurants();
     },
-    updateRestaurants() {
-      this.getRestaurants().then(r => {
-        this.totalPages = r.total;
-        this.restaurants = r.items;
-      });
+    async updateRestaurants() {
+      this.isRestaurantsLoaded = false;
+      const restaurant = await this.getRestaurants();
+      this.totalPages = restaurant.total;
+      this.restaurants = restaurant.items;
+      this.isRestaurantsLoaded = true;
     },
     async getRestaurants() {
-      this.isRestaurantsLoaded = false;
       const lat = this.isMapMode ? this.currentPos.lat : "";
       const lon = this.isMapMode ? this.currentPos.lng : "";
       const restaurants = await this.apiRestaurant.getRestaurants(
@@ -165,8 +163,12 @@ export default {
         lat,
         lon
       );
-      this.isRestaurantsLoaded = true;
       return restaurants;
+    },
+    updateAutoComplete() {
+      this.getRestaurants().then(r => {
+        this.restaurantAutocomplete = r.items.map(r => r.name);
+      });
     },
     myEventHandler() {
       this.detectWindowSize();
@@ -203,10 +205,12 @@ export default {
       provenance: "home",
       user: this.$root.user,
       isMapMode: false,
-      currentPos: {}
+      currentPos: {},
+      restaurantAutocomplete: []
     };
   },
   components: {
+    SearchAutoComplete,
     sidebar: SidebarFilter,
     RestaurantCard,
     RestaurantMap
