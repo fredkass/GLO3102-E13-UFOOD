@@ -21,12 +21,15 @@
       <b-navbar-item tag="div">
         <div class="field has-addons">
           <div class="control">
-            <input
-              class="input"
-              type="text"
-              v-model="searchTerms"
-              placeholder="Search"
-            />
+<!--            <input-->
+<!--              class="input"-->
+<!--              type="text"-->
+<!--              v-model="searchTerms"-->
+<!--              placeholder="Search"-->
+<!--            />-->
+            <SearchAutoComplete
+            v-on:keypress.enter.native="search(searchTerms)">
+            </SearchAutoComplete>
           </div>
           <div class="control">
             <b-button
@@ -78,7 +81,9 @@
   </b-navbar>
 </template>
 <script>
+import SearchAutoComplete from "@/components/SearchAutoComplete";
 export default {
+  components: {SearchAutoComplete},
   props: ["logout", "user"],
   data() {
     return {
