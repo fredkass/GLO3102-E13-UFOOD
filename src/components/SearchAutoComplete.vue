@@ -1,13 +1,13 @@
 <template>
   <section>
     <p class="content"><b>Selected:</b> {{ selected }}</p>
-    <b-field label="Find a movie">
+    <b-field>
       <b-autocomplete
         :data="data"
-        placeholder="e.g. Fight Club"
+        placeholder="Search restaurants..."
         field="title"
         :loading="isFetching"
-        @select="option => (selected = option)"
+        @select="restaurant => (selected = restaurant)"
       >
         <template slot-scope="props">
           <div class="media">
@@ -25,7 +25,7 @@
 <script>
 export default {
   name: "SearchAutoComplete",
-  props: [restaurants],
+  props: ["restaurants"],
   data() {
     return {
       data: [],
