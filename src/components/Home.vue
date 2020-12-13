@@ -59,8 +59,9 @@
           <SearchAutoComplete
             :restaurants="getRestaurants"
             @change="updateRestaurants"
-          ></SearchAutoComplete>
-          <div class="SearchAutocomplete"></div>
+            v-model="searchFilterTerms"
+          >
+          </SearchAutoComplete>
           <div class="columns is-multiline">
             <div
               class="column is-half-desktop is-full-tablet"

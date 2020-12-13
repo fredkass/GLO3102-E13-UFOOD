@@ -1,6 +1,5 @@
 <template>
   <section>
-    <p class="content"><b>Selected:</b> {{ selected }}</p>
     <b-field>
       <b-autocomplete
         :data="data"
