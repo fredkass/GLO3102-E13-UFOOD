@@ -43,11 +43,28 @@
             icon-left="filter"
             >Filters</b-button
           >
+<!--          <b-field>-->
+<!--            <b-input-->
+<!--              v-model="searchFilterTerms"-->
+<!--              placeholder="Search restaurants"-->
+<!--            ></b-input>-->
+            <b-button
+              icon-left="search"
+              type="is-primary"
+              @click="updateRestaurants"
+            >
+              Search
+            </b-button>
+<!--          </b-field>-->
+
           <b-field>
-            <b-input
-              v-model="searchFilterTerms"
-              placeholder="Search restaurants"
-            ></b-input>
+          <SearchAutoComplete
+            :names="restaurantAutocomplete"
+            :keypressed="updateAutoComplete"
+            v-model="searchFilterTerms"
+            v-on:submit="updateRestaurants"
+          >
+          </SearchAutoComplete>
             <b-button
               icon-left="search"
               type="is-primary"
@@ -56,14 +73,6 @@
               Search
             </b-button>
           </b-field>
-
-          <SearchAutoComplete
-            :names="restaurantAutocomplete"
-            :keypressed="updateAutoComplete"
-            v-model="searchFilterTerms"
-          >
-          </SearchAutoComplete>
-
           <div class="columns is-multiline">
             <div
               class="column is-half-desktop is-full-tablet"

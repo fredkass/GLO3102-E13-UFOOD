@@ -21,6 +21,7 @@ export default {
   props: ["names", "keypressed", "value"],
   data() {
     return {
+      data: [],
       selected: null,
     };
   },
