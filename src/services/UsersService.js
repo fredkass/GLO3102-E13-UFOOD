@@ -12,6 +12,11 @@ export default class UsersService {
     const response = await this.api.get("/users/");
     return await response.json();
   }
+  // returns users which names contain "terms"
+  async search(terms) {
+    const response = await this.api.get("/users?q=" + terms);
+    return await response.json();
+  }
   // returns user with provided Id
   async getUserById(userId) {
     const response = await this.api.get("/users/" + userId);
@@ -23,15 +28,22 @@ export default class UsersService {
     const response = await this.api.get("/users/" + userId + "/favorites");
     return await response.json();
   }
-  // follow user with provided Id (in body for some reason)
+  // follow user with provided Id
   async followUser(body) {
     const response = await this.api.post("/follow/", body);
-    return await response.json();
+    if (response.ok) {
+      return await response.json();
+    } else {
+      throw new Error("Unable to follow user");
+    }
   }
-  // deletes favorite list with provided Id
   async unFollowUser(userId) {
     const response = await this.api.delete("/follow/" + userId);
-    return await response.json();
+    if (response.ok) {
+      return await response.json();
+    } else {
+      throw new Error("Unable to unfollow user");
+    }
   }
   async signUp(body) {
     const response = await this.api.post("/signup/", body);

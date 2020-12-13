@@ -21,10 +21,19 @@
       <b-navbar-item tag="div">
         <div class="field has-addons">
           <div class="control">
-            <input class="input" type="text" placeholder="Search" />
+            <input
+              class="input"
+              type="text"
+              v-model="searchTerms"
+              placeholder="Search"
+            />
           </div>
           <div class="control">
-            <b-button icon-left="search" type="is-primary">
+            <b-button
+              icon-left="search"
+              type="is-primary"
+              @click="search(searchTerms)"
+            >
               Search
             </b-button>
           </div>
@@ -71,11 +80,37 @@
 <script>
 export default {
   props: ["logout", "user"],
+  data() {
+    return {
+      searchTerms: ""
+    };
+  },
   methods: {
     toggleLogIn() {
       this.isLoggedIn = !this.isLoggedIn;
       if (!this.isLoggedIn) {
         this.$router.push({ name: "Home" });
+      }
+    },
+    search(input) {
+      if (!this.isLoggedIn) {
+        if (input == '') {
+          this.$router
+            .push({
+              name: "UserGuestView",
+              params: { searchTerms: "all" }
+            })
+            .catch(() => {});
+        } else {
+          this.$router
+            .push({
+              name: "UserGuestView",
+              params: { searchTerms: input }
+            })
+            .catch(() => {});
+        }
+      } else {
+        this.$route.params.searchTerms = input;
       }
     }
   },

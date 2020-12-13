@@ -4,16 +4,9 @@
       <div class="column is-one-quarter">
         <div class="box profile-container has-text-centered">
           <figure class="image profile">
-            <!-- <img
-              src="https://d1w2poirtb3as9.cloudfront.net/default.jpeg?Expires=1601273955&Signature=meBVGTd53ut91D6gCOwE8Zwun60NUAlDwAB2Okj2LGm0EoC12iu8B5Tthah-RFR9XPibt-3wI1ruv9ex3~tlAtUAsvXNZz2-AVRJ33L64Qn5qmo~F4YGxsuPvSBagP0hBRhSA7eVzgohLu9gIEbNqw9IFOdgeLgjP3eM3GGLSuWMe152iVyLmIiKUGhPIADJ5AmjM5qoamjXjdPXgJsOONsghDUnn76n3x76b-dLO3PgLMTWdx39IKA9Osiip5CLPA7AqFqfzdzfqruV9Fhu2Ns-kd13N45ItzW-Q8ttLcXg4mVDn7EJ2oQlpxZ6LxfVHJbPofXbHnnb68qeUeUF5g__&Key-Pair-Id=APKAJSDH2OZQQSA64LQQ"
-              alt="user icon"
-            /> -->
             <img :src="this.gravatarURL" alt="user icon" />
           </figure>
           <h4 class="subtitle is-5">Profile Info</h4>
-          <p>
-            {{ profile.name }}
-          </p>
           <p>Your rating: {{ profile.rating }}</p>
 
           <b-dropdown aria-role="list">
@@ -36,6 +29,11 @@
             :deleteSelectedList="deleteSelectedList"
             :createNewList="createAndAddList"
           ></favorites-manager>
+          <followage
+            :userId="user.id"
+            :showFollowersList="switchToFollowers"
+            :showFollowingList="switchToFollowing"
+          />
         </div>
       </div>
       <div v-if="display_past_visits" class="column is-three-quarters">
@@ -74,7 +72,7 @@
           </div>
         </div>
       </div>
-      <div v-else class="column is-three-quarters">
+      <div v-else-if="display_favorites" class="column is-three-quarters">
         <h1 class="title" v-if="!editMode">
           {{ this.current_favorites_list.name }}
           <b-button icon-left="edit" @click="toggleEditMode"></b-button>
@@ -90,7 +88,7 @@
             </b-button>
           </div>
         </div>
-        <b-button class="is-primary is-light" @click="switchView"
+        <b-button class="is-primary is-light" @click="switchToPastVisits()"
           >Return to past visits view</b-button
         >
         <div class="columns is-multiline">
@@ -120,6 +118,42 @@
           </div>
         </div>
       </div>
+      <div v-else-if="display_followers" class="column is-three-quarters">
+        <h1 class="title">Followers</h1>
+        <div class="columns is-multiline">
+          <div
+            class="column is-half-desktop is-full-tablet"
+            v-if="user.followers.length < 1"
+          >
+            No follower yet
+          </div>
+          <div
+            class="column is-half-desktop is-full-tablet"
+            v-for="user in this.user.followers"
+            :key="user.index"
+          >
+            <user-card/>
+          </div>
+        </div>
+      </div>
+      <div v-else-if="display_following" class="column is-three-quarters">
+        <h1 class="title">Following</h1>
+        <div class="columns is-multiline">
+          <div
+            class="column is-half-desktop is-full-tablet"
+            v-if="user.following.length < 1"
+          >
+            No following yet
+          </div>
+          <div
+            class="column is-half-desktop is-full-tablet"
+            v-for="user in this.user.following"
+            :key="user.index"
+          >
+            <user-card/>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -132,6 +166,8 @@ import RestaurantService from "@/services/RestaurantService.js";
 import RestaurantCard from "./RestaurantCard.vue";
 import FavoritesManager from "./FavoritesManager.vue";
 import GravatarService from "@/services/GravatarService.js";
+import Followage from "./Followage.vue";
+import UserCard from './UserCard.vue';
 
 export default {
   mounted() {
@@ -214,7 +250,7 @@ export default {
       this.getFavoriteList(listId).then(l => {
         this.current_favorites_list = l;
         this.current_favorites_with_restaurants = l;
-        this.display_past_visits = false;
+        this.switchToFavorites();
         this.loadFavoriteRestaurants();
       });
     },
@@ -238,11 +274,32 @@ export default {
 
       this.favorites_lists = this.favorites_lists.filter(f => f.id != listId);
       if (this.current_favorites_list.id == listId) {
-        this.display_past_visits = true;
+        this.switchToPastVisits();
       }
     },
-    switchView() {
-      this.display_past_visits = !this.display_past_visits;
+    switchToPastVisits() {
+      this.display_past_visits = true;
+      this.display_favorites = false;
+      this.display_following = false;
+      this.display_followers = false;
+    },
+    switchToFavorites() {
+      this.display_past_visits = false;
+      this.display_favorites = true;
+      this.display_following = false;
+      this.display_followers = false;
+    },
+    switchToFollowing() {
+      this.display_past_visits = false;
+      this.display_favorites = false;
+      this.display_following = true;
+      this.display_followers = false;
+    },
+    switchToFollowers() {
+      this.display_past_visits = false;
+      this.display_favorites = false;
+      this.display_following = false;
+      this.display_followers = true;
     },
     async deleteFromList(restaurantId) {
       await this.apiFavorites.deleteRestaurantFromList(
@@ -308,6 +365,9 @@ export default {
       current_favorites_with_restaurants: {},
       provenance: "user",
       display_past_visits: true,
+      display_favorites: false,
+      display_following: false,
+      display_followers: false,
       total_visits: 0,
       visit_per_page: 10,
       currentPage: 1,
@@ -317,7 +377,9 @@ export default {
   },
   components: {
     RestaurantCard,
-    FavoritesManager
+    FavoritesManager,
+    Followage,
+    UserCard
   }
 };
 </script>

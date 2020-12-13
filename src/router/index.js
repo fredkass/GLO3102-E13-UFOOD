@@ -5,6 +5,8 @@ import Restaurant from "@/components/Restaurant";
 import User from "@/components/User";
 import SignUp from "@/components/SignUp/SignUp";
 import Login from "@/components/Login/Login";
+import UserGuestView from "@/components/UserGuestView";
+import UserView from "@/components/UserView"
 
 Vue.use(Router);
 
@@ -30,6 +32,22 @@ export default new Router({
       path: "/user",
       name: "User",
       component: User,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: "/userguestview/:searchTerms",
+      name: "UserGuestView",
+      component: UserGuestView,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: "/userview/:userId",
+      name: "UserView",
+      component: UserView,
       meta: {
         requiresAuth: true
       }
