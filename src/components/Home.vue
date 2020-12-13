@@ -9,7 +9,7 @@
             alt="ufood-logo-transparent.png"
           />
           <div class="button-block">
-            <button class="button is-xl is-dark">Sign Up</button>
+            <button class="button is-xl is-dark" v-if="!this.$root.authenticated">Sign Up</button>
           </div>
         </div>
       </div>
