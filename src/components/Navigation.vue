@@ -20,7 +20,6 @@
     <template slot="end">
       <b-navbar-item tag="div">
         <div class="field has-addons">
-          <div class="control">
 <!--            <input-->
 <!--              class="input"-->
 <!--              type="text"-->
@@ -28,9 +27,12 @@
 <!--              placeholder="Search"-->
 <!--            />-->
             <SearchAutoComplete
-            v-on:keypress.enter.native="search(searchTerms)">
+              :keypressed="updateAutoComplete"
+              v-model="searchFilterTerms"
+              @keyup.enter.native="search(searchTerms)"
+              :search="search"
+            >
             </SearchAutoComplete>
-          </div>
           <div class="control">
             <b-button
               icon-left="search"
@@ -83,7 +85,7 @@
 <script>
 import SearchAutoComplete from "@/components/SearchAutoComplete";
 export default {
-  components: {SearchAutoComplete},
+  components: { SearchAutoComplete },
   props: ["logout", "user"],
   data() {
     return {
@@ -99,7 +101,7 @@ export default {
     },
     search(input) {
       if (!this.isLoggedIn) {
-        if (input == '') {
+        if (input === "") {
           this.$router
             .push({
               name: "UserGuestView",
