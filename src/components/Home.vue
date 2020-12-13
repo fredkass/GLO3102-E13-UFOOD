@@ -122,45 +122,44 @@ export default {
     window.removeEventListener("resize", this.myEventHandler);
   },
   methods: {
-    toggleMapMode() {
+    async toggleMapMode() {
       if (!this.isMapMode) {
         navigator.geolocation.getCurrentPosition(
-          position => {
+          async position => {
             this.currentPos = {
               lat: position.coords.latitude,
               lng: position.coords.longitude
             };
             console.log(this.currentPos);
-            this.updateRestaurants();
+            await this.updateRestaurants();
           },
-          () => {
+          async () => {
             this.currentPos = {
               lat: this.restaurants[0].location.coordinates[1],
               lng: this.restaurants[0].location.coordinates[0]
             };
             console.log(this.currentPos);
 
-            this.updateRestaurants();
+            await this.updateRestaurants();
             window.alert("Impossible to determine location");
           }
         );
       }
       this.isMapMode = !this.isMapMode;
     },
-    priceFilterChanged(value) {
+    async priceFilterChanged(value) {
       this.price_range_filter = value;
-      this.updateRestaurants();
+      await this.updateRestaurants();
     },
-    genreFilterChanged(value) {
+    async genreFilterChanged(value) {
       this.genres_filter = value;
-      this.updateRestaurants();
+      await this.updateRestaurants();
     },
-    updateRestaurants() {
+    async updateRestaurants() {
       this.isRestaurantsLoaded = false;
-      this.getRestaurants().then(r => {
-        this.totalPages = r.total;
-        this.restaurants = r.items;
-      });
+      const restaurant = await this.getRestaurants();
+      this.totalPages = restaurant.total;
+      this.restaurants = restaurant.items;
       this.isRestaurantsLoaded = true;
     },
     async getRestaurants() {
@@ -176,10 +175,10 @@ export default {
         lon
       );
       return restaurants;
-    },    
+    },
     updateAutoComplete() {
       this.getRestaurants().then(r => {
-        this.restaurantAutocomplete = r.items.map(r=>r.name);
+        this.restaurantAutocomplete = r.items.map(r => r.name);
       });
     },
     myEventHandler() {
@@ -218,7 +217,7 @@ export default {
       user: this.$root.user,
       isMapMode: false,
       currentPos: {},
-      restaurantAutocomplete:[]
+      restaurantAutocomplete: []
     };
   },
   components: {
