@@ -49,16 +49,9 @@
             :keypressed="updateAutoComplete"
             v-model="searchFilterTerms"
             @keyup.enter.native="updateRestaurants"
+            :search="updateRestaurants"
           >
           </SearchAutoComplete>
-            <b-button
-              @keydown.enter="updateRestaurants"
-              icon-left="search"
-              type="is-primary"
-              @click="updateRestaurants"
-            >
-              Search
-            </b-button>
           </b-field>
           <div class="columns is-multiline">
             <div
