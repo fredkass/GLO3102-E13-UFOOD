@@ -28,7 +28,7 @@
 <!--            />-->
             <SearchAutoComplete
               :keypressed="updateAutoComplete"
-              v-model="searchFilterTerms"
+              v-model="searchTerms"
               @keyup.enter.native="search(searchTerms)"
               :search="search"
             >
