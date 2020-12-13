@@ -58,9 +58,8 @@
           </b-field>
 
           <SearchAutoComplete
-            :restaurants="getRestaurants"
-            @change="updateRestaurants"
-            v-on:typing="getRestaurants"
+            :names="restaurantAutocomplete"
+            :keypressed="updateAutoComplete"
             v-model="searchFilterTerms"
           >
           </SearchAutoComplete>
@@ -163,6 +162,8 @@ export default {
       });
     },
     async getRestaurants() {
+      
+      console.log(this.searchFilterTerms);
       this.isRestaurantsLoaded = false;
       const lat = this.isMapMode ? this.currentPos.lat : "";
       const lon = this.isMapMode ? this.currentPos.lng : "";
@@ -177,6 +178,13 @@ export default {
       );
       this.isRestaurantsLoaded = true;
       return restaurants;
+    },    
+    updateAutoComplete() {
+      this.getRestaurants().then(r => {
+        this.restaurantAutocomplete = r.items.map(r=>r.name);
+      });
+      console.log(this.searchFilterTerms);
+      console.log(this.restaurantAutocomplete);
     },
     myEventHandler() {
       this.detectWindowSize();
@@ -213,7 +221,8 @@ export default {
       provenance: "home",
       user: this.$root.user,
       isMapMode: false,
-      currentPos: {}
+      currentPos: {},
+      restaurantAutocomplete:[]
     };
   },
   components: {
