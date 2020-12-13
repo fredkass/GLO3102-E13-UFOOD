@@ -43,20 +43,6 @@
             icon-left="filter"
             >Filters</b-button
           >
-<!--          <b-field>-->
-<!--            <b-input-->
-<!--              v-model="searchFilterTerms"-->
-<!--              placeholder="Search restaurants"-->
-<!--            ></b-input>-->
-            <b-button
-              icon-left="search"
-              type="is-primary"
-              @click="updateRestaurants"
-            >
-              Search
-            </b-button>
-<!--          </b-field>-->
-
           <b-field>
           <SearchAutoComplete
             :names="restaurantAutocomplete"
