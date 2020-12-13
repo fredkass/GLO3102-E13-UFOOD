@@ -48,10 +48,11 @@
             :names="restaurantAutocomplete"
             :keypressed="updateAutoComplete"
             v-model="searchFilterTerms"
-            v-on:submit="updateRestaurants"
+            @keyup.enter.native="updateRestaurants"
           >
           </SearchAutoComplete>
             <b-button
+              @keydown.enter="updateRestaurants"
               icon-left="search"
               type="is-primary"
               @click="updateRestaurants"
