@@ -56,6 +56,11 @@
               Search
             </b-button>
           </b-field>
+          <SearchAutoComplete
+            :restaurants="getRestaurants"
+            @change="updateRestaurants"
+          ></SearchAutoComplete>
+          <div class="SearchAutocomplete"></div>
           <div class="columns is-multiline">
             <div
               class="column is-half-desktop is-full-tablet"
@@ -99,6 +104,7 @@ import SidebarFilter from "./SidebarFilter.vue";
 import RestaurantService from "@/services/RestaurantService.js";
 import RestaurantCard from "./RestaurantCard.vue";
 import RestaurantMap from "./RestaurantMap.vue";
+import SearchAutoComplete from "@/components/SearchAutoComplete";
 
 export default {
   name: "home",
@@ -207,6 +213,7 @@ export default {
     };
   },
   components: {
+    SearchAutoComplete,
     sidebar: SidebarFilter,
     RestaurantCard,
     RestaurantMap
