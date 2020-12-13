@@ -156,15 +156,14 @@ export default {
       this.updateRestaurants();
     },
     updateRestaurants() {
+      this.isRestaurantsLoaded = false;
       this.getRestaurants().then(r => {
         this.totalPages = r.total;
         this.restaurants = r.items;
       });
+      this.isRestaurantsLoaded = true;
     },
     async getRestaurants() {
-      
-      console.log(this.searchFilterTerms);
-      this.isRestaurantsLoaded = false;
       const lat = this.isMapMode ? this.currentPos.lat : "";
       const lon = this.isMapMode ? this.currentPos.lng : "";
       const restaurants = await this.apiRestaurant.getRestaurants(
@@ -176,15 +175,12 @@ export default {
         lat,
         lon
       );
-      this.isRestaurantsLoaded = true;
       return restaurants;
     },    
     updateAutoComplete() {
       this.getRestaurants().then(r => {
         this.restaurantAutocomplete = r.items.map(r=>r.name);
       });
-      console.log(this.searchFilterTerms);
-      console.log(this.restaurantAutocomplete);
     },
     myEventHandler() {
       this.detectWindowSize();
