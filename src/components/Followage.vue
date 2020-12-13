@@ -25,6 +25,8 @@
 export default {
   mounted() {
     this.user = this.$root.user;
+    this.followers_count = this.user.followers.length;
+    this.following_count = this.user.following.length;
   },
   name: "Followage",
   props: [
