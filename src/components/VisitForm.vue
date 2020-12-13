@@ -22,15 +22,20 @@
               icon="calendar"
               trap-focus
               append-to-body
+              :max-date="today"
             >
             </b-datepicker>
           </b-field>
 
           <b-field label="Message">
             <b-input
+              minlength="1"
               maxlength="500"
               type="textarea"
               v-model="formProps.message"
+              required
+              validation-message="Message is mandatory"
+              ref="message"
             ></b-input>
           </b-field>
         </section>
@@ -38,7 +43,7 @@
           <button class="button" type="button" @click="close">
             Close
           </button>
-          <button class="button is-primary" @click="submit(formProps)">
+          <button class="button is-primary" @click="validateAndSubmit">
             Save
           </button>
         </footer>
@@ -52,7 +57,15 @@ export default {
   props: ["submit", "close", "formProps"],
   data() {
     return {
+      today: new Date()
     };
+  },
+  methods: {
+    validateAndSubmit() {
+      if (this.$refs.message.checkHtml5Validity()) {
+        this.submit(this.formProps);
+      }
+    }
   }
 };
 </script>
