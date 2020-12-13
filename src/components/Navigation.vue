@@ -20,12 +20,6 @@
     <template slot="end">
       <b-navbar-item tag="div">
         <div class="field has-addons">
-<!--            <input-->
-<!--              class="input"-->
-<!--              type="text"-->
-<!--              v-model="searchTerms"-->
-<!--              placeholder="Search"-->
-<!--            />-->
             <SearchAutoComplete
               :keypressed="updateAutoComplete"
               v-model="searchTerms"
