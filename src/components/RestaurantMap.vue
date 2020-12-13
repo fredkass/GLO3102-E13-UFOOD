@@ -1,6 +1,14 @@
 <template>
   <div class="restaurant-map">
     <GmapMap ref="mapRef" :center="currentPos" :zoom="13" map-type-id="terrain">
+      <Gmap-info-window
+        :options="infoOptions"
+        :position="infoWindowPos"
+        :opened="infoWinOpen"
+        @closeclick="infoWinOpen = false"
+      >
+        <restaurant-card v-if="currentRestaurant" :restaurant="currentRestaurant" :isLoaded="true"></restaurant-card>
+      </Gmap-info-window>
       <GmapMarker
         :key="id"
         v-for="(restaurant, id) in restaurants"
@@ -10,18 +18,14 @@
         }"
         :clickable="true"
         :draggable="true"
-        @click="
-          center = {
-            lat: restaurant.location.coordinates[1],
-            lng: restaurant.location.coordinates[0]
-          }
-        "
+        @click="toggleInfoWindow(restaurant, id)"
       />
     </GmapMap>
   </div>
 </template>
 <script>
 import { gmapApi } from "gmap-vue";
+import RestaurantCard from "./RestaurantCard.vue";
 
 export default {
   name: "RestaurantMap",
@@ -29,7 +33,9 @@ export default {
   computed: {
     google: gmapApi
   },
-
+  components: {
+    RestaurantCard
+  },
   beforeUpdate() {
     this.$refs.mapRef.$mapPromise.then(map => {
       var bounds = new this.google.maps.LatLngBounds();
@@ -46,8 +52,36 @@ export default {
   },
   data() {
     return {
-      map: undefined
+      map: undefined,
+      infoWindowPos: null,
+      infoWinOpen: false,
+      currentRestaurant: null,
+      infoOptions: {
+        //content: "",
+        //optional: offset infowindow so it visually sits nicely on top of our marker
+        pixelOffset: {
+          width: 0,
+          height: -35
+        }
+      }
     };
+  },
+  methods: {
+    toggleInfoWindow: function(restaurant, idx) {
+      this.currentRestaurant = restaurant;
+      this.infoWindowPos = {
+        lat: restaurant.location.coordinates[1],
+        lng: restaurant.location.coordinates[0]
+      };
+      //this.infoOptions.content = restaurant.name;
+
+      if (this.currentMidx == idx) {
+        this.infoWinOpen = !this.infoWinOpen;
+      } else {
+        this.infoWinOpen = true;
+        this.currentMidx = idx;
+      }
+    },
   }
 };
 </script>

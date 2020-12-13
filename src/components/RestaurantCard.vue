@@ -105,8 +105,10 @@ export default {
   },
   data() {
     return {
-      userId: this.user.id,
-      apiFavorites: new FavoriteRestaurantsService(this.user.token)
+      userId: this.user ? this.user.id : null,
+      apiFavorites: this.user
+        ? new FavoriteRestaurantsService(this.user.token)
+        : null
     };
   },
   methods: {
@@ -144,7 +146,7 @@ export default {
 }
 .box {
   height: 100%;
-  min-width:300px;
+  min-width: 300px;
 }
 </style>
 
