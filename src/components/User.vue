@@ -129,10 +129,10 @@
           </div>
           <div
             class="column is-half-desktop is-full-tablet"
-            v-for="user in this.user.followers"
-            :key="user.index"
+            v-for="follower in this.user.followers"
+            :key="follower.index"
           >
-            <user-card/>
+            <user-card :user="follower"/>
           </div>
         </div>
       </div>
@@ -147,10 +147,10 @@
           </div>
           <div
             class="column is-half-desktop is-full-tablet"
-            v-for="user in this.user.following"
-            :key="user.index"
+            v-for="following in this.user.following"
+            :key="following.index"
           >
-            <user-card/>
+            <user-card :user="following"/>
           </div>
         </div>
       </div>
