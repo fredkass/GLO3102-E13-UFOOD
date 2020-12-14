@@ -19,7 +19,7 @@
   </div>
 </template>
 <script>
-import UsersService from "./../services/UsersService.js";
+import UsersService from "../../services/UsersService.js";
 import FollowButton from "./FollowButton.vue";
 
 export default {

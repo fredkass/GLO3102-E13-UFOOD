@@ -94,8 +94,8 @@
 <script>
 import SidebarFilter from "./SidebarFilter.vue";
 import RestaurantService from "@/services/RestaurantService.js";
-import RestaurantCard from "./RestaurantCard.vue";
-import RestaurantMap from "./RestaurantMap.vue";
+import RestaurantCard from "./Restaurants/RestaurantCard.vue";
+import RestaurantMap from "./Restaurants/RestaurantMap.vue";
 import SearchAutoComplete from "@/components/SearchAutoComplete";
 
 export default {

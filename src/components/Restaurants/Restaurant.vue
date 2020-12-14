@@ -15,7 +15,7 @@ import RestaurantService from "@/services/RestaurantService.js";
 import UserService from "@/services/UsersService.js";
 import FavoriteRestaurantsService from "@/services/FavoriteRestaurantsService.js";
 import RestaurantContent from "./RestaurantContent.vue";
-import DropdownFavorites from "./DropdownFavorites.vue";
+import DropdownFavorites from "../Users/DropdownFavorites.vue";
 
 export default {
   name: "restaurant",

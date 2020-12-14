@@ -83,9 +83,9 @@
   </div>
 </template>
 <script>
-import DropdownFavorites from "./DropdownFavorites.vue";
-import ModaleButton from "./ModaleButton.vue";
-import FavoriteRestaurantsService from "./../services/FavoriteRestaurantsService.js";
+import DropdownFavorites from "../Users/DropdownFavorites.vue";
+import ModaleButton from "../ModaleButton.vue";
+import FavoriteRestaurantsService from "../../services/FavoriteRestaurantsService.js";
 
 export default {
   name: "RestaurantCard",

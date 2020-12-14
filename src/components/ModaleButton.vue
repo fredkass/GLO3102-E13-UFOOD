@@ -25,7 +25,7 @@
   </span>
 </template>
 <script>
-import VisitModal from "./VisitModal.vue";
+import VisitModal from "./Visits/VisitModal.vue";
 
 export default {
   name: "ModaleButton",

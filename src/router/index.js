@@ -1,12 +1,12 @@
 import Vue from "vue";
 import Router from "vue-router";
 import Home from "@/components/Home";
-import Restaurant from "@/components/Restaurant";
-import User from "@/components/User";
+import Restaurant from "@/components/Restaurants/Restaurant";
+import User from "@/components/Users/User";
 import SignUp from "@/components/SignUp/SignUp";
 import Login from "@/components/Login/Login";
-import UserGuestView from "@/components/UserGuestView";
-import UserView from "@/components/UserView"
+import UserGuestView from "@/components/Users/UserGuestView";
+import UserView from "@/components/Users/UserView"
 
 Vue.use(Router);
 

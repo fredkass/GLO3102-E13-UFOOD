@@ -43,7 +43,7 @@
 <script>
 import VisitForm from "./VisitForm.vue";
 import Visit from "./Visit.vue";
-import RestaurantVisitsService from "../services/RestaurantVisitsService.js";
+import RestaurantVisitsService from "../../services/RestaurantVisitsService.js";
 
 export default {
   name: "VisitModal",

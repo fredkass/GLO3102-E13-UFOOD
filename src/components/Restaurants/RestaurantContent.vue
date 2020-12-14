@@ -117,7 +117,7 @@
 </template>
 <script>
 import { gmapApi } from "gmap-vue";
-import ModaleButton from "./ModaleButton.vue";
+import ModaleButton from "../ModaleButton.vue";
 
 export default {
   name: "RestaurantContent",
@@ -216,7 +216,7 @@ export default {
 </script>
 <style>
 .hero-body .buttons-header button{
-  margin:0.5em;  
+  margin:0.5em;
   display:block;
 }
 #map {

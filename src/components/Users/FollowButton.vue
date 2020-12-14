@@ -11,7 +11,7 @@
   </div>
 </template>
 <script>
-import UsersService from "./../services/UsersService.js"
+import UsersService from "../../services/UsersService.js"
 
 export default {
   name: "FollowButton",

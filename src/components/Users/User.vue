@@ -169,7 +169,7 @@ import UsersService from "@/services/UsersService.js";
 import RestaurantVisistsService from "@/services/RestaurantVisitsService.js";
 import FavoriteRestaurantsService from "@/services/FavoriteRestaurantsService.js";
 import RestaurantService from "@/services/RestaurantService.js";
-import RestaurantCard from "./RestaurantCard.vue";
+import RestaurantCard from "../Restaurants/RestaurantCard.vue";
 import FavoritesManager from "./FavoritesManager.vue";
 import GravatarService from "@/services/GravatarService.js";
 import Followage from "./Followage.vue";
