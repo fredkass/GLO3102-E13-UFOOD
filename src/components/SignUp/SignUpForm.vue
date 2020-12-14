@@ -24,7 +24,7 @@
             @isValid="updateIsValidEmail"
             :validationMethod="validateEmail"
           ></input-field>
-          
+
           <input-field
             label="Username"
             type="username"
@@ -34,7 +34,6 @@
             v-model="formData.name"
             @isValid="updateIsValidUserName"
           ></input-field>
-
 
           <input-field
             label="Password"
@@ -46,7 +45,6 @@
             @isValid="updateIsValidPassword"
           ></input-field>
 
-          
           <input-field
             label="Confirm Password"
             type="Password"
@@ -59,6 +57,14 @@
 
           <b-button type="is-primary" expanded @click="validateAndSubmit()"
             >Submit</b-button
+          >
+          Already a member ?
+          <b-button
+            class="button"
+            tag="router-link"
+            :to="{ path: '/Login' }"
+            expanded
+            ><strong>Login</strong></b-button
           >
         </div>
 
