@@ -1,6 +1,6 @@
 <template>
   <div class="section">
-    <login-form :submit="login"></login-form>
+    <login-form :submit="login" :error="errorMessage"></login-form>
   </div>
 </template>
 
@@ -14,7 +14,8 @@ export default {
   },
   data: () => {
     return {
-      apiUser: new UsersService()
+      apiUser: new UsersService(),
+      errorMessage : "",
     };
   },
   methods: {
@@ -29,7 +30,7 @@ export default {
         this.$root.authenticated = true;
         this.$router.push("/");
       } else {
-        //console.log(user);
+        this.errorMessage = "Invalid credentials"
       }
     }
   }

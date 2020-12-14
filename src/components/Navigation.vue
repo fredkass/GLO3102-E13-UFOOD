@@ -20,14 +20,13 @@
     <template slot="end">
       <b-navbar-item tag="div">
         <div class="field has-addons">
-          <div class="control">
-            <input class="input" type="text" placeholder="Search" />
-          </div>
-          <div class="control">
-            <b-button icon-left="search" type="is-primary">
-              Search
-            </b-button>
-          </div>
+          <SearchAutoComplete 
+            :names="usersAutoComplete"
+            :keypressed="updateAutoComplete"
+            v-model="searchTerms"
+            :search="search"
+          >
+          </SearchAutoComplete>
         </div>
       </b-navbar-item>
       <b-navbar-item tag="div">
@@ -69,13 +68,51 @@
   </b-navbar>
 </template>
 <script>
+import SearchAutoComplete from "@/components/SearchAutoComplete";
+import UsersService from "@/services/UsersService";
+
 export default {
+  components: { SearchAutoComplete },
   props: ["logout", "user"],
+  data() {
+    return {
+      apiUsers: new UsersService(this.user.token),
+      searchTerms: "",
+      usersAutoComplete: []
+    };
+  },
   methods: {
     toggleLogIn() {
       this.isLoggedIn = !this.isLoggedIn;
       if (!this.isLoggedIn) {
         this.$router.push({ name: "Home" });
+      }
+    },
+    updateAutoComplete() {
+      this.apiUsers.search(this.searchTerms).then(u => {
+        console.log(u);
+        this.usersAutoComplete = u.items.map(u => u.name);
+      });
+    },
+    search() {
+      if (!this.isLoggedIn) {
+        if (this.searchTerms === "") {
+          this.$router
+            .push({
+              name: "UserGuestView",
+              params: { searchTerms: "all" }
+            })
+            .catch(() => {});
+        } else {
+          this.$router
+            .push({
+              name: "UserGuestView",
+              params: { searchTerms: this.searchTerms }
+            })
+            .catch(() => {});
+        }
+      } else {
+        this.$route.params.searchTerms = this.searchTerms;
       }
     }
   },

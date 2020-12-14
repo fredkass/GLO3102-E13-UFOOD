@@ -32,6 +32,7 @@ export default {
   },
   methods: {
     filterKeyPressed: debounce(async function() {
+      this.searchFilter = this.value;
       await this.keypressed();
     }, 500),
     async updateAndSearch(option) {

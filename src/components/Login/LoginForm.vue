@@ -14,12 +14,13 @@
           <h1 class="title is-1">
             Log in
           </h1>
+          <span class="error">{{error}}</span>
           <input-field
             label="Email"
             type="email"
             icon="envelope"
             v-model="formData.email"
-            :hasValidation="false"
+            :hasValidation="true"
           ></input-field>
 
 
@@ -31,9 +32,18 @@
             :hasValidation="false"
           ></input-field>
 
-          <b-button type="is-primary" expanded @click="submit(formData)"
+          <b-button type="is-primary" expanded @click="validateAndSubmit"
             >Submit</b-button
           >
+          Not a member ? 
+          <b-button
+            class="button"
+            tag="router-link"
+            :to="{ path: '/SignUp' }"
+            expanded
+          >
+            <strong>Sign up</strong>
+          </b-button>
         </div>
 
         <div class="column"></div>
@@ -50,7 +60,7 @@ export default {
     InputField
   },
   name: "LoginForm",
-  props: ["submit"],
+  props: ["submit", "error"],
   data: () => {
     return {
       formData: {
@@ -60,8 +70,16 @@ export default {
     };
   },
   methods: {
+    validateAndSubmit(){
+
+      this.submit(this.formData);
+    }
   }
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.error{
+  color:red;
+}
+</style>
