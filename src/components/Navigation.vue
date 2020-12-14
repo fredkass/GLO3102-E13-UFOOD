@@ -20,23 +20,13 @@
     <template slot="end">
       <b-navbar-item tag="div">
         <div class="field has-addons">
-            <SearchAutoComplete
-              :names="usersAutoComplete"
-              :keypressed="updateAutoComplete"
-              v-model="searchTerms"
-              @keyup.enter.native="search(searchTerms)"
-              :search="search"
-            >
-            </SearchAutoComplete>
-          <div class="control">
-            <b-button
-              icon-left="search"
-              type="is-primary"
-              @click="search(searchTerms)"
-            >
-              Search
-            </b-button>
-          </div>
+          <SearchAutoComplete
+            :names="usersAutoComplete"
+            :keypressed="updateAutoComplete"
+            v-model="searchTerms"
+            :search="search"
+          >
+          </SearchAutoComplete>
         </div>
       </b-navbar-item>
       <b-navbar-item tag="div">
@@ -99,13 +89,13 @@ export default {
       }
     },
     updateAutoComplete() {
-        this.apiUsers.search(this.searchTerms).then(u => {
+      this.apiUsers.search(this.searchTerms).then(u => {
         this.usersAutoComplete = u.items.map(u => u.name);
       });
     },
-    search(input) {
+    search() {
       if (!this.isLoggedIn) {
-        if (input === "") {
+        if (this.searchTerms === "") {
           this.$router
             .push({
               name: "UserGuestView",
@@ -116,14 +106,14 @@ export default {
           this.$router
             .push({
               name: "UserGuestView",
-              params: { searchTerms: input }
+              params: { searchTerms: this.searchTerms }
             })
             .catch(() => {});
         }
       } else {
-        this.$route.params.searchTerms = input;
+        this.$route.params.searchTerms = this.searchTerms;
       }
-    },
+    }
   },
   computed: {
     isAuthenticated() {
