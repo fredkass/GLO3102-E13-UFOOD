@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <nav-menu :user="this.$root.user" :logout="logout"></nav-menu>
+    <nav-menu v-if="this.$root.user" :user="this.$root.user" :logout="logout"></nav-menu>
     <router-view></router-view>
   </div>
 </template>

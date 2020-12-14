@@ -21,6 +21,7 @@
       <b-navbar-item tag="div">
         <div class="field has-addons">
             <SearchAutoComplete
+              :names="usersAutoComplete"
               :keypressed="updateAutoComplete"
               v-model="searchTerms"
               @keyup.enter.native="search(searchTerms)"
@@ -78,12 +79,16 @@
 </template>
 <script>
 import SearchAutoComplete from "@/components/SearchAutoComplete";
+import UsersService from "@/services/UsersService";
+
 export default {
   components: { SearchAutoComplete },
   props: ["logout", "user"],
   data() {
     return {
-      searchTerms: ""
+      apiUsers: new UsersService(this.user.token),
+      searchTerms: "",
+      usersAutoComplete: []
     };
   },
   methods: {
@@ -92,6 +97,11 @@ export default {
       if (!this.isLoggedIn) {
         this.$router.push({ name: "Home" });
       }
+    },
+    updateAutoComplete() {
+        this.apiUsers.search(this.searchTerms).then(u => {
+        this.usersAutoComplete = u.items.map(u => u.name);
+      });
     },
     search(input) {
       if (!this.isLoggedIn) {
@@ -113,7 +123,7 @@ export default {
       } else {
         this.$route.params.searchTerms = input;
       }
-    }
+    },
   },
   computed: {
     isAuthenticated() {

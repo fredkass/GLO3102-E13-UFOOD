@@ -7,8 +7,8 @@
         placeholder="Search..."
         :loading="false"
         @select="option => (selected = option)"
-        @typing="keypressed"
         v-model="searchFilter"
+        @typing="keypressed"
       >
       </b-autocomplete>
     </b-field>
@@ -38,3 +38,4 @@ export default {
 };
 </script>
 <style scoped></style>
+
