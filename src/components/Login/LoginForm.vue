@@ -19,7 +19,7 @@
             type="email"
             icon="envelope"
             v-model="formData.email"
-            :hasValidation="false"
+            :hasValidation="true"
           ></input-field>
 
 
@@ -31,9 +31,18 @@
             :hasValidation="false"
           ></input-field>
 
-          <b-button type="is-primary" expanded @click="submit(formData)"
+          <b-button type="is-primary" expanded @click="validateAndSubmit"
             >Submit</b-button
           >
+          Not a member ? 
+          <b-button
+            class="button"
+            tag="router-link"
+            :to="{ path: '/SignUp' }"
+            expanded
+          >
+            <strong>Sign up</strong>
+          </b-button>
         </div>
 
         <div class="column"></div>
@@ -60,6 +69,10 @@ export default {
     };
   },
   methods: {
+    validateAndSubmit(){
+
+      this.submit(this.formData);
+    }
   }
 };
 </script>

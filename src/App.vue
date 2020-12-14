@@ -1,6 +1,10 @@
 <template>
   <div id="app">
-    <nav-menu v-if="this.$root.user" :user="this.$root.user" :logout="logout"></nav-menu>
+    <nav-menu
+      v-if="this.$root.user"
+      :user="this.$root.user"
+      :logout="logout"
+    ></nav-menu>
     <router-view></router-view>
   </div>
 </template>
@@ -21,7 +25,7 @@ export default {
   methods: {
     async logout() {
       const response = await this.userApi.logOut();
-      if(response){
+      if (response) {
         this.$root.user = null;
         this.$root.authenticated = false;
         this.$cookies.remove("token");

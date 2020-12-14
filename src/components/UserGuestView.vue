@@ -3,6 +3,14 @@
     <div class="columns">
       <div class="column">
         <h1 class="title">Search Results</h1>
+
+        <b-pagination
+          :total="total"
+          v-model="currentPage"
+          :per-page="perPage"
+          @change="search"
+        >
+        </b-pagination>
       </div>
     </div>
     <div class="columns is-multiline">
@@ -12,6 +20,7 @@
       >
         No results found
       </div>
+
       <div v-for="user in this.usersList" :key="user.id">
         <user-card :user="user" />
       </div>
@@ -41,6 +50,9 @@ export default {
   name: "UserGuestView",
   data() {
     return {
+      total: 0,
+      currentPage: 1,
+      perPage: 10,
       apiUsers: new UsersService(this.$root.user.token),
       usersList: [],
       searchInput: this.$route.params.searchTerms,
@@ -55,10 +67,15 @@ export default {
     },
     async getUsers() {
       if (this.searchInput != "all") {
-        const users = this.apiUsers.search(this.searchInput);
+        const users = await this.apiUsers.search(
+          this.searchInput,
+          this.currentPage - 1
+        );      
+        this.total = users.total;
         return users;
       } else {
-        const users = this.apiUsers.getUsers();
+        const users = await this.apiUsers.getUsers(this.currentPage -1);      
+        this.total = users.total;
         return users;
       }
     }

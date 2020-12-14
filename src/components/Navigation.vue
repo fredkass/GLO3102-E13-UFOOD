@@ -20,7 +20,7 @@
     <template slot="end">
       <b-navbar-item tag="div">
         <div class="field has-addons">
-          <SearchAutoComplete
+          <SearchAutoComplete 
             :names="usersAutoComplete"
             :keypressed="updateAutoComplete"
             v-model="searchTerms"
@@ -90,6 +90,7 @@ export default {
     },
     updateAutoComplete() {
       this.apiUsers.search(this.searchTerms).then(u => {
+        console.log(u);
         this.usersAutoComplete = u.items.map(u => u.name);
       });
     },

@@ -8,13 +8,19 @@ export default class UsersService {
   }
   // optional : ?limit, ?page, ?q=name
   // returns all users
-  async getUsers() {
-    const response = await this.api.get("/users/");
+  async getUsers(page) {
+    let querystrings = new URLSearchParams();
+    page && querystrings.append("page", page);
+    console.log(page);
+    const response = await this.api.get("/users?"+ querystrings);
     return await response.json();
   }
   // returns users which names contain "terms"
-  async search(terms) {
-    const response = await this.api.get("/users?q=" + terms);
+  async search(terms, page) {
+    let querystrings = new URLSearchParams();
+    page && querystrings.append("page", page);
+    querystrings.append('q', terms);
+    const response = await this.api.get("/users?" + querystrings);
     return await response.json();
   }
   // returns user with provided Id
@@ -69,7 +75,7 @@ export default class UsersService {
   async logIn(body) {
     const response = await this.api.post("/login", body);
     const data = await response.json();
-    
+
     this.setTokenCookie(data);
     return data;
   }
@@ -78,7 +84,7 @@ export default class UsersService {
     return response.ok;
   }
 
-  async getUserFromToken(){    
+  async getUserFromToken() {
     const response = await this.api.get("/tokeninfo");
     return response;
   }
@@ -89,5 +95,4 @@ export default class UsersService {
   getTokenCookie() {
     return Vue.$cookies.get("token");
   }
-
 }
