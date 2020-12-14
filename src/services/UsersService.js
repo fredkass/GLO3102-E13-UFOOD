@@ -1,10 +1,12 @@
 import Api from "./api.js";
 import Vue from "vue";
+import ToastService from "./ToastDisplayService.js";
 
 export default class UsersService {
   constructor(token) {
     this.api = new Api(token);
     this.token = this.getTokenCookie();
+    this.toast = new ToastService();
   }
   // optional : ?limit, ?page, ?q=name
   // returns all users
@@ -59,7 +61,7 @@ export default class UsersService {
     if (response.ok) {
       return await response.json();
     } else {
-      throw new Error("Username already exists");
+      this.toast.fail("Username already exists");
     }
   }
   async signUpAndLogin(body) {
@@ -74,8 +76,10 @@ export default class UsersService {
   }
   async logIn(body) {
     const response = await this.api.post("/login", body);
+    if(!response.ok){
+      return new Error("Invalid credentials");      
+    }
     const data = await response.json();
-
     this.setTokenCookie(data);
     return data;
   }

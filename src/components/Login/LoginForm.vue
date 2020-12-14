@@ -14,6 +14,7 @@
           <h1 class="title is-1">
             Log in
           </h1>
+          <span class="error">{{error}}</span>
           <input-field
             label="Email"
             type="email"
@@ -59,7 +60,7 @@ export default {
     InputField
   },
   name: "LoginForm",
-  props: ["submit"],
+  props: ["submit", "error"],
   data: () => {
     return {
       formData: {
@@ -77,4 +78,8 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.error{
+  color:red;
+}
+</style>

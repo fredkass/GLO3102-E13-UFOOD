@@ -74,7 +74,7 @@ export default {
         this.total = users.total;
         return users;
       } else {
-        const users = await this.apiUsers.getUsers(this.currentPage -1);      
+        const users = await this.apiUsers.getUsers(this.currentPage - 1);      
         this.total = users.total;
         return users;
       }
