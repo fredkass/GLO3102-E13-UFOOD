@@ -120,6 +120,9 @@
       </div>
       <div v-else-if="display_followers" class="column is-three-quarters">
         <h1 class="title">Followers</h1>
+        <b-button class="is-primary is-light" @click="switchToPastVisits()"
+          >Return to past visits view</b-button
+        >
         <div class="columns is-multiline">
           <div
             class="column is-half-desktop is-full-tablet"
@@ -138,6 +141,9 @@
       </div>
       <div v-else-if="display_following" class="column is-three-quarters">
         <h1 class="title">Following</h1>
+        <b-button class="is-primary is-light" @click="switchToPastVisits()"
+          >Return to past visits view</b-button
+        >
         <div class="columns is-multiline">
           <div
             class="column is-half-desktop is-full-tablet"
