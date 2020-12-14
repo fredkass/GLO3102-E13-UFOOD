@@ -29,7 +29,10 @@ export default class UsersService {
     return await response.json();
   }
   // follow user with provided Id
-  async followUser(body) {
+  async followUser(userId) {
+    let body = {
+      id: userId
+    };
     const response = await this.api.post("/follow/", body);
     if (response.ok) {
       return await response.json();
@@ -37,7 +40,7 @@ export default class UsersService {
       throw new Error("Unable to follow user");
     }
   }
-  async unFollowUser(userId) {
+  async unfollowUser(userId) {
     const response = await this.api.delete("/follow/" + userId);
     if (response.ok) {
       return await response.json();

@@ -3,13 +3,16 @@
     <div class="columns">
       <div class="column is-half">
         <div class="box">
-          <h1 class="title">{{ user.name }}</h1>
-          <p>
-            {{ user.email }}
+          <h1 v-if="userIsLoaded" class="title">{{ targetUser.name }}</h1>
+          <p v-if="userIsLoaded" >
+            {{ targetUser.email }}
           </p>
-          <p>
-            {{ user.rating }}
+          <p v-if="userIsLoaded" >
+            {{ targetUser.rating }}
           </p>
+          <div>
+            <follow-button v-if="userIsLoaded" :targetUser="targetUser" />
+          </div>
         </div>
       </div>
     </div>
@@ -17,30 +20,36 @@
 </template>
 <script>
 import UsersService from "./../services/UsersService.js";
+import FollowButton from "./FollowButton.vue";
 
 export default {
   mounted() {
-    this.user = this.getUser();
-    this.search();
+    this.apiUsers = new UsersService(this.$root.user.token);
+    this.targetUser = this.getUser();
   },
   name: "UserView",
   data() {
     return {
-      apiUsers: new UsersService(this.$root.user.token),
-      user: {},
-      userId: this.$route.params.userId
-    }
+      apiUsers: {},
+      targetUser: {},
+      userId: this.$route.params.userId,
+      userIsLoaded: false
+    };
   },
   methods: {
     getUser() {
       this.fetchUserInfo().then(u => {
-        this.user = u;
+        this.targetUser = u;
+        this.userIsLoaded = true;
       });
     },
     async fetchUserInfo() {
       const user = this.apiUsers.getUserById(this.userId);
       return user;
     }
+  },
+  components: {
+    FollowButton
   }
 };
 </script>
