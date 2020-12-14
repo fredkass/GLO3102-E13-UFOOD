@@ -60,7 +60,6 @@
     </b-sidebar>
   </section>
 </template>
-
 <script>
 export default {
   data() {
