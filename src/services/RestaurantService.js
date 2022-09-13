@@ -23,8 +23,7 @@ export default class RestaurantService {
     price_range.length > 0 && querystrings.append("price_range", price_range);
     lat && querystrings.append("lat", lat);
     lon && querystrings.append("lon", lon);
-
-    console.log(querystrings);
+    
     const response = await this.api.get("/restaurants?" + querystrings);    
     return await response.json();
   }

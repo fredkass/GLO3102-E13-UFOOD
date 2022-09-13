@@ -20,7 +20,6 @@ export default {
   },
   methods: {
     async login(formData) {
-      console.log(formData);
       const { email, password } = formData;
       const body = { email, password };
       const user = await this.apiUser.logIn(body);

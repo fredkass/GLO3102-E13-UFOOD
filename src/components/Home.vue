@@ -119,7 +119,6 @@ export default {
               lat: position.coords.latitude,
               lng: position.coords.longitude
             };
-            console.log(this.currentPos);
             await this.updateRestaurants();
           },
           async () => {
@@ -127,7 +126,6 @@ export default {
               lat: this.restaurants[0].location.coordinates[1],
               lng: this.restaurants[0].location.coordinates[0]
             };
-            console.log(this.currentPos);
 
             await this.updateRestaurants();
             window.alert("Impossible to determine location");
