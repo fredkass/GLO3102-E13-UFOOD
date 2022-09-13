@@ -17,8 +17,6 @@ export default class Api {
       });
       return response;
     } catch (error) {
-      console.error("Problem in put request.");
-      console.error(error);
     }
   }
   async post(route, body) {
@@ -30,8 +28,6 @@ export default class Api {
       });
       return response;
     } catch (error) {
-      console.error("Problem in post request.");
-      console.error(error);
       return error;
     }
   }
@@ -43,8 +39,7 @@ export default class Api {
       });
       return response;
     } catch (error) {
-      console.error("Problem in get request.");
-      console.error(error);
+      return error;
     }
   }
 
@@ -57,8 +52,7 @@ export default class Api {
       });
       return response;
     } catch (error) {
-      console.error("problem in delete request.");
-      console.error(error);
+      return error;
     }
   }
 }

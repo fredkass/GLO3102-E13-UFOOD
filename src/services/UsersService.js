@@ -13,15 +13,14 @@ export default class UsersService {
   async getUsers(page) {
     let querystrings = new URLSearchParams();
     page && querystrings.append("page", page);
-    console.log(page);
-    const response = await this.api.get("/users?"+ querystrings);
+    const response = await this.api.get("/users?" + querystrings);
     return await response.json();
   }
   // returns users which names contain "terms"
   async search(terms, page) {
     let querystrings = new URLSearchParams();
     page && querystrings.append("page", page);
-    querystrings.append('q', terms);
+    querystrings.append("q", terms);
     const response = await this.api.get("/users?" + querystrings);
     return await response.json();
   }
@@ -76,8 +75,8 @@ export default class UsersService {
   }
   async logIn(body) {
     const response = await this.api.post("/login", body);
-    if(!response.ok){
-      return new Error("Invalid credentials");      
+    if (!response.ok) {
+      return new Error("Invalid credentials");
     }
     const data = await response.json();
     this.setTokenCookie(data);
