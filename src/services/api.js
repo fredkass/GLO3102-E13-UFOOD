@@ -1,6 +1,6 @@
 export default class Api {
   constructor(token) {
-    this.baseURL = "https://ufoodapi.herokuapp.com";
+    this.baseURL = "https://ufood-api-fk.herokuapp.com";
     this.headers = new Headers();
     this.headers.append("Content-Type", "application/json");
     //if (token != undefined) {
